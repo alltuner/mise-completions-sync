@@ -7,6 +7,7 @@ on:
       - 'docs/**'
       - 'mkdocs.yml'
       - 'registry.toml'
+      - 'CHANGELOG.md'
   workflow_dispatch:
 
 permissions:
@@ -29,6 +30,9 @@ jobs:
 
       - name: Generate tools documentation
         run: uv run scripts/generate-tools-docs.py > docs/tools.md
+
+      - name: Copy CHANGELOG to docs
+        run: cp CHANGELOG.md docs/changelog.md
 
       - name: Build docs
         run: uvx --with mkdocs-material mkdocs build
