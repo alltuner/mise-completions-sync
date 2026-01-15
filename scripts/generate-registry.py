@@ -146,8 +146,6 @@ TOOL_PATTERNS = {
     "cosign": "standard",
     # Other tools
     "saml2aws": "standard",
-    "age": "standard",
-    "sops": "standard",
     "croc": "standard",
     "httpie": "standard",
     "xh": "standard",

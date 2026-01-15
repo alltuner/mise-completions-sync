@@ -207,10 +207,6 @@ bash = "complete -C consul consul"
 zsh = "nomad -autocomplete-install 2>/dev/null || true"
 bash = "complete -C nomad nomad"
 
-[go]
-zsh = "go tool completion zsh 2>/dev/null || true"
-bash = "go tool completion bash 2>/dev/null || true"
-
 [goreleaser]
 zsh = "goreleaser completion zsh"
 bash = "goreleaser completion bash"
