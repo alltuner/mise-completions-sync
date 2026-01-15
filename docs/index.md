@@ -58,6 +58,20 @@ Add to `~/.config/fish/config.fish`:
 set -gx fish_complete_path $fish_complete_path ~/.local/share/mise-completions/fish
 ```
 
+## Updating
+
+To update to the latest version:
+
+```bash
+mise upgrade github:alltuner/mise-completions-sync
+```
+
+Or to pin a specific version:
+
+```bash
+mise use -g github:alltuner/mise-completions-sync@0.3.0
+```
+
 ## Automatic Sync
 
 Set up a mise hook to automatically sync completions when tools are installed:
