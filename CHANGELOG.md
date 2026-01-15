@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/alltuner/mise-completions-sync/compare/v0.4.0...v0.4.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* **docs:** trigger rebuild on CHANGELOG changes and include in site ([#24](https://github.com/alltuner/mise-completions-sync/issues/24)) ([d1a5bd1](https://github.com/alltuner/mise-completions-sync/commit/d1a5bd1695f9a2d44b8e151475051b9df4918086))
+
 ## [0.4.0](https://github.com/alltuner/mise-completions-sync/compare/v0.3.0...v0.4.0) (2026-01-15)
 
 
