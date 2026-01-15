@@ -36,6 +36,10 @@ description = "Install pre-commit hooks"
 run = "uv run scripts/generate-tools-docs.py > docs/tools.md"
 description = "Generate tools documentation from registry"
 
+[tasks.docs-status]
+run = "uv run scripts/generate-tools-status.py > TOOLS.md"
+description = "Generate TOOLS.md with supported and pending tools"
+
 [tasks.validate-registry]
 run = "uv run scripts/validate-registry.py --installed-only"
 description = "Validate registry entries against installed tools"

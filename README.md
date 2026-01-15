@@ -50,6 +50,20 @@ mise-completions-sync list
 mise-completions-sync clean
 ```
 
+## Updating
+
+To update to the latest version:
+
+```bash
+mise upgrade github:alltuner/mise-completions-sync
+```
+
+Or to pin a specific version:
+
+```bash
+mise use -g github:alltuner/mise-completions-sync@0.3.0
+```
+
 ## Automatic Sync
 
 Set up a mise hook to sync completions when tools are installed:
