@@ -19,19 +19,20 @@ from pathlib import Path
 
 def get_mise_registry() -> dict[str, dict]:
     """Fetch tool metadata from mise's registry."""
-    result = subprocess.run(
-        ["mise", "registry", "--json"],
-        capture_output=True,
-        text=True,
-    )
-    if result.returncode != 0:
-        return {}
-
     try:
+        result = subprocess.run(
+            ["mise", "registry", "--json"],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode != 0:
+            return {}
+
         data = json.loads(result.stdout)
         # Convert list to dict keyed by short name
         return {item["short"]: item for item in data}
-    except (json.JSONDecodeError, KeyError):
+    except (FileNotFoundError, json.JSONDecodeError, KeyError):
+        # mise not installed or invalid output
         return {}
 
 
