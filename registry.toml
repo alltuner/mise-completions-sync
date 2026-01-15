@@ -241,11 +241,6 @@ fish = "nix --extra-experimental-features 'nix-command' completion fish 2>/dev/n
 
 # Additional tools
 
-[age]
-zsh = "age completion zsh"
-bash = "age completion bash"
-fish = "age completion fish"
-
 [air]
 zsh = "air completion zsh"
 bash = "air completion bash"
@@ -414,7 +409,6 @@ fish = "skaffold completion fish"
 [sops]
 zsh = "sops completion zsh"
 bash = "sops completion bash"
-fish = "sops completion fish"
 
 [step]
 zsh = "step completion zsh"
