@@ -33,7 +33,7 @@ run = "prek install"
 description = "Install pre-commit hooks"
 
 [tasks.docs-tools]
-run = "uv run scripts/generate-tools-docs.py > docs/src/tools.md"
+run = "uv run scripts/generate-tools-docs.py > docs/tools.md"
 description = "Generate tools documentation from registry"
 
 [tasks.validate-registry]

@@ -4,7 +4,6 @@ The following tools have completion support in mise-completions-sync.
 
 | Tool | ZSH | Bash | Fish |
 |------|-----|------|------|
-| age | ✓ | ✓ | ✓ |
 | air | ✓ | ✓ | ✓ |
 | argocd | ✓ | ✓ | ✓ |
 | atuin | ✓ | ✓ | ✓ |
@@ -35,7 +34,6 @@ The following tools have completion support in mise-completions-sync.
 | gitu | ✓ | ✓ | ✓ |
 | gitui | ✓ | ✓ | ✓ |
 | glab | ✓ | ✓ | ✓ |
-| go | ✓ | ✓ |  |
 | golangci-lint | ✓ | ✓ | ✓ |
 | goreleaser | ✓ | ✓ | ✓ |
 | grpcurl | ✓ | ✓ | ✓ |
@@ -66,7 +64,6 @@ The following tools have completion support in mise-completions-sync.
 | npm | ✓ | ✓ |  |
 | oc | ✓ | ✓ | ✓ |
 | oci | ✓ | ✓ | ✓ |
-| pdm | ✓ | ✓ | ✓ |
 | pipx | ✓ | ✓ |  |
 | pnpm | ✓ | ✓ |  |
 | podman | ✓ | ✓ | ✓ |
@@ -79,7 +76,7 @@ The following tools have completion support in mise-completions-sync.
 | rustup | ✓ | ✓ | ✓ |
 | saml2aws | ✓ | ✓ | ✓ |
 | skaffold | ✓ | ✓ | ✓ |
-| sops | ✓ | ✓ | ✓ |
+| sops | ✓ | ✓ |  |
 | starship | ✓ | ✓ | ✓ |
 | step | ✓ | ✓ | ✓ |
 | stern | ✓ | ✓ | ✓ |
@@ -99,7 +96,7 @@ The following tools have completion support in mise-completions-sync.
 | zellij | ✓ | ✓ | ✓ |
 | zoxide | ✓ | ✓ | ✓ |
 
-**Total: 94 tools**
+**Total: 91 tools**
 
 ## Adding Tools
 

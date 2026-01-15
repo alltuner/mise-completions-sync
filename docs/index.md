@@ -17,6 +17,27 @@ When mise installs a tool like `kubectl` or `gh`, you don't automatically get sh
 3. Runs the tool's completion command (e.g., `kubectl completion zsh`)
 4. Saves output to `~/.local/share/mise-completions/<shell>/`
 
+## Development
+
+```bash
+# Install dev tools
+cd ~/repos/mise-completions-sync
+mise install
+
+# Build
+mise run build
+
+# Test
+mise run test
+
+# Generate registry entries from mise's registry
+mise run generate-registry
+```
+
+## License
+
+MIT
+
 ---
 
 Built at [All Tuner Labs](https://alltuner.com) by [David Poblador i Garcia](https://davidpoblador.com)

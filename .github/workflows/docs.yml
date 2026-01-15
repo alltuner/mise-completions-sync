@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
-      - 'README.md'
+      - 'mkdocs.yml'
       - 'registry.toml'
   workflow_dispatch:
 
@@ -24,24 +24,19 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Setup mdBook
-        uses: peaceiris/actions-mdbook@v2
-        with:
-          mdbook-version: 'latest'
-
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
 
       - name: Generate tools documentation
-        run: uv run scripts/generate-tools-docs.py > docs/src/tools.md
+        run: uv run scripts/generate-tools-docs.py > docs/tools.md
 
       - name: Build docs
-        run: mdbook build docs
+        run: uvx --with mkdocs-material mkdocs build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: docs/book
+          path: site
 
   deploy:
     needs: build
