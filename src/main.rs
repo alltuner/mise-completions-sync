@@ -62,15 +62,11 @@ fn run() -> Result<(), sync::Error> {
             println!("{}", dir.display());
             Ok(())
         }
-        Some(Commands::Clean) => {
-            sync::clean_stale_completions()
-        }
+        Some(Commands::Clean) => sync::clean_stale_completions(),
         None => {
-            let shells = cli.shell.unwrap_or_else(|| vec![
-                "zsh".to_string(),
-                "bash".to_string(),
-                "fish".to_string(),
-            ]);
+            let shells = cli
+                .shell
+                .unwrap_or_else(|| vec!["zsh".to_string(), "bash".to_string(), "fish".to_string()]);
             sync::sync_completions(&shells, &cli.tools)
         }
     }

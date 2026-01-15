@@ -66,8 +66,8 @@ fn get_installed_tools() -> Result<Vec<String>, Error> {
     }
 
     let stdout = String::from_utf8_lossy(&output.stdout);
-    let tools: serde_json::Value = serde_json::from_str(&stdout)
-        .map_err(|e| Error::MiseList(e.to_string()))?;
+    let tools: serde_json::Value =
+        serde_json::from_str(&stdout).map_err(|e| Error::MiseList(e.to_string()))?;
 
     // mise ls --json returns an object with tool names as keys
     let tool_names: Vec<String> = tools
@@ -86,8 +86,7 @@ fn generate_completion(
     output_dir: &PathBuf,
 ) -> Result<(), Error> {
     // Create output directory if needed
-    std::fs::create_dir_all(output_dir)
-        .map_err(|e| Error::CreateDir(output_dir.clone(), e))?;
+    std::fs::create_dir_all(output_dir).map_err(|e| Error::CreateDir(output_dir.clone(), e))?;
 
     // Run the completion command
     let output = Command::new("sh")
@@ -104,8 +103,7 @@ fn generate_completion(
     let filename = shells::completion_filename(shell, tool);
     let filepath = output_dir.join(&filename);
 
-    std::fs::write(&filepath, &output.stdout)
-        .map_err(|e| Error::WriteFile(filepath.clone(), e))?;
+    std::fs::write(&filepath, &output.stdout).map_err(|e| Error::WriteFile(filepath.clone(), e))?;
 
     println!("  {tool} -> {filename}");
     Ok(())
@@ -134,7 +132,10 @@ pub fn sync_completions(shells: &[String], specific_tools: &[String]) -> Result<
         return Ok(());
     }
 
-    println!("Syncing completions for {} tools...", tools_in_registry.len());
+    println!(
+        "Syncing completions for {} tools...",
+        tools_in_registry.len()
+    );
 
     for shell in shells {
         let output_dir = get_completions_dir(shell)?;

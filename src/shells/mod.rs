@@ -31,18 +31,27 @@ mod tests {
     #[test]
     fn test_zsh_filename() {
         assert_eq!(completion_filename("zsh", "kubectl"), "_kubectl");
-        assert_eq!(tool_from_filename("zsh", "_kubectl"), Some("kubectl".to_string()));
+        assert_eq!(
+            tool_from_filename("zsh", "_kubectl"),
+            Some("kubectl".to_string())
+        );
     }
 
     #[test]
     fn test_bash_filename() {
         assert_eq!(completion_filename("bash", "kubectl"), "kubectl");
-        assert_eq!(tool_from_filename("bash", "kubectl"), Some("kubectl".to_string()));
+        assert_eq!(
+            tool_from_filename("bash", "kubectl"),
+            Some("kubectl".to_string())
+        );
     }
 
     #[test]
     fn test_fish_filename() {
         assert_eq!(completion_filename("fish", "kubectl"), "kubectl.fish");
-        assert_eq!(tool_from_filename("fish", "kubectl.fish"), Some("kubectl".to_string()));
+        assert_eq!(
+            tool_from_filename("fish", "kubectl.fish"),
+            Some("kubectl".to_string())
+        );
     }
 }
