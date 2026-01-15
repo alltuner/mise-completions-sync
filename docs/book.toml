@@ -1,8 +1,0 @@
-[book]
-title = "mise-completions-sync"
-authors = ["David Poblador i Garcia"]
-language = "en"
-src = "src"
-
-[output.html]
-git-repository-url = "https://github.com/alltuner/mise-completions-sync"

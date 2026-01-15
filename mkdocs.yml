@@ -1,0 +1,25 @@
+site_name: mise-completions-sync
+site_description: Automatically sync shell completions for tools managed by mise
+site_url: https://alltuner.github.io/mise-completions-sync/
+repo_url: https://github.com/alltuner/mise-completions-sync
+repo_name: alltuner/mise-completions-sync
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Configuration: configuration.md
+  - Supported Tools: tools.md
