@@ -2,6 +2,7 @@
 [tools]
 rust = "latest"
 uv = "latest"
+prek = "latest"
 
 [tasks.build]
 run = "cargo build --release"
@@ -26,3 +27,11 @@ description = "Generate registry.toml from mise's registry"
 [tasks.install-dev]
 run = "cargo install --path ."
 description = "Install locally for testing"
+
+[tasks.install-hooks]
+run = "prek install"
+description = "Install pre-commit hooks"
+
+[tasks.docs-tools]
+run = "uv run scripts/generate-tools-docs.py > docs/src/tools.md"
+description = "Generate tools documentation from registry"

@@ -238,3 +238,220 @@ bash = "vercel completion bash"
 zsh = "nix --extra-experimental-features 'nix-command' completion zsh 2>/dev/null || true"
 bash = "nix --extra-experimental-features 'nix-command' completion bash 2>/dev/null || true"
 fish = "nix --extra-experimental-features 'nix-command' completion fish 2>/dev/null || true"
+
+# Additional tools
+
+[age]
+zsh = "age completion zsh"
+bash = "age completion bash"
+fish = "age completion fish"
+
+[air]
+zsh = "air completion zsh"
+bash = "air completion bash"
+fish = "air completion fish"
+
+[biome]
+zsh = "biome completion zsh"
+bash = "biome completion bash"
+fish = "biome completion fish"
+
+[chezmoi]
+zsh = "chezmoi completion zsh"
+bash = "chezmoi completion bash"
+fish = "chezmoi completion fish"
+
+[cosign]
+zsh = "cosign completion zsh"
+bash = "cosign completion bash"
+fish = "cosign completion fish"
+
+[croc]
+zsh = "croc completion zsh"
+bash = "croc completion bash"
+fish = "croc completion fish"
+
+[cue]
+zsh = "cue completion zsh"
+bash = "cue completion bash"
+fish = "cue completion fish"
+
+[dagger]
+zsh = "dagger completion zsh"
+bash = "dagger completion bash"
+fish = "dagger completion fish"
+
+[doctl]
+zsh = "doctl completion zsh"
+bash = "doctl completion bash"
+fish = "doctl completion fish"
+
+[dust]
+zsh = "dust generate-shell-completion zsh"
+bash = "dust generate-shell-completion bash"
+fish = "dust generate-shell-completion fish"
+
+[evans]
+zsh = "evans completion zsh"
+bash = "evans completion bash"
+fish = "evans completion fish"
+
+[gitu]
+zsh = "gitu gen-completions --shell zsh"
+bash = "gitu gen-completions --shell bash"
+fish = "gitu gen-completions --shell fish"
+
+[gitui]
+zsh = "gitui gen-completions --shell zsh"
+bash = "gitui gen-completions --shell bash"
+fish = "gitui gen-completions --shell fish"
+
+[golangci-lint]
+zsh = "golangci-lint completion zsh"
+bash = "golangci-lint completion bash"
+fish = "golangci-lint completion fish"
+
+[grpcurl]
+zsh = "grpcurl completion zsh"
+bash = "grpcurl completion bash"
+fish = "grpcurl completion fish"
+
+[hyperfine]
+zsh = "hyperfine generate-shell-completion zsh"
+bash = "hyperfine generate-shell-completion bash"
+fish = "hyperfine generate-shell-completion fish"
+
+[istioctl]
+zsh = "istioctl completion zsh"
+bash = "istioctl completion bash"
+fish = "istioctl completion fish"
+
+[k3d]
+zsh = "k3d completion zsh"
+bash = "k3d completion bash"
+fish = "k3d completion fish"
+
+[ko]
+zsh = "ko completion zsh"
+bash = "ko completion bash"
+fish = "ko completion fish"
+
+[krew]
+zsh = "krew completion zsh"
+bash = "krew completion bash"
+fish = "krew completion fish"
+
+[kubeseal]
+zsh = "kubeseal completion zsh"
+bash = "kubeseal completion bash"
+fish = "kubeseal completion fish"
+
+[lazygit]
+zsh = "lazygit completion zsh"
+bash = "lazygit completion bash"
+fish = "lazygit completion fish"
+
+[lefthook]
+zsh = "lefthook completions zsh"
+bash = "lefthook completions bash"
+fish = "lefthook completions fish"
+
+[linkerd]
+zsh = "linkerd completion zsh"
+bash = "linkerd completion bash"
+fish = "linkerd completion fish"
+
+[mdbook]
+zsh = "mdbook generate-shell-completion zsh"
+bash = "mdbook generate-shell-completion bash"
+fish = "mdbook generate-shell-completion fish"
+
+[mkcert]
+zsh = "mkcert completion zsh"
+bash = "mkcert completion bash"
+fish = "mkcert completion fish"
+
+[nerdctl]
+zsh = "nerdctl completion zsh"
+bash = "nerdctl completion bash"
+fish = "nerdctl completion fish"
+
+[oc]
+zsh = "oc completion zsh"
+bash = "oc completion bash"
+fish = "oc completion fish"
+
+[oci]
+zsh = "oci completion zsh"
+bash = "oci completion bash"
+fish = "oci completion fish"
+
+[podman]
+zsh = "podman completion zsh"
+bash = "podman completion bash"
+fish = "podman completion fish"
+
+[pulumi]
+zsh = "pulumi completion zsh"
+bash = "pulumi completion bash"
+fish = "pulumi completion fish"
+
+[restic]
+zsh = "restic completion zsh"
+bash = "restic completion bash"
+fish = "restic completion fish"
+
+[saml2aws]
+zsh = "saml2aws completion zsh"
+bash = "saml2aws completion bash"
+fish = "saml2aws completion fish"
+
+[skaffold]
+zsh = "skaffold completion zsh"
+bash = "skaffold completion bash"
+fish = "skaffold completion fish"
+
+[sops]
+zsh = "sops completion zsh"
+bash = "sops completion bash"
+fish = "sops completion fish"
+
+[step]
+zsh = "step completion zsh"
+bash = "step completion bash"
+fish = "step completion fish"
+
+[stern]
+zsh = "stern completion zsh"
+bash = "stern completion bash"
+fish = "stern completion fish"
+
+[tilt]
+zsh = "tilt completion zsh"
+bash = "tilt completion bash"
+fish = "tilt completion fish"
+
+[tokei]
+zsh = "tokei generate-shell-completion zsh"
+bash = "tokei generate-shell-completion bash"
+fish = "tokei generate-shell-completion fish"
+
+[trivy]
+zsh = "trivy completion zsh"
+bash = "trivy completion bash"
+fish = "trivy completion fish"
+
+[ty]
+zsh = "ty generate-shell-completion zsh"
+bash = "ty generate-shell-completion bash"
+fish = "ty generate-shell-completion fish"
+
+[velero]
+zsh = "velero completion zsh"
+bash = "velero completion bash"
+fish = "velero completion fish"
+
+[xh]
+zsh = "xh completion zsh"
+bash = "xh completion bash"
+fish = "xh completion fish"
