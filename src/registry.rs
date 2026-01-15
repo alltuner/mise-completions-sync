@@ -8,14 +8,33 @@ use std::path::PathBuf;
 use crate::sync::Error;
 
 const EMBEDDED_REGISTRY: &str = include_str!("../registry.toml");
+const CURRENT_SCHEMA_VERSION: u32 = 1;
 
+/// Parsed registry format with patterns and tools sections
 #[derive(Debug, Deserialize)]
+struct RawRegistry {
+    schema_version: Option<u32>,
+    #[serde(default)]
+    patterns: HashMap<String, ToolCompletions>,
+    #[serde(default)]
+    tools: HashMap<String, ToolEntry>,
+}
+
+/// A tool entry: either a pattern name or explicit shell commands
+#[derive(Debug, Deserialize)]
+#[serde(untagged)]
+enum ToolEntry {
+    Pattern(String),
+    Explicit(ToolCompletions),
+}
+
+/// Expanded registry with all patterns resolved
+#[derive(Debug)]
 pub struct Registry {
-    #[serde(flatten)]
     pub tools: HashMap<String, ToolCompletions>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct ToolCompletions {
     pub zsh: Option<String>,
     pub bash: Option<String>,
@@ -29,6 +48,15 @@ impl ToolCompletions {
             "bash" => self.bash.as_ref(),
             "fish" => self.fish.as_ref(),
             _ => None,
+        }
+    }
+
+    /// Expand pattern placeholders with tool name
+    fn expand(&self, tool_name: &str) -> Self {
+        Self {
+            zsh: self.zsh.as_ref().map(|s| s.replace("{}", tool_name)),
+            bash: self.bash.as_ref().map(|s| s.replace("{}", tool_name)),
+            fish: self.fish.as_ref().map(|s| s.replace("{}", tool_name)),
         }
     }
 }
@@ -61,8 +89,37 @@ fn get_registry_content() -> Result<(String, Option<PathBuf>), Error> {
 
 pub fn load_registry() -> Result<Registry, Error> {
     let (content, path) = get_registry_content()?;
-    let registry: Registry = toml::from_str(&content).map_err(|e| {
-        Error::RegistryParse(path.unwrap_or_else(|| PathBuf::from("<embedded>")), e)
-    })?;
-    Ok(registry)
+    let path_for_error = path.clone().unwrap_or_else(|| PathBuf::from("<embedded>"));
+
+    let raw: RawRegistry =
+        toml::from_str(&content).map_err(|e| Error::RegistryParse(path_for_error.clone(), e))?;
+
+    // Check schema version
+    match raw.schema_version {
+        None => return Err(Error::MissingSchemaVersion),
+        Some(v) if v != CURRENT_SCHEMA_VERSION => {
+            return Err(Error::IncompatibleSchema {
+                found: v,
+                expected: CURRENT_SCHEMA_VERSION,
+            })
+        }
+        Some(_) => {}
+    }
+
+    let mut tools = HashMap::new();
+
+    for (tool_name, entry) in raw.tools {
+        let completions = match entry {
+            ToolEntry::Pattern(pattern_name) => {
+                let pattern = raw.patterns.get(&pattern_name).ok_or_else(|| {
+                    Error::UnknownPattern(tool_name.clone(), pattern_name.clone())
+                })?;
+                pattern.expand(&tool_name)
+            }
+            ToolEntry::Explicit(completions) => completions,
+        };
+        tools.insert(tool_name, completions);
+    }
+
+    Ok(Registry { tools })
 }
