@@ -18,8 +18,14 @@ theme:
   features:
     - content.code.copy
 
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+
 nav:
   - Home: index.md
-  - Installation: installation.md
-  - Configuration: configuration.md
-  - Supported Tools: tools.md
+  - Reference:
+    - Supported Tools: tools.md
+    - How It Works: how-it-works.md
+  - Development: development.md

@@ -97,11 +97,3 @@ The following tools have completion support in mise-completions-sync.
 | zoxide | ✓ | ✓ | ✓ |
 
 **Total: 91 tools**
-
-## Adding Tools
-
-If a tool you use isn't in the registry:
-
-1. Check if the tool supports completions (usually `tool completion --help`)
-2. Add an entry to `registry.toml`
-3. Submit a PR
