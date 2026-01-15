@@ -3,6 +3,17 @@ name: Release Binaries
 on:
   release:
     types: [published]
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (e.g., v0.2.0)"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -28,6 +39,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag || github.ref }}
 
       - uses: houseabsolute/actions-rust-cross@v0
         with:
@@ -50,4 +63,5 @@ jobs:
       - name: Upload to release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.tag || github.ref_name }}
           files: mise-completions-sync-${{ matrix.target }}.*

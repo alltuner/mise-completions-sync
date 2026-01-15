@@ -20,3 +20,10 @@ jobs:
         id: release
         with:
           release-type: rust
+
+  build-binaries:
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
+    uses: ./.github/workflows/release.yml
+    with:
+      tag: ${{ needs.release-please.outputs.tag_name }}

@@ -3,7 +3,7 @@
 ## Using mise (recommended)
 
 ```bash
-mise use -g ubi:alltuner/mise-completions-sync
+mise use -g github:alltuner/mise-completions-sync
 ```
 
 ## From GitHub Releases

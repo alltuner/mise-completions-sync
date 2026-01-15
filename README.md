@@ -15,7 +15,7 @@ When mise installs a tool like `kubectl` or `gh`, you don't automatically get sh
 ### 1. Install the tool
 
 ```bash
-mise use -g ubi:alltuner/mise-completions-sync
+mise use -g github:alltuner/mise-completions-sync
 ```
 
 ### 2. Add to your shell config
