@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/alltuner/mise-completions-sync/compare/v0.3.0...v0.4.0) (2026-01-15)
+
+
+### Features
+
+* **docs:** enhance tool documentation with metadata and status tracking ([#23](https://github.com/alltuner/mise-completions-sync/issues/23)) ([8159951](https://github.com/alltuner/mise-completions-sync/commit/81599513a5e3f689e6b52d09ed0530ecc7dd68bb))
+
+
+### Bug Fixes
+
+* **registry:** remove tools without completion support ([#21](https://github.com/alltuner/mise-completions-sync/issues/21)) ([4d5e7ba](https://github.com/alltuner/mise-completions-sync/commit/4d5e7ba585cd80b0b70eabc4890909999318295d))
+
 ## [0.3.0](https://github.com/alltuner/mise-completions-sync/compare/v0.2.2...v0.3.0) (2026-01-15)
 
 
