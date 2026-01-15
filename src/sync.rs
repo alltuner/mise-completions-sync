@@ -88,9 +88,10 @@ fn generate_completion(
     // Create output directory if needed
     std::fs::create_dir_all(output_dir).map_err(|e| Error::CreateDir(output_dir.clone(), e))?;
 
-    // Run the completion command
+    // Run the completion command wrapped with mise to ensure the tool is available
+    let wrapped_command = format!("mise x {tool} -- {command}");
     let output = Command::new("sh")
-        .args(["-c", command])
+        .args(["-c", &wrapped_command])
         .output()
         .map_err(|e| Error::Generate(tool.to_string(), e.to_string()))?;
 
