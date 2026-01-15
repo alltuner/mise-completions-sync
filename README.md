@@ -130,3 +130,7 @@ mise run generate-registry
 ## License
 
 MIT
+
+---
+
+Built at [All Tuner Labs](https://alltuner.com) by [David Poblador i Garcia](https://davidpoblador.com)
