@@ -1,0 +1,240 @@
+# Tool completion registry for mise-completions-sync
+# Format: [tool_name] with zsh/bash/fish keys containing the command to generate completions
+
+[mise]
+zsh = "mise completion zsh"
+bash = "mise completion bash"
+fish = "mise completion fish"
+
+[kubectl]
+zsh = "kubectl completion zsh"
+bash = "kubectl completion bash"
+fish = "kubectl completion fish"
+
+[helm]
+zsh = "helm completion zsh"
+bash = "helm completion bash"
+fish = "helm completion fish"
+
+[docker]
+zsh = "docker completion zsh"
+bash = "docker completion bash"
+fish = "docker completion fish"
+
+[gh]
+zsh = "gh completion -s zsh"
+bash = "gh completion -s bash"
+fish = "gh completion -s fish"
+
+[glab]
+zsh = "glab completion -s zsh"
+bash = "glab completion -s bash"
+fish = "glab completion -s fish"
+
+[aws]
+zsh = "aws_completer"
+bash = "complete -C aws_completer aws"
+
+[gcloud]
+zsh = "gcloud completion zsh"
+bash = "gcloud completion bash"
+
+[terraform]
+zsh = "terraform -install-autocomplete 2>/dev/null; cat ~/.zshrc | grep -A1 'autoload -U +X bashcompinit' || echo ''"
+bash = "complete -C terraform terraform"
+
+[rustup]
+zsh = "rustup completions zsh"
+bash = "rustup completions bash"
+fish = "rustup completions fish"
+
+[cargo]
+zsh = "rustup completions zsh cargo"
+bash = "rustup completions bash cargo"
+fish = "rustup completions fish cargo"
+
+[deno]
+zsh = "deno completions zsh"
+bash = "deno completions bash"
+fish = "deno completions fish"
+
+[bun]
+zsh = "bun completions"
+
+[npm]
+zsh = "npm completion"
+bash = "npm completion"
+
+[pnpm]
+zsh = "pnpm completion zsh"
+bash = "pnpm completion bash"
+
+[yarn]
+zsh = "yarn completion"
+
+[uv]
+zsh = "uv generate-shell-completion zsh"
+bash = "uv generate-shell-completion bash"
+fish = "uv generate-shell-completion fish"
+
+[ruff]
+zsh = "ruff generate-shell-completion zsh"
+bash = "ruff generate-shell-completion bash"
+fish = "ruff generate-shell-completion fish"
+
+[pipx]
+zsh = "register-python-argcomplete pipx"
+bash = "register-python-argcomplete pipx"
+
+[poetry]
+zsh = "poetry completions zsh"
+bash = "poetry completions bash"
+fish = "poetry completions fish"
+
+[pdm]
+zsh = "pdm completion zsh"
+bash = "pdm completion bash"
+fish = "pdm completion fish"
+
+[just]
+zsh = "just --completions zsh"
+bash = "just --completions bash"
+fish = "just --completions fish"
+
+[task]
+zsh = "task --completion zsh"
+bash = "task --completion bash"
+fish = "task --completion fish"
+
+[starship]
+zsh = "starship completions zsh"
+bash = "starship completions bash"
+fish = "starship completions fish"
+
+[zoxide]
+zsh = "zoxide init zsh"
+bash = "zoxide init bash"
+fish = "zoxide init fish"
+
+[fzf]
+zsh = "fzf --zsh"
+bash = "fzf --bash"
+fish = "fzf --fish"
+
+[bat]
+zsh = "bat --generate-shell-completion zsh"
+bash = "bat --generate-shell-completion bash"
+fish = "bat --generate-shell-completion fish"
+
+[eza]
+zsh = "eza --generate-completions zsh"
+bash = "eza --generate-completions bash"
+fish = "eza --generate-completions fish"
+
+[fd]
+zsh = "fd --gen-completions zsh"
+bash = "fd --gen-completions bash"
+fish = "fd --gen-completions fish"
+
+[rg]
+zsh = "rg --generate complete-zsh"
+bash = "rg --generate complete-bash"
+fish = "rg --generate complete-fish"
+
+[ripgrep]
+zsh = "rg --generate complete-zsh"
+bash = "rg --generate complete-bash"
+fish = "rg --generate complete-fish"
+
+[delta]
+zsh = "delta --generate-completion zsh"
+bash = "delta --generate-completion bash"
+fish = "delta --generate-completion fish"
+
+[zellij]
+zsh = "zellij setup --generate-completion zsh"
+bash = "zellij setup --generate-completion bash"
+fish = "zellij setup --generate-completion fish"
+
+[atuin]
+zsh = "atuin gen-completions --shell zsh"
+bash = "atuin gen-completions --shell bash"
+fish = "atuin gen-completions --shell fish"
+
+[k9s]
+zsh = "k9s completion zsh"
+bash = "k9s completion bash"
+fish = "k9s completion fish"
+
+[kubectx]
+zsh = "kubectx completion zsh"
+bash = "kubectx completion bash"
+
+[kind]
+zsh = "kind completion zsh"
+bash = "kind completion bash"
+fish = "kind completion fish"
+
+[minikube]
+zsh = "minikube completion zsh"
+bash = "minikube completion bash"
+fish = "minikube completion fish"
+
+[kustomize]
+zsh = "kustomize completion zsh"
+bash = "kustomize completion bash"
+fish = "kustomize completion fish"
+
+[argocd]
+zsh = "argocd completion zsh"
+bash = "argocd completion bash"
+fish = "argocd completion fish"
+
+[flux]
+zsh = "flux completion zsh"
+bash = "flux completion bash"
+fish = "flux completion fish"
+
+[vault]
+zsh = "vault -autocomplete-install 2>/dev/null || true"
+bash = "complete -C vault vault"
+
+[consul]
+zsh = "consul -autocomplete-install 2>/dev/null || true"
+bash = "complete -C consul consul"
+
+[nomad]
+zsh = "nomad -autocomplete-install 2>/dev/null || true"
+bash = "complete -C nomad nomad"
+
+[go]
+zsh = "go tool completion zsh 2>/dev/null || true"
+bash = "go tool completion bash 2>/dev/null || true"
+
+[goreleaser]
+zsh = "goreleaser completion zsh"
+bash = "goreleaser completion bash"
+fish = "goreleaser completion fish"
+
+[hugo]
+zsh = "hugo completion zsh"
+bash = "hugo completion bash"
+fish = "hugo completion fish"
+
+[flyctl]
+zsh = "flyctl completion zsh"
+bash = "flyctl completion bash"
+fish = "flyctl completion fish"
+
+[wrangler]
+zsh = "wrangler completions zsh"
+bash = "wrangler completions bash"
+
+[vercel]
+zsh = "vercel completion zsh"
+bash = "vercel completion bash"
+
+[nix]
+zsh = "nix --extra-experimental-features 'nix-command' completion zsh 2>/dev/null || true"
+bash = "nix --extra-experimental-features 'nix-command' completion bash 2>/dev/null || true"
+fish = "nix --extra-experimental-features 'nix-command' completion fish 2>/dev/null || true"

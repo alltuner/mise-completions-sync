@@ -1,0 +1,28 @@
+# Development tools for mise-completions-sync
+[tools]
+rust = "latest"
+uv = "latest"
+
+[tasks.build]
+run = "cargo build --release"
+description = "Build the release binary"
+
+[tasks.test]
+run = "cargo test"
+description = "Run tests"
+
+[tasks.lint]
+run = "cargo clippy -- -D warnings"
+description = "Run clippy lints"
+
+[tasks.format]
+run = "cargo fmt"
+description = "Format code"
+
+[tasks.generate-registry]
+run = "uv run scripts/generate-registry.py"
+description = "Generate registry.toml from mise's registry"
+
+[tasks.install-dev]
+run = "cargo install --path ."
+description = "Install locally for testing"
