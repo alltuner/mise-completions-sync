@@ -207,10 +207,6 @@ bash = "complete -C consul consul"
 zsh = "nomad -autocomplete-install 2>/dev/null || true"
 bash = "complete -C nomad nomad"
 
-[go]
-zsh = "go tool completion zsh 2>/dev/null || true"
-bash = "go tool completion bash 2>/dev/null || true"
-
 [goreleaser]
 zsh = "goreleaser completion zsh"
 bash = "goreleaser completion bash"
@@ -240,11 +236,6 @@ bash = "nix --extra-experimental-features 'nix-command' completion bash 2>/dev/n
 fish = "nix --extra-experimental-features 'nix-command' completion fish 2>/dev/null || true"
 
 # Additional tools
-
-[age]
-zsh = "age completion zsh"
-bash = "age completion bash"
-fish = "age completion fish"
 
 [air]
 zsh = "air completion zsh"
@@ -414,7 +405,6 @@ fish = "skaffold completion fish"
 [sops]
 zsh = "sops completion zsh"
 bash = "sops completion bash"
-fish = "sops completion fish"
 
 [step]
 zsh = "step completion zsh"
