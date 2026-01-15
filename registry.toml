@@ -1,6 +1,8 @@
 # ABOUTME: Tool completion registry for mise-completions-sync.
 # ABOUTME: Patterns define command templates; tools reference patterns or specify explicit commands.
 
+schema_version = 1
+
 [patterns]
 # {} is replaced with the tool name at load time
 standard = { zsh = "{} completion zsh", bash = "{} completion bash", fish = "{} completion fish" }

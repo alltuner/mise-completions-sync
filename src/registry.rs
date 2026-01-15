@@ -8,10 +8,12 @@ use std::path::PathBuf;
 use crate::sync::Error;
 
 const EMBEDDED_REGISTRY: &str = include_str!("../registry.toml");
+const CURRENT_SCHEMA_VERSION: u32 = 1;
 
 /// Parsed registry format with patterns and tools sections
 #[derive(Debug, Deserialize)]
 struct RawRegistry {
+    schema_version: Option<u32>,
     #[serde(default)]
     patterns: HashMap<String, ToolCompletions>,
     #[serde(default)]
@@ -91,6 +93,18 @@ pub fn load_registry() -> Result<Registry, Error> {
 
     let raw: RawRegistry =
         toml::from_str(&content).map_err(|e| Error::RegistryParse(path_for_error.clone(), e))?;
+
+    // Check schema version
+    match raw.schema_version {
+        None => return Err(Error::MissingSchemaVersion),
+        Some(v) if v != CURRENT_SCHEMA_VERSION => {
+            return Err(Error::IncompatibleSchema {
+                found: v,
+                expected: CURRENT_SCHEMA_VERSION,
+            })
+        }
+        Some(_) => {}
+    }
 
     let mut tools = HashMap::new();
 

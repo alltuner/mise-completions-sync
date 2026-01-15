@@ -33,6 +33,12 @@ pub enum Error {
 
     #[error("unknown pattern '{1}' for tool '{0}'")]
     UnknownPattern(String, String),
+
+    #[error("registry schema version {found} is not supported (expected {expected})")]
+    IncompatibleSchema { found: u32, expected: u32 },
+
+    #[error("registry is missing schema_version field (format may be outdated)")]
+    MissingSchemaVersion,
 }
 
 /// Get the base directory for completions
