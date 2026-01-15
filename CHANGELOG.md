@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.0](https://github.com/alltuner/mise-completions-sync/compare/v0.2.2...v0.3.0) (2026-01-15)
+
+
+### Features
+
+* add worktrees directory to gitignore ([#15](https://github.com/alltuner/mise-completions-sync/issues/15)) ([c43f8ae](https://github.com/alltuner/mise-completions-sync/commit/c43f8aee52cc323ae6a75305ff13c18025a10c44))
+* **docs:** convert from mdBook to MkDocs with Material theme ([#18](https://github.com/alltuner/mise-completions-sync/issues/18)) ([1075920](https://github.com/alltuner/mise-completions-sync/commit/1075920b4285c1373a74aafcd5dafbb0fc50beb1))
+* **registry:** pattern-based format with schema versioning ([#17](https://github.com/alltuner/mise-completions-sync/issues/17)) ([e7e72cc](https://github.com/alltuner/mise-completions-sync/commit/e7e72cc86fe1a6ee508dfda625156443d3b3967b))
+
 ## [0.2.2](https://github.com/alltuner/mise-completions-sync/compare/v0.2.1...v0.2.2) (2026-01-15)
 
 
