@@ -7,6 +7,8 @@ use std::path::PathBuf;
 
 use crate::sync::Error;
 
+const EMBEDDED_REGISTRY: &str = include_str!("../registry.toml");
+
 #[derive(Debug, Deserialize)]
 pub struct Registry {
     #[serde(flatten)]
@@ -31,42 +33,37 @@ impl ToolCompletions {
     }
 }
 
-/// Get the path to registry.toml bundled with the binary
-fn get_registry_path() -> Result<PathBuf, Error> {
-    // First, check if there's a registry.toml next to the executable
+/// Try to load registry from external file, with fallback to embedded
+fn get_registry_content() -> Result<(String, Option<PathBuf>), Error> {
+    // Check for registry.toml next to the executable (allows user customization)
     if let Ok(exe_path) = std::env::current_exe() {
         let alongside = exe_path.parent().unwrap().join("registry.toml");
         if alongside.exists() {
-            return Ok(alongside);
+            let content = std::fs::read_to_string(&alongside)
+                .map_err(|e| Error::RegistryRead(alongside.clone(), e))?;
+            return Ok((content, Some(alongside)));
         }
     }
 
-    // Fall back to embedded registry (compiled into binary)
-    // For now, we'll look in common locations
-    let candidates = [
-        // Development: in the project directory
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("registry.toml"),
-        // Installed via cargo
-        dirs::data_dir()
-            .unwrap_or_default()
+    // Check XDG data directory for user-provided registry
+    if let Some(data_dir) = dirs::data_dir() {
+        let user_registry = data_dir
             .join("mise-completions-sync")
-            .join("registry.toml"),
-    ];
-
-    for path in candidates {
-        if path.exists() {
-            return Ok(path);
+            .join("registry.toml");
+        if user_registry.exists() {
+            let content = std::fs::read_to_string(&user_registry)
+                .map_err(|e| Error::RegistryRead(user_registry.clone(), e))?;
+            return Ok((content, Some(user_registry)));
         }
     }
 
-    Err(Error::RegistryNotFound)
+    // Use embedded registry
+    Ok((EMBEDDED_REGISTRY.to_string(), None))
 }
 
 pub fn load_registry() -> Result<Registry, Error> {
-    let path = get_registry_path()?;
-    let content = std::fs::read_to_string(&path)
-        .map_err(|e| Error::RegistryRead(path.clone(), e))?;
+    let (content, path) = get_registry_content()?;
     let registry: Registry = toml::from_str(&content)
-        .map_err(|e| Error::RegistryParse(path, e))?;
+        .map_err(|e| Error::RegistryParse(path.unwrap_or_else(|| PathBuf::from("<embedded>")), e))?;
     Ok(registry)
 }

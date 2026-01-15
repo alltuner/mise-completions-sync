@@ -50,6 +50,11 @@ KNOWN_PATTERNS = {
         "{tool} gen-completions --shell bash",
         "{tool} gen-completions --shell fish",
     ),
+    "generate_completion": (
+        "{tool} --generate-completion zsh",
+        "{tool} --generate-completion bash",
+        "{tool} --generate-completion fish",
+    ),
 }
 
 # Map tool names to their known pattern
@@ -64,33 +69,92 @@ TOOL_PATTERNS = {
     "kustomize": "standard",
     "argocd": "standard",
     "flux": "standard",
+    "k3d": "standard",
+    "kubeseal": "standard",
+    "krew": "standard",
+    "stern": "standard",
+    "velero": "standard",
+    "istioctl": "standard",
+    "cilium": "standard",
+    "oc": "standard",
+    "linkerd": "standard",
+    "skaffold": "standard",
+    "tilt": "standard",
     # Cloud CLI tools
     "gh": "gh_style",
     "glab": "gh_style",
+    "tea": "gh_style",
     # Development tools
     "mise": "standard",
-    "just": "completions",
     "task": "standard",
     "goreleaser": "standard",
     "hugo": "standard",
-    # Rust tools
+    "pulumi": "standard",
+    "turso": "standard",
+    "wails": "standard",
+    "air": "standard",
+    "golangci-lint": "standard",
+    "ko": "standard",
+    "cue": "standard",
+    "dagger": "standard",
+    "restic": "standard",
+    "chezmoi": "standard",
+    "lazygit": "standard",
+    "gh-dash": "gh_style",
+    # Rust tools with completions pattern
     "rustup": "completions",
     "deno": "completions",
-    "bat": "generate_shell",
     "starship": "completions",
-    "zellij": "standard",
-    "atuin": "gen_completions",
-    # Python tools
+    "poetry": "completions",
+    "wrangler": "completions",
+    "lefthook": "completions",
+    "bacon": "completions",
+    # Rust tools with generate-shell-completion pattern
     "uv": "generate_shell",
     "ruff": "generate_shell",
-    "poetry": "completions",
-    "pdm": "standard",
+    "bat": "generate_shell",
+    "ty": "generate_shell",
+    "procs": "generate_shell",
+    "dust": "generate_shell",
+    "ouch": "generate_shell",
+    "hyperfine": "generate_shell",
+    "tokei": "generate_shell",
+    "miniserve": "generate_shell",
+    "mdbook": "generate_shell",
+    "cargo-watch": "generate_shell",
+    # Rust tools with gen-completions pattern
+    "atuin": "gen_completions",
+    "gitui": "gen_completions",
+    "gitu": "gen_completions",
+    # Tools with --generate-completion pattern
+    "delta": "generate_completion",
     # Node tools
     "pnpm": "standard",
+    "biome": "standard",
     # Cloud platforms
     "flyctl": "standard",
+    "doctl": "standard",
+    "oci": "standard",
+    "scaleway-cli": "standard",
     # Containers
     "docker": "standard",
+    "podman": "standard",
+    "nerdctl": "standard",
+    "buildah": "standard",
+    "skopeo": "standard",
+    "trivy": "standard",
+    "cosign": "standard",
+    # Other tools
+    "saml2aws": "standard",
+    "age": "standard",
+    "sops": "standard",
+    "croc": "standard",
+    "httpie": "standard",
+    "xh": "standard",
+    "grpcurl": "standard",
+    "evans": "standard",
+    "mkcert": "standard",
+    "step": "standard",
 }
 
 
@@ -98,7 +162,11 @@ def fetch_mise_registry():
     """Fetch and parse mise's registry.toml."""
     response = httpx.get(MISE_REGISTRY_URL)
     response.raise_for_status()
-    return tomllib.loads(response.text)
+    registry = tomllib.loads(response.text)
+    # New format: tools are under [tools.*]
+    if "tools" in registry:
+        return registry["tools"]
+    return registry
 
 
 def generate_entry(tool: str, pattern_name: str) -> list[str]:

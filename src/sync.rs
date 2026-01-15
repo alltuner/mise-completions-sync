@@ -10,9 +10,6 @@ use crate::shells;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("registry.toml not found")]
-    RegistryNotFound,
-
     #[error("failed to read registry at {0}: {1}")]
     RegistryRead(PathBuf, std::io::Error),
 
@@ -181,11 +178,12 @@ pub fn clean_stale_completions() -> Result<(), Error> {
                 // Extract tool name from filename
                 let tool = shells::tool_from_filename(shell, filename);
                 if let Some(tool) = tool {
-                    if registry.tools.contains_key(&tool) && !installed_set.contains(&tool) {
-                        if std::fs::remove_file(&path).is_ok() {
-                            println!("Removed: {}", path.display());
-                            removed += 1;
-                        }
+                    if registry.tools.contains_key(&tool)
+                        && !installed_set.contains(&tool)
+                        && std::fs::remove_file(&path).is_ok()
+                    {
+                        println!("Removed: {}", path.display());
+                        removed += 1;
                     }
                 }
             }
