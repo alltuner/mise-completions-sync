@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.2](https://github.com/alltuner/mise-completions-sync/compare/v0.2.1...v0.2.2) (2026-01-15)
+
+
+### Bug Fixes
+
+* **registry:** remove tools without completion support ([#14](https://github.com/alltuner/mise-completions-sync/issues/14)) ([7f3a0b5](https://github.com/alltuner/mise-completions-sync/commit/7f3a0b57bc084eebac2bba345bcaa892965c1165))
+* wrap completion commands with mise x for tool availability ([#12](https://github.com/alltuner/mise-completions-sync/issues/12)) ([32f58c5](https://github.com/alltuner/mise-completions-sync/commit/32f58c509744f7e91c4c805c6e69caf322418616))
+
 ## [0.2.1](https://github.com/alltuner/mise-completions-sync/compare/v0.2.0...v0.2.1) (2026-01-15)
 
 
