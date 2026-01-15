@@ -45,9 +45,7 @@ starship = "completions"
 uv = "generate_shell"
 ruff = "generate_shell"
 ty = "generate_shell"
-dust = "generate_shell"
 hyperfine = "generate_shell"
-tokei = "generate_shell"
 mdbook = "generate_shell"
 atuin = "gen_completions"
 gitu = "gen_completions"
@@ -68,13 +66,9 @@ trivy = "standard"
 cosign = "standard"
 
 # Dev tools
-air = "standard"
-biome = "standard"
 chezmoi = "standard"
-croc = "standard"
 cue = "standard"
 dagger = "standard"
-evans = "standard"
 golangci-lint = "standard"
 goreleaser = "standard"
 grpcurl = "standard"
@@ -95,25 +89,14 @@ lefthook = "completions"
 
 # Partial shell support (zsh only)
 bun = { zsh = "bun completions" }
-yarn = { zsh = "yarn completion" }
 
 # Partial shell support (zsh + bash)
 npm = { zsh = "npm completion", bash = "npm completion" }
 pnpm = { zsh = "pnpm completion zsh", bash = "pnpm completion bash" }
 gcloud = { zsh = "gcloud completion zsh", bash = "gcloud completion bash" }
 kubectx = { zsh = "kubectx completion zsh", bash = "kubectx completion bash" }
-wrangler = { zsh = "wrangler completions zsh", bash = "wrangler completions bash" }
 vercel = { zsh = "vercel completion zsh", bash = "vercel completion bash" }
 sops = { zsh = "sops completion zsh", bash = "sops completion bash" }
-
-# AWS uses aws_completer
-aws = { zsh = "aws_completer", bash = "complete -C aws_completer aws" }
-
-# HashiCorp tools
-terraform = { zsh = "terraform -install-autocomplete 2>/dev/null; cat ~/.zshrc | grep -A1 'autoload -U +X bashcompinit' || echo ''", bash = "complete -C terraform terraform" }
-vault = { zsh = "vault -autocomplete-install 2>/dev/null || true", bash = "complete -C vault vault" }
-consul = { zsh = "consul -autocomplete-install 2>/dev/null || true", bash = "complete -C consul consul" }
-nomad = { zsh = "nomad -autocomplete-install 2>/dev/null || true", bash = "complete -C nomad nomad" }
 
 # Cargo uses rustup
 cargo = { zsh = "rustup completions zsh cargo", bash = "rustup completions bash cargo", fish = "rustup completions fish cargo" }
@@ -124,8 +107,7 @@ pipx = { zsh = "register-python-argcomplete pipx", bash = "register-python-argco
 # Unique command patterns
 just = { zsh = "just --completions zsh", bash = "just --completions bash", fish = "just --completions fish" }
 task = { zsh = "task --completion zsh", bash = "task --completion bash", fish = "task --completion fish" }
-bat = { zsh = "bat --generate-shell-completion zsh", bash = "bat --generate-shell-completion bash", fish = "bat --generate-shell-completion fish" }
-eza = { zsh = "eza --generate-completions zsh", bash = "eza --generate-completions bash", fish = "eza --generate-completions fish" }
+bat = { zsh = "bat --completion zsh", bash = "bat --completion bash", fish = "bat --completion fish" }
 fd = { zsh = "fd --gen-completions zsh", bash = "fd --gen-completions bash", fish = "fd --gen-completions fish" }
 delta = { zsh = "delta --generate-completion zsh", bash = "delta --generate-completion bash", fish = "delta --generate-completion fish" }
 zellij = { zsh = "zellij setup --generate-completion zsh", bash = "zellij setup --generate-completion bash", fish = "zellij setup --generate-completion fish" }
