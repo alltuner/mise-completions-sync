@@ -30,6 +30,9 @@ pub enum Error {
 
     #[error("unsupported shell: {0}")]
     UnsupportedShell(String),
+
+    #[error("unknown pattern '{1}' for tool '{0}'")]
+    UnknownPattern(String, String),
 }
 
 /// Get the base directory for completions

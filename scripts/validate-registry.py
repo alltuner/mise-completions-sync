@@ -38,6 +38,35 @@ def get_installed_tools() -> set[str]:
         return set()
 
 
+def load_registry() -> dict[str, dict[str, str]]:
+    """Load registry.toml and expand patterns to get tool completions."""
+    registry_path = Path(__file__).parent.parent / "registry.toml"
+    with open(registry_path, "rb") as f:
+        raw = tomllib.load(f)
+
+    patterns = raw.get("patterns", {})
+    tools_raw = raw.get("tools", {})
+
+    expanded = {}
+    for tool_name, entry in tools_raw.items():
+        if isinstance(entry, str):
+            # Pattern reference
+            pattern = patterns.get(entry)
+            if pattern is None:
+                print(f"Warning: unknown pattern '{entry}' for tool '{tool_name}'", file=sys.stderr)
+                continue
+            # Expand {} placeholder with tool name
+            expanded[tool_name] = {
+                shell: cmd.replace("{}", tool_name)
+                for shell, cmd in pattern.items()
+            }
+        else:
+            # Explicit commands
+            expanded[tool_name] = entry
+
+    return expanded
+
+
 def test_completion(tool: str, shell: str, command: str) -> tuple[bool, str]:
     """Test a completion command. Returns (success, error_message)."""
     wrapped = f"mise x {tool} -- {command}"
@@ -58,10 +87,7 @@ def test_completion(tool: str, shell: str, command: str) -> tuple[bool, str]:
 def main():
     installed_only = "--installed-only" in sys.argv
 
-    registry_path = Path(__file__).parent.parent / "registry.toml"
-    with open(registry_path, "rb") as f:
-        registry = tomllib.load(f)
-
+    registry = load_registry()
     installed = get_installed_tools() if installed_only else set()
 
     results: dict[str, dict[str, tuple[bool, str]]] = {}
