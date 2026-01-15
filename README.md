@@ -39,7 +39,16 @@ set -gx fish_complete_path $fish_complete_path ~/.local/share/mise-completions/f
 
 ### 3. Set up automatic sync
 
-Add to your global mise config (`~/.config/mise/config.toml`):
+```bash
+# Append hook to global mise config
+mkdir -p ~/.config/mise && cat >> ~/.config/mise/config.toml << 'EOF'
+
+[hooks]
+postinstall = "mise-completions-sync"
+EOF
+```
+
+Or manually add to `~/.config/mise/config.toml`:
 ```toml
 [hooks]
 postinstall = "mise-completions-sync"
