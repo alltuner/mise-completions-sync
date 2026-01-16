@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.3](https://github.com/alltuner/mise-completions-sync/compare/v0.4.2...v0.4.3) (2026-01-16)
+
+
+### Bug Fixes
+
+* **ci:** remove auto-generation of tools docs from workflow ([#29](https://github.com/alltuner/mise-completions-sync/issues/29)) ([25d873b](https://github.com/alltuner/mise-completions-sync/commit/25d873b7ea502e9f3cb21a0e21120b88e906060b))
+
 ## [0.4.2](https://github.com/alltuner/mise-completions-sync/compare/v0.4.1...v0.4.2) (2026-01-15)
 
 
