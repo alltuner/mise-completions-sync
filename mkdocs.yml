@@ -1,27 +1,69 @@
 site_name: mise-completions-sync
 site_description: Automatically sync shell completions for tools managed by mise
 site_url: https://alltuner.github.io/mise-completions-sync/
+site_author: All Tuner Labs, S.L.
+
 repo_url: https://github.com/alltuner/mise-completions-sync
 repo_name: alltuner/mise-completions-sync
+edit_uri: edit/main/docs/
 
 theme:
   name: material
+  logo: assets/logo.png
+  favicon: assets/logo.png
   palette:
-    - scheme: default
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
-    - scheme: slate
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
   features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
     - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
 
 markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight:
       anchor_linenums: true
-  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+plugins:
+  - search
 
 nav:
   - Home: index.md
@@ -30,3 +72,11 @@ nav:
     - How It Works: how-it-works.md
   - Development: development.md
   - Changelog: changelog.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/alltuner/mise-completions-sync
+
+extra_css:
+  - stylesheets/extra.css

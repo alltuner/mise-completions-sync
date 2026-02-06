@@ -1,0 +1,85 @@
+/* ABOUTME: All Tuner Labs brand colors and MkDocs Material theme overrides. */
+/* ABOUTME: Provides wine/burgundy color scheme with light/dark mode support. */
+
+/* All Tuner Labs Brand Colors */
+:root {
+  --wine: #5B2333;
+  --white-smoke: #F7F4F3;
+  --taupe-gray: #928E8D;
+  --raisin-black: #2C2826;
+}
+
+/* Light mode custom colors */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: var(--wine);
+  --md-primary-fg-color--light: #7a2f45;
+  --md-primary-fg-color--dark: #4a1b28;
+  --md-primary-bg-color: var(--white-smoke);
+
+  --md-accent-fg-color: var(--wine);
+  --md-accent-fg-color--transparent: rgba(91, 35, 51, 0.1);
+
+  --md-default-bg-color: var(--white-smoke);
+  --md-default-fg-color: var(--raisin-black);
+  --md-default-fg-color--light: var(--taupe-gray);
+  --md-default-fg-color--lighter: #b5b2b1;
+  --md-default-fg-color--lightest: #d4d3d2;
+
+  --md-code-bg-color: #ffffff;
+  --md-code-fg-color: var(--raisin-black);
+}
+
+/* Dark mode custom colors */
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: var(--wine);
+  --md-primary-fg-color--light: #7a2f45;
+  --md-primary-fg-color--dark: #4a1b28;
+
+  --md-accent-fg-color: #8a3d51;
+  --md-accent-fg-color--transparent: rgba(138, 61, 81, 0.1);
+
+  --md-default-bg-color: var(--raisin-black);
+  --md-default-fg-color: var(--white-smoke);
+  --md-default-fg-color--light: var(--taupe-gray);
+
+  --md-code-bg-color: #1a1816;
+  --md-code-fg-color: var(--white-smoke);
+}
+
+/* Custom link colors for light mode */
+[data-md-color-scheme="default"] .md-content a {
+  color: var(--wine);
+}
+
+[data-md-color-scheme="default"] .md-content a:hover {
+  color: #7a2f45;
+}
+
+/* Custom link colors for dark mode - use white-smoke for readability */
+[data-md-color-scheme="slate"] .md-content a {
+  color: var(--white-smoke);
+}
+
+[data-md-color-scheme="slate"] .md-content a:hover {
+  color: var(--taupe-gray);
+}
+
+/* Sidebar navigation links in dark mode */
+[data-md-color-scheme="slate"] .md-nav__link {
+  color: var(--white-smoke);
+}
+
+[data-md-color-scheme="slate"] .md-nav__link:hover {
+  color: var(--taupe-gray);
+}
+
+[data-md-color-scheme="slate"] .md-nav__link--active {
+  color: var(--white-smoke);
+}
+
+/* Custom header logo sizing */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 2rem;
+  width: auto;
+}
