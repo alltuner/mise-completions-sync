@@ -93,7 +93,6 @@ bun = { zsh = "bun completions" }
 # Partial shell support (zsh + bash)
 npm = { zsh = "npm completion", bash = "npm completion" }
 pnpm = { zsh = "pnpm completion zsh", bash = "pnpm completion bash" }
-gcloud = { zsh = "gcloud completion zsh", bash = "gcloud completion bash" }
 kubectx = { zsh = "kubectx completion zsh", bash = "kubectx completion bash" }
 vercel = { zsh = "vercel completion zsh", bash = "vercel completion bash" }
 sops = { zsh = "sops completion zsh", bash = "sops completion bash" }

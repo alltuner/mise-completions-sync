@@ -25,6 +25,7 @@ NO_COMPLETION_SUPPORT = {
     "croc",
     "dust",
     "evans",
+    "gcloud",  # Completions bundled as files in SDK, not generated via command
     "eza",
     "nomad",  # HashiCorp autocomplete-install pattern
     "terraform",  # HashiCorp autocomplete-install pattern
