@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.4](https://github.com/alltuner/mise-completions-sync/compare/v0.4.3...v0.4.4) (2026-02-11)
+
+
+### Bug Fixes
+
+* remove gcloud from registry ([#32](https://github.com/alltuner/mise-completions-sync/issues/32)) ([#33](https://github.com/alltuner/mise-completions-sync/issues/33)) ([fa296f6](https://github.com/alltuner/mise-completions-sync/commit/fa296f69e5812a0e83c081ec7431d02282681662))
+
 ## [0.4.3](https://github.com/alltuner/mise-completions-sync/compare/v0.4.2...v0.4.3) (2026-01-16)
 
 
