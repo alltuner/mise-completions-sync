@@ -23,7 +23,6 @@ glab = "gh_style"
 # Kubernetes ecosystem
 k9s = "standard"
 kind = "standard"
-kubectl-ai = "standard"
 minikube = "standard"
 kustomize = "standard"
 argocd = "standard"
