@@ -18,7 +18,6 @@ The following tools have shell completion support in mise-completions-sync.
 | deno | A modern runtime for JavaScript and TypeScript ... | ✓ | ✓ | ✓ |
 | [dive](https://github.com/wagoodman/dive) | A tool for exploring each layer in a docker image | ✓ | ✓ | ✓ |
 | docker |  | ✓ | ✓ | ✓ |
-| dockerfmt |  | ✓ | ✓ | ✓ |
 | [doctl](https://github.com/digitalocean/doctl) | The official command line interface for the Dig... | ✓ | ✓ | ✓ |
 | [doggo](https://github.com/mr-karan/doggo) | :dog: Command-line DNS Client for Humans. Writt... | ✓ | ✓ | ✓ |
 | [dyff](https://github.com/homeport/dyff) | A diff tool for YAML files, and sometimes JSON | ✓ | ✓ | ✓ |
