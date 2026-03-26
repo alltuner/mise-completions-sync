@@ -18,6 +18,7 @@ The following tools have shell completion support in mise-completions-sync.
 | deno | A modern runtime for JavaScript and TypeScript ... | ✓ | ✓ | ✓ |
 | [dive](https://github.com/wagoodman/dive) | A tool for exploring each layer in a docker image | ✓ | ✓ | ✓ |
 | docker |  | ✓ | ✓ | ✓ |
+| dockerfmt |  | ✓ | ✓ | ✓ |
 | [doctl](https://github.com/digitalocean/doctl) | The official command line interface for the Dig... | ✓ | ✓ | ✓ |
 | [doggo](https://github.com/mr-karan/doggo) | :dog: Command-line DNS Client for Humans. Writt... | ✓ | ✓ | ✓ |
 | [dyff](https://github.com/homeport/dyff) | A diff tool for YAML files, and sometimes JSON | ✓ | ✓ | ✓ |
@@ -43,6 +44,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [kind](https://github.com/kubernetes-sigs/kind) | Kubernetes IN Docker - local clusters for testi... | ✓ | ✓ | ✓ |
 | [ko](https://github.com/ko-build/ko) | Build and deploy Go applications on Kubernetes | ✓ | ✓ | ✓ |
 | [kubectl](https://github.com/kubernetes/kubernetes) | kubectl cli | ✓ | ✓ | ✓ |
+| kubectl-ai |  | ✓ | ✓ | ✓ |
 | [kubectx](https://github.com/ahmetb/kubectx) | Faster way to switch between clusters and names... | ✓ | ✓ |  |
 | [kubeseal](https://github.com/bitnami-labs/sealed-secrets) | A Kubernetes controller and tool for one-way en... | ✓ | ✓ | ✓ |
 | [kustomize](https://github.com/kubernetes-sigs/kustomize) | Customization of kubernetes YAML configurations | ✓ | ✓ | ✓ |
