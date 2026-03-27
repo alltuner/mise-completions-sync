@@ -79,9 +79,34 @@ fn get_installed_tools() -> Result<Vec<String>, Error> {
         serde_json::from_str(&stdout).map_err(|e| Error::MiseList(e.to_string()))?;
 
     // mise ls --json returns an object with tool names as keys
+    // Tool names may include backend prefixes like "go:package" or "aqua:repo/tool"
+    // We need to extract the actual binary name for registry matching
     let tool_names: Vec<String> = tools
         .as_object()
-        .map(|obj| obj.keys().cloned().collect())
+        .map(|obj| {
+            obj.keys()
+                .map(|key| {
+                    // Extract binary name from backend-prefixed tool names
+                    // Examples:
+                    // - "go:golang.org/x/tools/gopls" -> "gopls"
+                    // - "aqua:reteps/dockerfmt" -> "dockerfmt"
+                    // - "github:GoogleCloudPlatform/kubectl-ai" -> "kubectl-ai"
+                    // - "yq" -> "yq" (no prefix, keep as-is)
+                    if let Some(colon_pos) = key.find(':') {
+                        // Has backend prefix, extract the last component after the last slash
+                        let after_colon = &key[colon_pos + 1..];
+                        after_colon
+                            .rsplit('/')
+                            .next()
+                            .map(|s| s.to_string())
+                            .unwrap_or_else(|| after_colon.to_string())
+                    } else {
+                        // No backend prefix, use as-is
+                        key.clone()
+                    }
+                })
+                .collect()
+        })
         .unwrap_or_default();
 
     Ok(tool_names)
