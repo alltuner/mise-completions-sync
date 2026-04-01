@@ -116,6 +116,8 @@ cargo = { zsh = "rustup completions zsh cargo", bash = "rustup completions bash 
 # pipx uses argcomplete
 pipx = { zsh = "register-python-argcomplete pipx", bash = "register-python-argcomplete pipx" }
 
+prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util generate-shell-completion bash", fish = "prek util generate-shell-completion fish" }
+
 # Unique command patterns
 just = { zsh = "just --completions zsh", bash = "just --completions bash", fish = "just --completions fish" }
 task = { zsh = "task --completion zsh", bash = "task --completion bash", fish = "task --completion fish" }

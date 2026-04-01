@@ -123,3 +123,29 @@ pub fn load_registry() -> Result<Registry, Error> {
 
     Ok(Registry { tools })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_prek_in_registry() {
+        let registry = load_registry().expect("Failed to load registry");
+        let prek = registry
+            .tools
+            .get("prek")
+            .expect("prek should be in registry");
+        assert_eq!(
+            prek.zsh.as_deref(),
+            Some("prek util generate-shell-completion zsh")
+        );
+        assert_eq!(
+            prek.bash.as_deref(),
+            Some("prek util generate-shell-completion bash")
+        );
+        assert_eq!(
+            prek.fish.as_deref(),
+            Some("prek util generate-shell-completion fish")
+        );
+    }
+}
