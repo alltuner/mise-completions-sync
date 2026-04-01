@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.0](https://github.com/alltuner/mise-completions-sync/compare/v0.4.4...v0.5.0) (2026-04-01)
+
+
+### Features
+
+* add new tools ([#40](https://github.com/alltuner/mise-completions-sync/issues/40)) ([4617152](https://github.com/alltuner/mise-completions-sync/commit/461715210f3123aac1ec2471ecb334c0d232808a))
+* add prek completion support ([#48](https://github.com/alltuner/mise-completions-sync/issues/48)) ([b2bb8a9](https://github.com/alltuner/mise-completions-sync/commit/b2bb8a982e35c8bf5d08ad3cf15538fa2d9c2510)), closes [#36](https://github.com/alltuner/mise-completions-sync/issues/36)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate toml to v1 ([#35](https://github.com/alltuner/mise-completions-sync/issues/35)) ([ea3241f](https://github.com/alltuner/mise-completions-sync/commit/ea3241fa003e8c5a60b0c70d07e22cb9f9de8239))
+* **generate-registry:** migrate from mise registry.toml to API endpoint ([#42](https://github.com/alltuner/mise-completions-sync/issues/42)) ([329a9b9](https://github.com/alltuner/mise-completions-sync/commit/329a9b97754df3e264ea9d47ce11bbe21a02406e))
+* remove unused json import in generate-registry ([#47](https://github.com/alltuner/mise-completions-sync/issues/47)) ([d3e7c29](https://github.com/alltuner/mise-completions-sync/commit/d3e7c29a63751b203108bfa12884156ff5a03b5d))
+
 ## [0.4.4](https://github.com/alltuner/mise-completions-sync/compare/v0.4.3...v0.4.4) (2026-02-11)
 
 
