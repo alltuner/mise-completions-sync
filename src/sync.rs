@@ -243,7 +243,8 @@ mod tests {
 
 /// Generate completion for a single tool and shell
 fn generate_completion(
-    tool: &str,
+    tool_id: &str,   // Original ID with backend prefix (for mise x)
+    tool_name: &str, // Stripped name (for filename)
     command: &str,
     shell: &str,
     output_dir: &PathBuf,
@@ -252,24 +253,24 @@ fn generate_completion(
     std::fs::create_dir_all(output_dir).map_err(|e| Error::CreateDir(output_dir.clone(), e))?;
 
     // Run the completion command wrapped with mise to ensure the tool is available
-    let wrapped_command = format!("mise x {tool} -- {command}");
+    let wrapped_command = format!("mise x {tool_id} -- {command}");
     let output = Command::new("sh")
         .args(["-c", &wrapped_command])
         .output()
-        .map_err(|e| Error::Generate(tool.to_string(), e.to_string()))?;
+        .map_err(|e| Error::Generate(tool_name.to_string(), e.to_string()))?;
 
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr);
-        return Err(Error::Generate(tool.to_string(), stderr.to_string()));
+        return Err(Error::Generate(tool_name.to_string(), stderr.to_string()));
     }
 
-    // Write the completion file
-    let filename = shells::completion_filename(shell, tool);
+    // Write the completion file using the stripped name (not the original ID)
+    let filename = shells::completion_filename(shell, tool_name);
     let filepath = output_dir.join(&filename);
 
     std::fs::write(&filepath, &output.stdout).map_err(|e| Error::WriteFile(filepath.clone(), e))?;
 
-    println!("  {tool} -> {filename}");
+    println!("  {tool_name} -> {filename}");
     Ok(())
 }
 
@@ -314,7 +315,10 @@ pub fn sync_completions(shells: &[String], specific_tools: &[String]) -> Result<
             if let Some(completions) = registry.tools.get(*short_name) {
                 if let Some(cmd) = completions.get(shell) {
                     // Use the original tool ID (with backend prefix) for mise x
-                    if let Err(e) = generate_completion(original_id, cmd, shell, &output_dir) {
+                    // and the stripped name for the filename
+                    if let Err(e) =
+                        generate_completion(original_id, short_name, cmd, shell, &output_dir)
+                    {
                         eprintln!("  {short_name}: {e}");
                     }
                 }

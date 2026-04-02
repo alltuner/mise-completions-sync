@@ -3,7 +3,6 @@
 rust = "latest"
 uv = "latest"
 prek = "latest"
-"go:sigs.k8s.io/kustomize/kustomize/v5" = "5.8.1"
 
 [tasks.build]
 run = "cargo build --release"
