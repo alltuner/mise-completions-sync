@@ -299,10 +299,13 @@ pub fn sync_completions(shells: &[String], specific_tools: &[String]) -> Result<
     };
 
     // Filter to only tools in our registry (match on short names)
-    let tools_in_registry: Vec<(&String, &String)> = tools_map
+    let mut tools_in_registry: Vec<(&String, &String)> = tools_map
         .iter()
         .filter(|(short_name, _)| registry.tools.contains_key(*short_name))
         .collect();
+
+    // Sort alphabetically by short name for consistent output
+    tools_in_registry.sort_by(|a, b| a.0.cmp(b.0));
 
     if tools_in_registry.is_empty() {
         println!("No installed tools have completion support in registry.");
