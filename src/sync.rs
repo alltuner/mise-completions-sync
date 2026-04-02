@@ -149,10 +149,17 @@ fn get_installed_tools() -> Result<std::collections::HashMap<String, String>, Er
     if let Some(obj) = tools.as_object() {
         for tool_id in obj.keys() {
             let short_name = extract_tool_name(tool_id);
-            // Only insert if not already present (first backend wins for deduplication)
-            tool_map
-                .entry(short_name)
-                .or_insert_with(|| tool_id.to_string());
+            // Verify the short name resolves to an actual binary using mise which
+            let which_output = Command::new("mise").args(["which", &short_name]).output();
+            if let Ok(output) = which_output {
+                if output.status.success() {
+                    // Binary exists, add to map
+                    tool_map
+                        .entry(short_name)
+                        .or_insert_with(|| tool_id.to_string());
+                }
+            }
+            // If mise which fails, skip this tool (binary not available)
         }
     }
 
