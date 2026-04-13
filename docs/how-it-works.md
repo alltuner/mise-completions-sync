@@ -48,10 +48,10 @@ mise-completions-sync fzf
 Or you can override output directories for one (or more) shells (e.g., `MISE_COMPLETIONS_SYNC_{SHELL}_DIR`)
 
 ```shell
-export MISE_COMPLETIONS_SYNC_FISH_DIR="$HOME/fish/completions"
+export MISE_COMPLETIONS_SYNC_FISH_DIR="$XDG_CONFIG_DIR/fish/completions"
 
 mise-completions-sync fzf
-#  [fish] -> ~/fish/completions/fzf.fish
+#  [fish] -> ~/.config/fish/completions/fzf.fish
 #  [zsh]  -> ~/.local/share/mise-completions/zsh/_fzf
 #  [bash] -> ~/.local/share/mise-completions/bash/fzf
 ```

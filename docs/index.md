@@ -83,8 +83,7 @@ export MISE_COMPLETIONS_SYNC_BASH_DIR="$XDG_DATA_HOME/bash-completion/completion
 export MISE_COMPLETIONS_SYNC_ZSH_DIR="$XDG_DATA_HOME/zsh/site-functions"
 
 # Fish completions to standard fish locations
-export MISE_COMPLETIONS_SYNC_FISH_DIR="$HOME/fish/completions"
-# (or)
+export MISE_COMPLETIONS_SYNC_FISH_DIR="$XDG_CONFIG_HOME/fish/completions"
 export MISE_COMPLETIONS_SYNC_FISH_DIR="$XDG_DATA_HOME/fish/vendor_completions.d"
 ```
 
