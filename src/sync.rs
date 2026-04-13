@@ -57,7 +57,13 @@ pub fn get_completions_base_dir() -> PathBuf {
 /// Get the directory for a specific shell's completions
 pub fn get_completions_dir(shell: &str) -> Result<PathBuf, Error> {
     match shell {
-        "zsh" | "bash" | "fish" => Ok(get_completions_base_dir().join(shell)),
+        "zsh" | "bash" | "fish" => {
+            let env_var = format!("MISE_COMPLETIONS_SYNC_{}_DIR", shell.to_uppercase());
+            if let Ok(path) = std::env::var(&env_var) {
+                return Ok(PathBuf::from(path));
+            }
+            Ok(get_completions_base_dir().join(shell))
+        }
         _ => Err(Error::UnsupportedShell(shell.to_string())),
     }
 }
@@ -203,4 +209,78 @@ pub fn clean_stale_completions() -> Result<(), Error> {
 
     println!("Cleaned {removed} stale completion files.");
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn cleanup_env_vars() {
+        std::env::remove_var("MISE_COMPLETIONS_SYNC_BASH_DIR");
+        std::env::remove_var("MISE_COMPLETIONS_SYNC_ZSH_DIR");
+        std::env::remove_var("MISE_COMPLETIONS_SYNC_FISH_DIR");
+    }
+
+    #[test]
+    fn test_get_completions_dir_bash_env_override() {
+        cleanup_env_vars();
+        std::env::set_var(
+            "MISE_COMPLETIONS_SYNC_BASH_DIR",
+            "/custom/bash-completion/completions",
+        );
+
+        let result = get_completions_dir("bash").unwrap();
+        assert_eq!(result, PathBuf::from("/custom/bash-completion/completions"));
+
+        cleanup_env_vars();
+    }
+
+    #[test]
+    fn test_get_completions_dir_zsh_env_override() {
+        cleanup_env_vars();
+        std::env::set_var("MISE_COMPLETIONS_SYNC_ZSH_DIR", "/custom/zsh/site-functions");
+
+        let result = get_completions_dir("zsh").unwrap();
+        assert_eq!(result, PathBuf::from("/custom/zsh/site-functions"));
+
+        cleanup_env_vars();
+    }
+
+    #[test]
+    fn test_get_completions_dir_fish_env_override() {
+        cleanup_env_vars();
+        std::env::set_var(
+            "MISE_COMPLETIONS_SYNC_FISH_DIR",
+            "/custom/fish/vendor_completions.d",
+        );
+
+        let result = get_completions_dir("fish").unwrap();
+        assert_eq!(result, PathBuf::from("/custom/fish/vendor_completions.d"));
+
+        cleanup_env_vars();
+    }
+
+    #[test]
+    fn test_get_completions_dir_no_env_var_fallback() {
+        cleanup_env_vars();
+
+        let bash_result = get_completions_dir("bash").unwrap();
+        assert_eq!(bash_result, get_completions_base_dir().join("bash"));
+
+        let zsh_result = get_completions_dir("zsh").unwrap();
+        assert_eq!(zsh_result, get_completions_base_dir().join("zsh"));
+
+        let fish_result = get_completions_dir("fish").unwrap();
+        assert_eq!(fish_result, get_completions_base_dir().join("fish"));
+
+        cleanup_env_vars();
+    }
+
+    #[test]
+    fn test_get_completions_dir_unsupported_shell() {
+        cleanup_env_vars();
+        let result = get_completions_dir("tcsh");
+        assert!(result.is_err());
+        cleanup_env_vars();
+    }
 }
