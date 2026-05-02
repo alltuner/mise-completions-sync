@@ -5,7 +5,7 @@ Use this to identify tools that could be added to mise-completions-sync.
 
 ## Supported Tools
 
-Currently **88 tools** have completion support.
+Currently **89 tools** have completion support.
 
 See [docs/tools.md](docs/tools.md) for the full list with shell support details.
 
@@ -55,6 +55,7 @@ These tools are in mise's registry but not yet supported. They may have completi
 | [atlas](https://github.com/ariga/atlas) | A modern tool for managing database schemas | Needs testing |
 | [atlas-community](https://github.com/ariga/atlas) | A modern tool for managing database schemas (Co... | Needs testing |
 | [atmos](https://github.com/cloudposse/atmos) | Workflow automation tool for DevOps. Keep confi... | Needs testing |
+| aube | A fast Node.js package manager | Needs testing |
 | auto-doc | Github action that turns your reusable workflow... | Needs testing |
 | aws-amplify | The AWS Amplify CLI is a toolchain for simplify... | Needs testing |
 | [aws-cli](https://github.com/aws/aws-cli) | The AWS Command Line Interface (AWS CLI v2) is ... | Needs testing |
@@ -64,9 +65,8 @@ These tools are in mise's registry but not yet supported. They may have completi
 | [aws-sam](https://github.com/aws/aws-sam-cli) | CLI tool to build, test, debug, and deploy Serv... | Needs testing |
 | [aws-sso](https://github.com/synfinatic/aws-sso-cli) | A powerful tool for using AWS Identity Center f... | Needs testing |
 | [aws-vault](https://github.com/ByteNess/aws-vault) | A vault for securely storing and accessing AWS ... | Needs testing |
-| awscli-local | This package provides the awslocal command, whi... | Needs testing |
 
-*...and 790 more tools in mise registry*
+*...and 811 more tools in mise registry*
 
 ## Tools Without Completion Support
 

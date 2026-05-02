@@ -20,6 +20,7 @@ The following tools have shell completion support in mise-completions-sync.
 | docker |  | ✓ | ✓ | ✓ |
 | [doctl](https://github.com/digitalocean/doctl) | The official command line interface for the Dig... | ✓ | ✓ | ✓ |
 | [doggo](https://github.com/mr-karan/doggo) | :dog: Command-line DNS Client for Humans. Writt... | ✓ | ✓ | ✓ |
+| [dyff](https://github.com/homeport/dyff) | A diff tool for YAML files, and sometimes JSON | ✓ | ✓ | ✓ |
 | [fd](https://github.com/sharkdp/fd) | A simple, fast and user-friendly alternative to... | ✓ | ✓ | ✓ |
 | flux |  | ✓ | ✓ | ✓ |
 | [flyctl](https://github.com/superfly/flyctl) | Command line tools for fly.io services | ✓ | ✓ | ✓ |
@@ -32,17 +33,15 @@ The following tools have shell completion support in mise-completions-sync.
 | glab | gitlab cli | ✓ | ✓ | ✓ |
 | [golangci-lint](https://github.com/golangci/golangci-lint) | Fast linters Runner for Go | ✓ | ✓ | ✓ |
 | [goreleaser](https://github.com/goreleaser/goreleaser) | Deliver Go binaries as fast and easily as possible | ✓ | ✓ | ✓ |
-| [grpcurl](https://github.com/fullstorydev/grpcurl) | Like cURL, but for gRPC: Command-line tool for ... | ✓ | ✓ | ✓ |
+| [grype](https://github.com/anchore/grype) | A vulnerability scanner for container images an... | ✓ | ✓ | ✓ |
 | [helm](https://github.com/helm/helm) | The Kubernetes Package Manager | ✓ | ✓ | ✓ |
 | [hugo](https://github.com/gohugoio/hugo) | The world’s fastest framework for building webs... | ✓ | ✓ | ✓ |
-| [hyperfine](https://github.com/sharkdp/hyperfine) | A command-line benchmarking tool | ✓ | ✓ | ✓ |
 | [istioctl](https://github.com/istio/istio) | Istio configuration command line utility for se... | ✓ | ✓ | ✓ |
 | [just](https://github.com/casey/just) | Just a command runner | ✓ | ✓ | ✓ |
 | [k3d](https://github.com/k3d-io/k3d) | Little helper to run CNCF's k3s in Docker | ✓ | ✓ | ✓ |
 | [k9s](https://github.com/derailed/k9s) | Kubernetes CLI To Manage Your Clusters In Style | ✓ | ✓ | ✓ |
 | [kind](https://github.com/kubernetes-sigs/kind) | Kubernetes IN Docker - local clusters for testi... | ✓ | ✓ | ✓ |
 | [ko](https://github.com/ko-build/ko) | Build and deploy Go applications on Kubernetes | ✓ | ✓ | ✓ |
-| [krew](https://github.com/kubernetes-sigs/krew) | Find and install kubectl plugins | ✓ | ✓ | ✓ |
 | [kubectl](https://github.com/kubernetes/kubernetes) | kubectl cli | ✓ | ✓ | ✓ |
 | [kubectx](https://github.com/ahmetb/kubectx) | Faster way to switch between clusters and names... | ✓ | ✓ |  |
 | [kubeseal](https://github.com/bitnami-labs/sealed-secrets) | A Kubernetes controller and tool for one-way en... | ✓ | ✓ | ✓ |
@@ -53,7 +52,6 @@ The following tools have shell completion support in mise-completions-sync.
 | [mdbook](https://github.com/rust-lang/mdBook) | Create book from markdown files. Like Gitbook b... | ✓ | ✓ | ✓ |
 | [minikube](https://github.com/kubernetes/minikube) | Run Kubernetes locally | ✓ | ✓ | ✓ |
 | mise |  | ✓ | ✓ | ✓ |
-| [mkcert](https://github.com/FiloSottile/mkcert) | A simple zero-config tool to make locally trust... | ✓ | ✓ | ✓ |
 | [nerdctl](https://github.com/containerd/nerdctl) | contaiNERD CTL - Docker-compatible CLI for cont... | ✓ | ✓ | ✓ |
 | nix |  | ✓ | ✓ | ✓ |
 | npm | the package manager for JavaScript | ✓ | ✓ |  |
@@ -62,16 +60,18 @@ The following tools have shell completion support in mise-completions-sync.
 | [oras](https://github.com/oras-project/oras) | ORAS CLI | ✓ | ✓ | ✓ |
 | [pipx](https://github.com/pypa/pipx) |  | ✓ | ✓ |  |
 | [pitchfork](https://github.com/jdx/pitchfork) | Daemons with DX | ✓ | ✓ | ✓ |
+| [pluto](https://github.com/FairwindsOps/pluto) | A cli tool to help discover deprecated apiVersi... | ✓ | ✓ | ✓ |
 | [pnpm](https://github.com/pnpm/pnpm) | Fast, disk space efficient package manager | ✓ | ✓ |  |
 | podman | Podman: A tool for managing OCI containers and ... | ✓ | ✓ | ✓ |
 | poetry | Python packaging and dependency management made... | ✓ | ✓ | ✓ |
+| [prek](https://github.com/j178/prek) |  | ✓ | ✓ | ✓ |
 | [pulumi](https://github.com/pulumi/pulumi) | Pulumi - Infrastructure as Code in any programm... | ✓ | ✓ | ✓ |
 | [regctl](https://github.com/regclient/regclient) | Docker and OCI Registry Client in Go and toolin... | ✓ | ✓ | ✓ |
 | [restic](https://github.com/restic/restic) | Fast, secure, efficient backup program | ✓ | ✓ | ✓ |
 | [rg](https://github.com/BurntSushi/ripgrep) | ripgrep recursively searches directories for a ... | ✓ | ✓ | ✓ |
 | [ripgrep](https://github.com/BurntSushi/ripgrep) | ripgrep recursively searches directories for a ... | ✓ | ✓ | ✓ |
 | [ruff](https://github.com/astral-sh/ruff) | An extremely fast Python linter and code format... | ✓ | ✓ | ✓ |
-| rumdl | Markdown Linter and Formatter written in Rust | ✓ | ✓ | ✓ |
+| [rumdl](https://github.com/rvben/rumdl) | Markdown Linter and Formatter written in Rust | ✓ | ✓ | ✓ |
 | rustup |  | ✓ | ✓ | ✓ |
 | [saml2aws](https://github.com/Versent/saml2aws) | CLI tool which enables you to login and retriev... | ✓ | ✓ | ✓ |
 | [scaleway-cli](https://github.com/scaleway/scaleway-cli) | Command Line Interface for Scaleway | ✓ | ✓ | ✓ |
@@ -80,6 +80,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [starship](https://github.com/starship/starship) | The minimal, blazing-fast, and infinitely custo... | ✓ | ✓ | ✓ |
 | [step](https://github.com/smallstep/cli) | A zero trust swiss army knife for working with ... | ✓ | ✓ | ✓ |
 | [stern](https://github.com/stern/stern) | ⎈ Multi pod and container log tailing for Kuber... | ✓ | ✓ | ✓ |
+| [syft](https://github.com/anchore/syft) | CLI tool and library for generating a Software ... | ✓ | ✓ | ✓ |
 | [task](https://github.com/go-task/task) | A task runner / simpler Make alternative writte... | ✓ | ✓ | ✓ |
 | [tilt](https://github.com/tilt-dev/tilt) | Define your dev environment as code. For micros... | ✓ | ✓ | ✓ |
 | [trivy](https://github.com/aquasecurity/trivy) | Find vulnerabilities, misconfigurations, secret... | ✓ | ✓ | ✓ |
@@ -93,7 +94,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | A smarter cd command. Supports all major shells | ✓ | ✓ | ✓ |
 
-**Total: 88 tools**
+**Total: 89 tools**
 
 ## Shell Support Legend
 
