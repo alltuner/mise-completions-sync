@@ -42,7 +42,7 @@ jobs:
         with:
           ref: ${{ inputs.tag || github.ref }}
 
-      - uses: houseabsolute/actions-rust-cross@v0
+      - uses: houseabsolute/actions-rust-cross@v1.0.7
         with:
           target: ${{ matrix.target }}
           args: --release
