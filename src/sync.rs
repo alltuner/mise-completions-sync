@@ -144,22 +144,24 @@ fn get_installed_tools() -> Result<std::collections::HashMap<String, String>, Er
     // mise ls --json returns an object with tool names as keys
     // Tool names may include backend prefixes like "go:package" or "aqua:repo/tool"
     // We need to extract the actual binary name for registry matching
-    // but keep the original ID for mise x operations
+    // but keep the original ID for mise x operations.
+    //
+    // When two installed tools resolve to the same short name (e.g. "kubectl" and
+    // "aqua:org/kubectl"), prefer the bare entry — it's the one most likely to be on PATH.
     let mut tool_map = std::collections::HashMap::new();
     if let Some(obj) = tools.as_object() {
         for tool_id in obj.keys() {
             let short_name = extract_tool_name(tool_id);
-            // Verify the short name resolves to an actual binary using mise which
-            let which_output = Command::new("mise").args(["which", &short_name]).output();
-            if let Ok(output) = which_output {
-                if output.status.success() {
-                    // Binary exists, add to map
-                    tool_map
-                        .entry(short_name)
-                        .or_insert_with(|| tool_id.to_string());
+            let is_bare = !tool_id.contains(':');
+            match tool_map.entry(short_name) {
+                std::collections::hash_map::Entry::Vacant(e) => {
+                    e.insert(tool_id.to_string());
                 }
+                std::collections::hash_map::Entry::Occupied(mut e) if is_bare => {
+                    e.insert(tool_id.to_string());
+                }
+                std::collections::hash_map::Entry::Occupied(_) => {}
             }
-            // If mise which fails, skip this tool (binary not available)
         }
     }
 
