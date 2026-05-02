@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.1](https://github.com/alltuner/mise-completions-sync/compare/v0.5.0...v0.5.1) (2026-05-02)
+
+
+### Bug Fixes
+
+* bundle dependency and registry updates from recent merges ([#59](https://github.com/alltuner/mise-completions-sync/issues/59)) ([98e9409](https://github.com/alltuner/mise-completions-sync/commit/98e9409a7df5d32810ad0d41e58fb046a6926567))
+* **registry:** remove mkcert (closes [#50](https://github.com/alltuner/mise-completions-sync/issues/50)) ([#61](https://github.com/alltuner/mise-completions-sync/issues/61)) ([b588589](https://github.com/alltuner/mise-completions-sync/commit/b588589f06c413028438ec9faf367879f29c223b))
+
 ## [0.5.0](https://github.com/alltuner/mise-completions-sync/compare/v0.4.4...v0.5.0) (2026-04-01)
 
 
