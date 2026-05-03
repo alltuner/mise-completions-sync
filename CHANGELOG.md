@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.5](https://github.com/alltuner/mise-completions-sync/compare/v0.5.4...v0.5.5) (2026-05-03)
+
+
+### Miscellaneous Chores
+
+* **deps:** update rust dependencies ([#71](https://github.com/alltuner/mise-completions-sync/issues/71)) ([ba67f02](https://github.com/alltuner/mise-completions-sync/commit/ba67f02946eeb1815daa8d54e6b27d2dcd9964fe))
+
 ## [0.5.4](https://github.com/alltuner/mise-completions-sync/compare/v0.5.3...v0.5.4) (2026-05-03)
 
 
