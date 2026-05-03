@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.4](https://github.com/alltuner/mise-completions-sync/compare/v0.5.3...v0.5.4) (2026-05-03)
+
+
+### Build System
+
+* track Cargo.lock so release builds with --locked succeed ([#69](https://github.com/alltuner/mise-completions-sync/issues/69)) ([78a9a78](https://github.com/alltuner/mise-completions-sync/commit/78a9a7852b46e707b5ae95d6d92628d0bfb52f38))
+
 ## [0.5.3](https://github.com/alltuner/mise-completions-sync/compare/v0.5.2...v0.5.3) (2026-05-03)
 
 
