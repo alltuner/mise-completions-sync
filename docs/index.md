@@ -12,7 +12,19 @@ When mise installs a tool like `kubectl` or `gh`, you don't automatically get sh
 
 ## Installation
 
-### Using mise (recommended)
+### Homebrew
+
+```bash
+brew install alltuner/tap/mise-completions-sync
+```
+
+### Cargo
+
+```bash
+cargo install mise-completions-sync
+```
+
+### Using mise
 
 ```bash
 mise use -g github:alltuner/mise-completions-sync
@@ -21,12 +33,6 @@ mise use -g github:alltuner/mise-completions-sync
 ### From GitHub Releases
 
 Download the appropriate binary for your platform from the [releases page](https://github.com/alltuner/mise-completions-sync/releases).
-
-### From Source
-
-```bash
-cargo install --git https://github.com/alltuner/mise-completions-sync
-```
 
 ## Shell Setup
 
@@ -60,16 +66,28 @@ set -gx fish_complete_path $fish_complete_path ~/.local/share/mise-completions/f
 
 ## Updating
 
-To update to the latest version:
+### Homebrew
+
+```bash
+brew upgrade mise-completions-sync
+```
+
+### Cargo
+
+```bash
+cargo install --force mise-completions-sync
+```
+
+### mise
 
 ```bash
 mise upgrade github:alltuner/mise-completions-sync
 ```
 
-Or to pin a specific version:
+Or pin a specific version with mise:
 
 ```bash
-mise use -g github:alltuner/mise-completions-sync@0.3.0
+mise use -g github:alltuner/mise-completions-sync@0.5.1
 ```
 
 ## Automatic Sync

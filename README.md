@@ -4,11 +4,22 @@ Automatically sync shell completions for tools managed by [mise](https://mise.jd
 
 ## Installation
 
+**Homebrew:**
+```bash
+brew install alltuner/tap/mise-completions-sync
+```
+
+**Cargo:**
+```bash
+cargo install mise-completions-sync
+```
+
+**mise:**
 ```bash
 mise use -g github:alltuner/mise-completions-sync
 ```
 
-Or download from [releases](https://github.com/alltuner/mise-completions-sync/releases), or build from source with `cargo install --git https://github.com/alltuner/mise-completions-sync`.
+Or download a prebuilt binary from [releases](https://github.com/alltuner/mise-completions-sync/releases).
 
 ## Shell Setup
 
@@ -52,16 +63,24 @@ mise-completions-sync clean
 
 ## Updating
 
-To update to the latest version:
+**Homebrew:**
+```bash
+brew upgrade mise-completions-sync
+```
 
+**Cargo:**
+```bash
+cargo install --force mise-completions-sync
+```
+
+**mise:**
 ```bash
 mise upgrade github:alltuner/mise-completions-sync
 ```
 
-Or to pin a specific version:
-
+Or pin a specific version with mise:
 ```bash
-mise use -g github:alltuner/mise-completions-sync@0.3.0
+mise use -g github:alltuner/mise-completions-sync@0.5.1
 ```
 
 ## Automatic Sync
