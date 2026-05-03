@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.2](https://github.com/alltuner/mise-completions-sync/compare/v0.5.1...v0.5.2) (2026-05-03)
+
+
+### Miscellaneous Chores
+
+* **deps:** update amannn/action-semantic-pull-request action to v6 ([#66](https://github.com/alltuner/mise-completions-sync/issues/66)) ([be5454f](https://github.com/alltuner/mise-completions-sync/commit/be5454f69cd32758b59275e990e5228b3af65c27))
+
+
+### CI/CD Changes
+
+* validate PR titles as conventional commits ([#64](https://github.com/alltuner/mise-completions-sync/issues/64)) ([f27297d](https://github.com/alltuner/mise-completions-sync/commit/f27297def7e61488e24f54ea6f5814a475f43528))
+
 ## [0.5.1](https://github.com/alltuner/mise-completions-sync/compare/v0.5.0...v0.5.1) (2026-05-02)
 
 
