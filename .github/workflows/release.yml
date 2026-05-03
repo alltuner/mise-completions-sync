@@ -1,67 +1,155 @@
-name: Release Binaries
+name: Release
 
 on:
-  release:
-    types: [published]
-  workflow_call:
-    inputs:
-      tag:
-        required: true
-        type: string
+  push:
+    branches: [main]
   workflow_dispatch:
-    inputs:
-      tag:
-        description: "Release tag (e.g., v0.2.0)"
-        required: true
-        type: string
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
-  build:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+    steps:
+      - uses: googleapis/release-please-action@v5
+        id: release
+        with:
+          config-file: .release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish-crate:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo publish --token ${{ secrets.CRATES_IO_TOKEN }}
+
+  build-binaries:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    permissions:
+      contents: write
     strategy:
+      fail-fast: false
       matrix:
         include:
-          - target: x86_64-unknown-linux-gnu
-            os: ubuntu-latest
-          - target: x86_64-unknown-linux-musl
-            os: ubuntu-latest
-          - target: aarch64-unknown-linux-gnu
-            os: ubuntu-latest
-          - target: x86_64-apple-darwin
-            os: macos-latest
           - target: aarch64-apple-darwin
             os: macos-latest
-          - target: x86_64-pc-windows-msvc
-            os: windows-latest
-
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.tag || github.ref }}
+          ref: ${{ needs.release-please.outputs.tag_name }}
 
       - uses: houseabsolute/actions-rust-cross@v1.0.7
         with:
           target: ${{ matrix.target }}
-          args: --release
+          args: --release --locked
           strip: true
 
-      - name: Create archive (Unix)
-        if: runner.os != 'Windows'
+      - name: Create archive
         run: |
           cd target/${{ matrix.target }}/release
           tar -czvf ../../../mise-completions-sync-${{ matrix.target }}.tar.gz mise-completions-sync
 
-      - name: Create archive (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          cd target/${{ matrix.target }}/release
-          Compress-Archive -Path mise-completions-sync.exe -DestinationPath ../../../mise-completions-sync-${{ matrix.target }}.zip
-
       - name: Upload to release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ inputs.tag || github.ref_name }}
-          files: mise-completions-sync-${{ matrix.target }}.*
+          tag_name: ${{ needs.release-please.outputs.tag_name }}
+          files: mise-completions-sync-${{ matrix.target }}.tar.gz
+
+  brew-formula:
+    needs: [release-please, build-binaries]
+    if: ${{ needs.release-please.outputs.release_created }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release tarballs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.release-please.outputs.tag_name }}
+        run: |
+          for target in aarch64-apple-darwin x86_64-apple-darwin aarch64-unknown-linux-gnu x86_64-unknown-linux-gnu; do
+            gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "mise-completions-sync-$target.tar.gz"
+          done
+
+      - name: Generate and push formula
+        env:
+          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          VERSION: ${{ needs.release-please.outputs.version }}
+        run: |
+          MAC_ARM_SHA=$(sha256sum mise-completions-sync-aarch64-apple-darwin.tar.gz | awk '{print $1}')
+          MAC_INTEL_SHA=$(sha256sum mise-completions-sync-x86_64-apple-darwin.tar.gz | awk '{print $1}')
+          LINUX_ARM_SHA=$(sha256sum mise-completions-sync-aarch64-unknown-linux-gnu.tar.gz | awk '{print $1}')
+          LINUX_INTEL_SHA=$(sha256sum mise-completions-sync-x86_64-unknown-linux-gnu.tar.gz | awk '{print $1}')
+
+          BASE_URL="https://github.com/alltuner/mise-completions-sync/releases/download/v${VERSION}"
+
+          FORMULA_CONTENT=$(cat <<RUBY
+          class MiseCompletionsSync < Formula
+            desc "Sync shell completions for tools managed by mise"
+            homepage "https://github.com/alltuner/mise-completions-sync"
+            version "${VERSION}"
+            license "MIT"
+
+            on_macos do
+              if Hardware::CPU.arm?
+                url "${BASE_URL}/mise-completions-sync-aarch64-apple-darwin.tar.gz"
+                sha256 "${MAC_ARM_SHA}"
+              else
+                url "${BASE_URL}/mise-completions-sync-x86_64-apple-darwin.tar.gz"
+                sha256 "${MAC_INTEL_SHA}"
+              end
+            end
+
+            on_linux do
+              if Hardware::CPU.arm?
+                url "${BASE_URL}/mise-completions-sync-aarch64-unknown-linux-gnu.tar.gz"
+                sha256 "${LINUX_ARM_SHA}"
+              else
+                url "${BASE_URL}/mise-completions-sync-x86_64-unknown-linux-gnu.tar.gz"
+                sha256 "${LINUX_INTEL_SHA}"
+              end
+            end
+
+            def install
+              bin.install "mise-completions-sync"
+            end
+
+            test do
+              system bin/"mise-completions-sync", "--help"
+            end
+          end
+          RUBY
+          )
+
+          ENCODED=$(echo "$FORMULA_CONTENT" | base64 -w 0)
+          EXISTING_SHA=$(gh api repos/alltuner/homebrew-tap/contents/Formula/mise-completions-sync.rb -q '.sha' 2>/dev/null || true)
+
+          if [ -n "$EXISTING_SHA" ]; then
+            gh api repos/alltuner/homebrew-tap/contents/Formula/mise-completions-sync.rb \
+              --method PUT \
+              -f message="mise-completions-sync: update to v${VERSION}" \
+              -f content="$ENCODED" \
+              -f sha="$EXISTING_SHA"
+          else
+            gh api repos/alltuner/homebrew-tap/contents/Formula/mise-completions-sync.rb \
+              --method PUT \
+              -f message="mise-completions-sync: add formula at v${VERSION}" \
+              -f content="$ENCODED"
+          fi
