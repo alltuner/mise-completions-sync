@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.3](https://github.com/alltuner/mise-completions-sync/compare/v0.5.2...v0.5.3) (2026-05-03)
+
+
+### CI/CD Changes
+
+* align PR title check with org canonical workflow ([#67](https://github.com/alltuner/mise-completions-sync/issues/67)) ([73a1093](https://github.com/alltuner/mise-completions-sync/commit/73a10931a2c97106d5a8471be262606a9df4d714))
+
 ## [0.5.2](https://github.com/alltuner/mise-completions-sync/compare/v0.5.1...v0.5.2) (2026-05-03)
 
 
