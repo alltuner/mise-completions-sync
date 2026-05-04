@@ -99,15 +99,15 @@ mise use -g github:alltuner/mise-completions-sync@0.5.1
 
 Full docs at [alltuner.github.io/mise-completions-sync](https://alltuner.github.io/mise-completions-sync/) — supported tools, completion details, and troubleshooting.
 
+## License
+
+[MIT](LICENSE)
+
 ## Support the project
 
 mise-completions-sync is an open source project built by [David Poblador i Garcia](https://davidpoblador.com/) through [All Tuner Labs](https://www.alltuner.com/).
 
 If this project was useful to you, [consider supporting its development](https://alltuner.com/sponsor).
-
-## License
-
-[MIT](LICENSE)
 
 ---
 
