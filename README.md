@@ -1,4 +1,6 @@
-<h1 align="center">mise-completions-sync</h1>
+<p align="center">
+  <img src="https://brand.alltuner.com/logos/mise-completions-sync/horizontal.png" alt="mise-completions-sync" width="500">
+</p>
 
 <p align="center">
   <strong>Sync shell completions for tools managed by mise.</strong><br>
