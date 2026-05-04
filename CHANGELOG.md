@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.6](https://github.com/alltuner/mise-completions-sync/compare/v0.5.5...v0.5.6) (2026-05-04)
+
+
+### Documentation Updates
+
+* standardize README to alltuner brand structure ([#73](https://github.com/alltuner/mise-completions-sync/issues/73)) ([2057074](https://github.com/alltuner/mise-completions-sync/commit/2057074e75141b738aadb3cd323a01ef60856999))
+
 ## [0.5.5](https://github.com/alltuner/mise-completions-sync/compare/v0.5.4...v0.5.5) (2026-05-03)
 
 
