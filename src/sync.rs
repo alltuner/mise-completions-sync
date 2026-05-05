@@ -209,6 +209,27 @@ fn get_newly_installed_tools() -> Result<std::collections::HashMap<String, Strin
     parse_installed_tools_json(&installed_tools_json)
 }
 
+/// Extract binary name from tool name (handles backend prefixes like "go:" or "aqua:")
+/// Examples:
+/// - "go:golang.org/x/tools/gopls" -> "gopls"
+/// - "aqua:reteps/dockerfmt" -> "dockerfmt"
+/// - "github:GoogleCloudPlatform/kubectl-ai" -> "kubectl-ai"
+/// - "yq" -> "yq" (no prefix, keep as-is)
+fn extract_binary_name(tool_name: &str) -> String {
+    if let Some(colon_pos) = tool_name.find(':') {
+        // Has backend prefix, extract the last component after the last slash
+        let after_colon = &tool_name[colon_pos + 1..];
+        after_colon
+            .rsplit('/')
+            .next()
+            .map(|s| s.to_string())
+            .unwrap_or_else(|| after_colon.to_string())
+    } else {
+        // No backend prefix, use as-is
+        tool_name.to_string()
+    }
+}
+
 /// Parse the MISE_INSTALLED_TOOLS JSON string and extract tool names
 /// Returns a map of stripped tool names to their original IDs (with backend prefixes)
 fn parse_installed_tools_json(
@@ -570,6 +591,35 @@ mod tests {
         );
         // Single component after colon
         assert_eq!(extract_tool_name("aqua:simple-tool"), "simple-tool");
+    }
+
+    #[test]
+    fn test_extract_binary_name_no_prefix() {
+        assert_eq!(extract_binary_name("yq"), "yq");
+        assert_eq!(extract_binary_name("kubectl"), "kubectl");
+    }
+
+    #[test]
+    fn test_extract_binary_name_go_backend() {
+        assert_eq!(extract_binary_name("go:golang.org/x/tools/gopls"), "gopls");
+        assert_eq!(extract_binary_name("go:example.com/tool"), "tool");
+    }
+
+    #[test]
+    fn test_extract_binary_name_aqua_backend() {
+        assert_eq!(extract_binary_name("aqua:reteps/dockerfmt"), "dockerfmt");
+        assert_eq!(
+            extract_binary_name("aqua:owner/repo/tool_name"),
+            "tool_name"
+        );
+    }
+
+    #[test]
+    fn test_extract_binary_name_github_backend() {
+        assert_eq!(
+            extract_binary_name("github:GoogleCloudPlatform/kubectl-ai"),
+            "kubectl-ai"
+        );
     }
 
     #[test]
