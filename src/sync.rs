@@ -219,6 +219,8 @@ pub fn clean_stale_completions() -> Result<(), Error> {
 mod tests {
     use super::*;
 
+    static MUTEX: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
     fn cleanup_env_vars() {
         std::env::remove_var("MISE_COMPLETIONS_SYNC_HOME");
         std::env::remove_var("MISE_COMPLETIONS_SYNC_BASH_DIR");
@@ -228,6 +230,7 @@ mod tests {
 
     #[test]
     fn test_get_completions_dir_base_env_override() {
+        let _lock = MUTEX.lock().unwrap();
         cleanup_env_vars();
         std::env::set_var("MISE_COMPLETIONS_SYNC_HOME", "/custom/base");
 
@@ -245,6 +248,7 @@ mod tests {
 
     #[test]
     fn test_get_completions_dir_bash_shell_env_overrides() {
+        let _lock = MUTEX.lock().unwrap();
         cleanup_env_vars();
         std::env::set_var(
             "MISE_COMPLETIONS_SYNC_BASH_DIR",
@@ -273,6 +277,7 @@ mod tests {
 
     #[test]
     fn test_get_completions_dir_no_env_var_fallback() {
+        let _lock = MUTEX.lock().unwrap();
         cleanup_env_vars();
 
         let bash_result = get_completions_dir("bash").unwrap();
@@ -289,6 +294,7 @@ mod tests {
 
     #[test]
     fn test_get_completions_dir_unsupported_shell() {
+        let _lock = MUTEX.lock().unwrap();
         cleanup_env_vars();
         let result = get_completions_dir("tcsh");
         assert!(result.is_err());

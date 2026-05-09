@@ -30,4 +30,4 @@ jobs:
         run: cargo build --release
 
       - name: Test
-        run: cargo test -- --test-threads=1
+        run: cargo test

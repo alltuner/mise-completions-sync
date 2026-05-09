@@ -9,7 +9,7 @@ run = "cargo build --release"
 description = "Build the release binary"
 
 [tasks.test]
-run = "cargo test -- --test-threads=1"
+run = "cargo test"
 description = "Run tests"
 
 [tasks.lint]
