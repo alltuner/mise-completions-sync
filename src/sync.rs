@@ -300,4 +300,26 @@ mod tests {
         assert!(result.is_err());
         cleanup_env_vars();
     }
+
+    #[test]
+    fn test_get_completions_dir_shell_override_takes_precedence() {
+        let _lock = MUTEX.lock().unwrap();
+        cleanup_env_vars();
+        std::env::set_var("MISE_COMPLETIONS_SYNC_HOME", "/custom/base");
+        std::env::set_var(
+            "MISE_COMPLETIONS_SYNC_ZSH_DIR",
+            "/custom/zsh/site-functions",
+        );
+
+        let bash_result = get_completions_dir("bash").unwrap();
+        assert_eq!(bash_result, PathBuf::from("/custom/base/bash"));
+
+        let zsh_result = get_completions_dir("zsh").unwrap();
+        assert_eq!(zsh_result, PathBuf::from("/custom/zsh/site-functions"));
+
+        let fish_result = get_completions_dir("fish").unwrap();
+        assert_eq!(fish_result, PathBuf::from("/custom/base/fish"));
+
+        cleanup_env_vars();
+    }
 }
