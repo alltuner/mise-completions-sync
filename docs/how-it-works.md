@@ -60,11 +60,11 @@ Or a shell dir with base dir default (shell takes precedence):
 
 ```shell
 export MISE_COMPLETIONS_SYNC_HOME="$XDG_DATA_HOME/custom-vendor-completions"
-export MISE_COMPLETIONS_SYNC_ZSH_DIR="$XDG_DATA_HOME/zsh/site-funtions"
+export MISE_COMPLETIONS_SYNC_ZSH_DIR="$XDG_DATA_HOME/zsh/site-functions"
 
 mise-completions-sync fzf
 #  [fish] -> ~/.local/share/custom-vendor-completions/fish/fzf.fish
-#  [zsh]  -> ~/.local/share/zsh/site-fuctions/_fzf
+#  [zsh]  -> ~/.local/share/zsh/site-functions/_fzf
 #  [bash] -> ~/.local/share/custom-vendor-completions/bash/fzf
 ```
 
