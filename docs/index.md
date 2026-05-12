@@ -8,9 +8,11 @@ When mise installs a tool like `kubectl` or `gh`, you don't automatically get sh
 
 ## The Solution
 
-mise-completions-sync automatically generates completions for all your mise-installed tools. The package is named `mise-completions-sync`; the binary it installs is `misecompsync` (mise reserves `mise-*` binary names for itself, so the shim can't forward to a binary that starts with `mise-`).
+mise-completions-sync automatically generates completions for all your mise-installed tools.
 
 ## Installation
+
+The package is named `mise-completions-sync`; the binary it installs is `misecompsync` (mise reserves `mise-*` names for itself, so the shim can't forward to a binary that starts with `mise-`).
 
 ### Homebrew
 
