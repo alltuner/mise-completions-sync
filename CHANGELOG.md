@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.7](https://github.com/alltuner/mise-completions-sync/compare/v0.5.6...v0.5.7) (2026-05-12)
+
+
+### Features
+
+* add support for tree-sitter ([#77](https://github.com/alltuner/mise-completions-sync/issues/77)) ([afd6605](https://github.com/alltuner/mise-completions-sync/commit/afd660584746e717fdaab9aa7238ce2e571ab305))
+* allow overriding output dirs with ENV vars ([#52](https://github.com/alltuner/mise-completions-sync/issues/52)) ([fc423c9](https://github.com/alltuner/mise-completions-sync/commit/fc423c9bd3c610efc69bf97032eaeacb8a047536))
+* support tools from alternative backends ([#41](https://github.com/alltuner/mise-completions-sync/issues/41)) ([6e39bc0](https://github.com/alltuner/mise-completions-sync/commit/6e39bc08bf30cf8aba8124591b0f957d10fb4b17))
+
+
+### Bug Fixes
+
+* merge duplicate tests module in sync.rs ([#82](https://github.com/alltuner/mise-completions-sync/issues/82)) ([c469875](https://github.com/alltuner/mise-completions-sync/commit/c4698753d03a5216e3e7efa34c1bf3c107affe72))
+* rename installed binary to misecompsync (closes [#79](https://github.com/alltuner/mise-completions-sync/issues/79)) ([#81](https://github.com/alltuner/mise-completions-sync/issues/81)) ([bd235ff](https://github.com/alltuner/mise-completions-sync/commit/bd235ffd075f86c6cc19ed0b011265a6d07612f9))
+
 ## [0.5.6](https://github.com/alltuner/mise-completions-sync/compare/v0.5.5...v0.5.6) (2026-05-04)
 
 
