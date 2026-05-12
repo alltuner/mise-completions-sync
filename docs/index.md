@@ -8,7 +8,7 @@ When mise installs a tool like `kubectl` or `gh`, you don't automatically get sh
 
 ## The Solution
 
-`mise-completions-sync` automatically generates completions for all your mise-installed tools.
+mise-completions-sync automatically generates completions for all your mise-installed tools. The package is named `mise-completions-sync`; the binary it installs is `misecompsync` (mise reserves `mise-*` binary names for itself, so the shim can't forward to a binary that starts with `mise-`).
 
 ## Installation
 
@@ -98,7 +98,7 @@ Set up a mise hook to automatically sync completions when tools are installed:
 mkdir -p ~/.config/mise && cat >> ~/.config/mise/config.toml << 'EOF'
 
 [hooks]
-postinstall = "mise-completions-sync"
+postinstall = "misecompsync"
 EOF
 ```
 
@@ -107,29 +107,29 @@ EOF
 After setup, run the initial sync:
 
 ```bash
-mise-completions-sync
+misecompsync
 ```
 
 ## Usage
 
 ```bash
 # Sync completions for all installed tools (all shells)
-mise-completions-sync
+misecompsync
 
 # Sync only for specific shell
-mise-completions-sync --shell zsh
+misecompsync --shell zsh
 
 # Sync specific tool(s)
-mise-completions-sync kubectl helm
+misecompsync kubectl helm
 
 # List tools with completion support
-mise-completions-sync list
+misecompsync list
 
 # Show completion directory for a shell
-mise-completions-sync dir zsh
+misecompsync dir zsh
 
 # Clean up completions for uninstalled tools
-mise-completions-sync clean
+misecompsync clean
 ```
 
 ## License
