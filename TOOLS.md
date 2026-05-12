@@ -91,6 +91,7 @@ These tools have been tested and confirmed to NOT output shell completion script
 ## How to Add a Tool
 
 1. Check if the tool supports shell completions:
+
    ```bash
    mise x <tool> -- <tool> completion --help
    mise x <tool> -- <tool> --help | grep -i complet
@@ -99,6 +100,7 @@ These tools have been tested and confirmed to NOT output shell completion script
 2. Find the correct completion command pattern
 
 3. Add entry to `registry.toml`:
+
    ```toml
    # If it matches an existing pattern:
    newtool = "standard"  # for: newtool completion <shell>
@@ -108,6 +110,7 @@ These tools have been tested and confirmed to NOT output shell completion script
    ```
 
 4. Test the entry:
+
    ```bash
    uv run scripts/validate-registry.py --installed-only
    ```
