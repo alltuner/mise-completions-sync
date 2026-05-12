@@ -1,7 +1,7 @@
 // ABOUTME: Core sync logic for generating shell completions.
 // ABOUTME: Gets installed tools from mise and generates completion files.
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::path::PathBuf;
 use std::process::Command;
 
@@ -41,24 +41,52 @@ pub enum Error {
     MissingSchemaVersion,
 }
 
-/// Get the base directory for completions
-pub fn get_completions_base_dir() -> PathBuf {
-    std::env::var("XDG_DATA_HOME")
-        .map(PathBuf::from)
-        .unwrap_or_else(|_| {
-            dirs::home_dir()
-                .unwrap_or_default()
-                .join(".local")
-                .join("share")
-        })
-        .join("mise-completions")
+pub struct CompletionsDirs {
+    base_dir: PathBuf,
+    shell_overrides: HashMap<String, PathBuf>,
 }
 
-/// Get the directory for a specific shell's completions
-pub fn get_completions_dir(shell: &str) -> Result<PathBuf, Error> {
-    match shell {
-        "zsh" | "bash" | "fish" => Ok(get_completions_base_dir().join(shell)),
-        _ => Err(Error::UnsupportedShell(shell.to_string())),
+impl CompletionsDirs {
+    pub fn from_env() -> Self {
+        let base_dir = if let Ok(home) = std::env::var("MISE_COMPLETIONS_SYNC_HOME") {
+            PathBuf::from(home)
+        } else {
+            std::env::var("XDG_DATA_HOME")
+                .map(PathBuf::from)
+                .unwrap_or_else(|_| {
+                    dirs::home_dir()
+                        .unwrap_or_default()
+                        .join(".local")
+                        .join("share")
+                })
+                .join("mise-completions")
+        };
+
+        let mut shell_overrides = HashMap::new();
+        for shell in ["bash", "zsh", "fish"] {
+            let env_var = format!("MISE_COMPLETIONS_SYNC_{}_DIR", shell.to_uppercase());
+            if let Ok(path) = std::env::var(&env_var) {
+                shell_overrides.insert(shell.to_string(), PathBuf::from(path));
+            }
+        }
+
+        Self {
+            base_dir,
+            shell_overrides,
+        }
+    }
+
+    pub fn get_dir(&self, shell: &str) -> Result<PathBuf, Error> {
+        match shell {
+            "zsh" | "bash" | "fish" => {
+                if let Some(path) = self.shell_overrides.get(shell) {
+                    Ok(path.clone())
+                } else {
+                    Ok(self.base_dir.join(shell))
+                }
+            }
+            _ => Err(Error::UnsupportedShell(shell.to_string())),
+        }
     }
 }
 
@@ -120,7 +148,11 @@ fn generate_completion(
 }
 
 /// Sync completions for the given shells and tools
-pub fn sync_completions(shells: &[String], specific_tools: &[String]) -> Result<(), Error> {
+pub fn sync_completions(
+    dirs: &CompletionsDirs,
+    shells: &[String],
+    specific_tools: &[String],
+) -> Result<(), Error> {
     let registry = registry::load_registry()?;
 
     // Determine which tools to sync
@@ -148,7 +180,7 @@ pub fn sync_completions(shells: &[String], specific_tools: &[String]) -> Result<
     );
 
     for shell in shells {
-        let output_dir = get_completions_dir(shell)?;
+        let output_dir = dirs.get_dir(shell)?;
         println!("\n[{shell}] -> {}", output_dir.display());
 
         for tool in &tools_in_registry {
@@ -167,7 +199,7 @@ pub fn sync_completions(shells: &[String], specific_tools: &[String]) -> Result<
 }
 
 /// Remove completions for tools that are no longer installed
-pub fn clean_stale_completions() -> Result<(), Error> {
+pub fn clean_stale_completions(dirs: &CompletionsDirs) -> Result<(), Error> {
     let registry = registry::load_registry()?;
     let installed = get_installed_tools()?;
     let installed_set: HashSet<_> = installed.iter().collect();
@@ -176,7 +208,7 @@ pub fn clean_stale_completions() -> Result<(), Error> {
     let mut removed = 0;
 
     for shell in shells {
-        let dir = get_completions_dir(shell)?;
+        let dir = dirs.get_dir(shell)?;
         if !dir.exists() {
             continue;
         }
@@ -203,4 +235,116 @@ pub fn clean_stale_completions() -> Result<(), Error> {
 
     println!("Cleaned {removed} stale completion files.");
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn dirs_with_base(base: &str) -> CompletionsDirs {
+        CompletionsDirs {
+            base_dir: PathBuf::from(base),
+            shell_overrides: HashMap::new(),
+        }
+    }
+
+    #[test]
+    fn test_get_dir_with_custom_base() {
+        let dirs = dirs_with_base("/custom/base");
+
+        assert_eq!(
+            dirs.get_dir("bash").unwrap(),
+            PathBuf::from("/custom/base/bash")
+        );
+        assert_eq!(
+            dirs.get_dir("zsh").unwrap(),
+            PathBuf::from("/custom/base/zsh")
+        );
+        assert_eq!(
+            dirs.get_dir("fish").unwrap(),
+            PathBuf::from("/custom/base/fish")
+        );
+    }
+
+    #[test]
+    fn test_get_dir_with_shell_overrides() {
+        let dirs = CompletionsDirs {
+            base_dir: PathBuf::from("/ignored"),
+            shell_overrides: HashMap::from([
+                (
+                    "bash".to_string(),
+                    PathBuf::from("/custom/bash-completion/completions"),
+                ),
+                (
+                    "zsh".to_string(),
+                    PathBuf::from("/custom/zsh/site-functions"),
+                ),
+                (
+                    "fish".to_string(),
+                    PathBuf::from("/custom/fish/vendor_completions.d"),
+                ),
+            ]),
+        };
+
+        assert_eq!(
+            dirs.get_dir("bash").unwrap(),
+            PathBuf::from("/custom/bash-completion/completions")
+        );
+        assert_eq!(
+            dirs.get_dir("zsh").unwrap(),
+            PathBuf::from("/custom/zsh/site-functions")
+        );
+        assert_eq!(
+            dirs.get_dir("fish").unwrap(),
+            PathBuf::from("/custom/fish/vendor_completions.d")
+        );
+    }
+
+    #[test]
+    fn test_get_dir_falls_back_to_base() {
+        let dirs = dirs_with_base("/default/base");
+
+        assert_eq!(
+            dirs.get_dir("bash").unwrap(),
+            PathBuf::from("/default/base/bash")
+        );
+        assert_eq!(
+            dirs.get_dir("zsh").unwrap(),
+            PathBuf::from("/default/base/zsh")
+        );
+        assert_eq!(
+            dirs.get_dir("fish").unwrap(),
+            PathBuf::from("/default/base/fish")
+        );
+    }
+
+    #[test]
+    fn test_get_dir_unsupported_shell() {
+        let dirs = dirs_with_base("/any");
+        assert!(dirs.get_dir("tcsh").is_err());
+    }
+
+    #[test]
+    fn test_get_dir_shell_override_takes_precedence() {
+        let dirs = CompletionsDirs {
+            base_dir: PathBuf::from("/custom/base"),
+            shell_overrides: HashMap::from([(
+                "zsh".to_string(),
+                PathBuf::from("/custom/zsh/site-functions"),
+            )]),
+        };
+
+        assert_eq!(
+            dirs.get_dir("bash").unwrap(),
+            PathBuf::from("/custom/base/bash")
+        );
+        assert_eq!(
+            dirs.get_dir("zsh").unwrap(),
+            PathBuf::from("/custom/zsh/site-functions")
+        );
+        assert_eq!(
+            dirs.get_dir("fish").unwrap(),
+            PathBuf::from("/custom/base/fish")
+        );
+    }
 }

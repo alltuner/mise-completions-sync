@@ -47,6 +47,7 @@ fn main() {
 
 fn run() -> Result<(), sync::Error> {
     let cli = Cli::parse();
+    let dirs = sync::CompletionsDirs::from_env();
 
     match cli.command {
         Some(Commands::List) => {
@@ -58,16 +59,16 @@ fn run() -> Result<(), sync::Error> {
             Ok(())
         }
         Some(Commands::Dir { shell }) => {
-            let dir = sync::get_completions_dir(&shell)?;
+            let dir = dirs.get_dir(&shell)?;
             println!("{}", dir.display());
             Ok(())
         }
-        Some(Commands::Clean) => sync::clean_stale_completions(),
+        Some(Commands::Clean) => sync::clean_stale_completions(&dirs),
         None => {
             let shells = cli
                 .shell
                 .unwrap_or_else(|| vec!["zsh".to_string(), "bash".to_string(), "fish".to_string()]);
-            sync::sync_completions(&shells, &cli.tools)
+            sync::sync_completions(&dirs, &shells, &cli.tools)
         }
     }
 }

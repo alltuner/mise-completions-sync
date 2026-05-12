@@ -64,6 +64,31 @@ Add to `~/.config/fish/config.fish`:
 set -gx fish_complete_path $fish_complete_path ~/.local/share/mise-completions/fish
 ```
 
+## Custom Output Dirs
+
+By default, completions are synced to `$XDG_DATA_HOME/mise-completions/<shell>`. However, you can override the output directories using environment variables:
+
+```shell
+# Override default base output directory
+export MISE_COMPLETIONS_SYNC_HOME="$XDG_DATA_HOME/custom-vendor-completions"
+```
+
+Or you can override output targets on a per-shell basis (these take precedence over the base override above):
+
+```shell
+# Bash completions to standard bash location
+export MISE_COMPLETIONS_SYNC_BASH_DIR="$XDG_DATA_HOME/bash-completion/completions"
+
+# ZSH completions to standard zsh location
+export MISE_COMPLETIONS_SYNC_ZSH_DIR="$XDG_DATA_HOME/zsh/site-functions"
+
+# Fish completions to standard fish locations.
+# (pick one or the other, both are autoloaded by fish)
+export MISE_COMPLETIONS_SYNC_FISH_DIR="$XDG_DATA_HOME/fish/vendor_completions.d"
+```
+
+Note: Target directories will be created if they don't already exist. Don't forget to update your shell setup above.
+
 ## Updating
 
 ### Homebrew
