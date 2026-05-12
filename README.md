@@ -36,6 +36,8 @@ cargo install mise-completions-sync
 mise use -g github:alltuner/mise-completions-sync
 ```
 
+The installed binary is named `misecompsync` (mise reserves `mise-*` names for itself, so the shim can't forward to a binary that starts with `mise-`).
+
 Then add the completions directory to your shell config:
 
 | Shell | Where to add | Snippet |
@@ -48,25 +50,25 @@ Then add the completions directory to your shell config:
 
 ## What is mise-completions-sync?
 
-mise installs language and tool versions per project, but it doesn't touch your shell completion files. As versions change, completions get stale or missing. `mise-completions-sync` walks your installed mise tools, generates the right completion file for each one (Bash, Zsh, Fish), and writes them under `${XDG_DATA_HOME:-$HOME/.local/share}/mise-completions/<shell>/`. Run it once after installing tools, or wire it into a mise post-install hook.
+mise installs language and tool versions per project, but it doesn't touch your shell completion files. As versions change, completions get stale or missing. mise-completions-sync walks your installed mise tools, generates the right completion file for each one (Bash, Zsh, Fish), and writes them under `${XDG_DATA_HOME:-$HOME/.local/share}/mise-completions/<shell>/`. Run it once after installing tools, or wire it into a mise post-install hook.
 
 ## Usage
 
 ```bash
 # Sync completions for all installed tools
-mise-completions-sync
+misecompsync
 
 # Sync only for a specific shell
-mise-completions-sync --shell zsh
+misecompsync --shell zsh
 
 # Sync specific tools
-mise-completions-sync kubectl helm
+misecompsync kubectl helm
 
 # List supported tools
-mise-completions-sync list
+misecompsync list
 
 # Clean up completions for uninstalled tools
-mise-completions-sync clean
+misecompsync clean
 ```
 
 ### Automatic sync
@@ -77,7 +79,7 @@ Wire it into a mise post-install hook so new tool installs get completions autom
 mkdir -p ~/.config/mise && cat >> ~/.config/mise/config.toml << 'EOF'
 
 [hooks]
-postinstall = "mise-completions-sync"
+postinstall = "misecompsync"
 EOF
 ```
 

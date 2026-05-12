@@ -1,6 +1,6 @@
 # How It Works
 
-`mise-completions-sync` follows a simple process to generate shell completions:
+mise-completions-sync follows a simple process to generate shell completions:
 
 1. **Discover installed tools** - Gets list of installed tools via `mise ls --installed --json`
 2. **Look up registry entries** - Each tool is matched against the built-in registry

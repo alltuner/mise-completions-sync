@@ -8,7 +8,7 @@ mod sync;
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
-#[command(name = "mise-completions-sync")]
+#[command(name = "misecompsync")]
 #[command(about = "Sync shell completions for tools managed by mise")]
 #[command(version)]
 struct Cli {
