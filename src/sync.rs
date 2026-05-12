@@ -196,88 +196,6 @@ fn get_installed_tools() -> Result<std::collections::HashMap<String, String>, Er
     Ok(tool_map)
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_is_version_component() {
-        // v-prefixed versions
-        assert!(is_version_component("v5"));
-        assert!(is_version_component("v1"));
-        assert!(is_version_component("v1.0"));
-        assert!(is_version_component("v2.3.1"));
-
-        // Plain semver
-        assert!(is_version_component("1.0.0"));
-        assert!(is_version_component("2.3.1"));
-        assert!(is_version_component("5"));
-
-        // Special cases
-        assert!(is_version_component("latest"));
-
-        // Not versions
-        assert!(!is_version_component("kustomize"));
-        assert!(!is_version_component("gopls"));
-        assert!(!is_version_component("kubectl-ai"));
-        assert!(!is_version_component("v")); // just 'v' alone
-        assert!(!is_version_component("")); // empty
-    }
-
-    #[test]
-    fn test_extract_tool_name_no_prefix() {
-        assert_eq!(extract_tool_name("yq"), "yq");
-        assert_eq!(extract_tool_name("kubectl"), "kubectl");
-        assert_eq!(extract_tool_name("mise"), "mise");
-    }
-
-    #[test]
-    fn test_extract_tool_name_go_backend() {
-        assert_eq!(extract_tool_name("go:golang.org/x/tools/gopls"), "gopls");
-        assert_eq!(extract_tool_name("go:example.com/tool"), "tool");
-    }
-
-    #[test]
-    fn test_extract_tool_name_go_backend_with_version() {
-        // Go module paths with version suffix
-        assert_eq!(
-            extract_tool_name("go:sigs.k8s.io/kustomize/kustomize/v5"),
-            "kustomize"
-        );
-        assert_eq!(
-            extract_tool_name("go:github.com/golangci/golangci-lint/cmd/golangci-lint/v2"),
-            "golangci-lint"
-        );
-        assert_eq!(extract_tool_name("go:example.com/tool/tool/v1.0.0"), "tool");
-    }
-
-    #[test]
-    fn test_extract_tool_name_aqua_backend() {
-        assert_eq!(extract_tool_name("aqua:reteps/dockerfmt"), "dockerfmt");
-        assert_eq!(extract_tool_name("aqua:helm/helm"), "helm");
-    }
-
-    #[test]
-    fn test_extract_tool_name_github_backend() {
-        assert_eq!(
-            extract_tool_name("github:GoogleCloudPlatform/kubectl-ai"),
-            "kubectl-ai"
-        );
-        assert_eq!(extract_tool_name("github:cli/cli"), "cli");
-    }
-
-    #[test]
-    fn test_extract_tool_name_complex_paths() {
-        // Multiple slashes in path (now with version handling)
-        assert_eq!(
-            extract_tool_name("go:sigs.k8s.io/kustomize/kustomize/v5"),
-            "kustomize"
-        );
-        // Single component after colon
-        assert_eq!(extract_tool_name("aqua:simple-tool"), "simple-tool");
-    }
-}
-
 /// Generate completion for a single tool and shell
 fn generate_completion(
     tool_id: &str,   // Original ID with backend prefix (for mise x)
@@ -522,5 +440,82 @@ mod tests {
             dirs.get_dir("fish").unwrap(),
             PathBuf::from("/custom/base/fish")
         );
+    }
+
+    #[test]
+    fn test_is_version_component() {
+        // v-prefixed versions
+        assert!(is_version_component("v5"));
+        assert!(is_version_component("v1"));
+        assert!(is_version_component("v1.0"));
+        assert!(is_version_component("v2.3.1"));
+
+        // Plain semver
+        assert!(is_version_component("1.0.0"));
+        assert!(is_version_component("2.3.1"));
+        assert!(is_version_component("5"));
+
+        // Special cases
+        assert!(is_version_component("latest"));
+
+        // Not versions
+        assert!(!is_version_component("kustomize"));
+        assert!(!is_version_component("gopls"));
+        assert!(!is_version_component("kubectl-ai"));
+        assert!(!is_version_component("v")); // just 'v' alone
+        assert!(!is_version_component("")); // empty
+    }
+
+    #[test]
+    fn test_extract_tool_name_no_prefix() {
+        assert_eq!(extract_tool_name("yq"), "yq");
+        assert_eq!(extract_tool_name("kubectl"), "kubectl");
+        assert_eq!(extract_tool_name("mise"), "mise");
+    }
+
+    #[test]
+    fn test_extract_tool_name_go_backend() {
+        assert_eq!(extract_tool_name("go:golang.org/x/tools/gopls"), "gopls");
+        assert_eq!(extract_tool_name("go:example.com/tool"), "tool");
+    }
+
+    #[test]
+    fn test_extract_tool_name_go_backend_with_version() {
+        // Go module paths with version suffix
+        assert_eq!(
+            extract_tool_name("go:sigs.k8s.io/kustomize/kustomize/v5"),
+            "kustomize"
+        );
+        assert_eq!(
+            extract_tool_name("go:github.com/golangci/golangci-lint/cmd/golangci-lint/v2"),
+            "golangci-lint"
+        );
+        assert_eq!(extract_tool_name("go:example.com/tool/tool/v1.0.0"), "tool");
+    }
+
+    #[test]
+    fn test_extract_tool_name_aqua_backend() {
+        assert_eq!(extract_tool_name("aqua:reteps/dockerfmt"), "dockerfmt");
+        assert_eq!(extract_tool_name("aqua:helm/helm"), "helm");
+    }
+
+    #[test]
+    fn test_extract_tool_name_github_backend() {
+        assert_eq!(
+            extract_tool_name("github:GoogleCloudPlatform/kubectl-ai"),
+            "kubectl-ai"
+        );
+        assert_eq!(extract_tool_name("github:cli/cli"), "cli");
+    }
+
+    #[test]
+    fn test_extract_tool_name_complex_paths() {
+        // Multiple slashes in path (now with version handling)
+        assert_eq!(
+            extract_tool_name("go:sigs.k8s.io/kustomize/kustomize/v5"),
+            "kustomize"
+        );
+        // Single component after colon
+        assert_eq!(extract_tool_name("aqua:simple-tool"), "simple-tool");
     }
 }
