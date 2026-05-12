@@ -151,6 +151,22 @@ fn extract_tool_name(tool_id: &str) -> String {
     }
 }
 
+// When two installed tools resolve to the same short name (e.g. "kubectl" and
+// "aqua:org/kubectl"), prefer the bare entry — it's the one most likely to be on PATH.
+fn resolve_tool_binary(tool_map: &mut std::collections::HashMap<String, String>, tool_id: &str) {
+    let short_name = extract_tool_name(tool_id);
+    let is_bare = !tool_id.contains(':');
+    match tool_map.entry(short_name) {
+        std::collections::hash_map::Entry::Vacant(e) => {
+            e.insert(tool_id.to_string());
+        }
+        std::collections::hash_map::Entry::Occupied(mut e) if is_bare => {
+            e.insert(tool_id.to_string());
+        }
+        std::collections::hash_map::Entry::Occupied(_) => {}
+    }
+}
+
 /// Get list of installed tools from mise
 /// Returns a map of stripped tool names to their original IDs (with backend prefixes)
 /// This allows registry matching on short names while preserving the original ID for mise x
@@ -173,23 +189,10 @@ fn get_installed_tools() -> Result<std::collections::HashMap<String, String>, Er
     // Tool names may include backend prefixes like "go:package" or "aqua:repo/tool"
     // We need to extract the actual binary name for registry matching
     // but keep the original ID for mise x operations.
-    //
-    // When two installed tools resolve to the same short name (e.g. "kubectl" and
-    // "aqua:org/kubectl"), prefer the bare entry — it's the one most likely to be on PATH.
     let mut tool_map = std::collections::HashMap::new();
     if let Some(obj) = tools.as_object() {
         for tool_id in obj.keys() {
-            let short_name = extract_tool_name(tool_id);
-            let is_bare = !tool_id.contains(':');
-            match tool_map.entry(short_name) {
-                std::collections::hash_map::Entry::Vacant(e) => {
-                    e.insert(tool_id.to_string());
-                }
-                std::collections::hash_map::Entry::Occupied(mut e) if is_bare => {
-                    e.insert(tool_id.to_string());
-                }
-                std::collections::hash_map::Entry::Occupied(_) => {}
-            }
+            resolve_tool_binary(&mut tool_map, tool_id);
         }
     }
 
@@ -209,27 +212,6 @@ fn get_newly_installed_tools() -> Result<std::collections::HashMap<String, Strin
     parse_installed_tools_json(&installed_tools_json)
 }
 
-/// Extract binary name from tool name (handles backend prefixes like "go:" or "aqua:")
-/// Examples:
-/// - "go:golang.org/x/tools/gopls" -> "gopls"
-/// - "aqua:reteps/dockerfmt" -> "dockerfmt"
-/// - "github:GoogleCloudPlatform/kubectl-ai" -> "kubectl-ai"
-/// - "yq" -> "yq" (no prefix, keep as-is)
-fn extract_binary_name(tool_name: &str) -> String {
-    if let Some(colon_pos) = tool_name.find(':') {
-        // Has backend prefix, extract the last component after the last slash
-        let after_colon = &tool_name[colon_pos + 1..];
-        after_colon
-            .rsplit('/')
-            .next()
-            .map(|s| s.to_string())
-            .unwrap_or_else(|| after_colon.to_string())
-    } else {
-        // No backend prefix, use as-is
-        tool_name.to_string()
-    }
-}
-
 /// Parse the MISE_INSTALLED_TOOLS JSON string and extract tool names
 /// Returns a map of stripped tool names to their original IDs (with backend prefixes)
 fn parse_installed_tools_json(
@@ -244,18 +226,7 @@ fn parse_installed_tools_json(
         for item in arr {
             if let (Some(name), Some(_version)) = (item.get("name"), item.get("version")) {
                 if let Some(s) = name.as_str() {
-                    // Use the same extract_tool_name logic as get_installed_tools
-                    let short_name = extract_tool_name(s);
-                    let is_bare = !s.contains(':');
-                    match tool_map.entry(short_name) {
-                        std::collections::hash_map::Entry::Vacant(e) => {
-                            e.insert(s.to_string());
-                        }
-                        std::collections::hash_map::Entry::Occupied(mut e) if is_bare => {
-                            e.insert(s.to_string());
-                        }
-                        std::collections::hash_map::Entry::Occupied(_) => {}
-                    }
+                    resolve_tool_binary(&mut tool_map, s);
                 }
             }
         }
@@ -591,35 +562,6 @@ mod tests {
         );
         // Single component after colon
         assert_eq!(extract_tool_name("aqua:simple-tool"), "simple-tool");
-    }
-
-    #[test]
-    fn test_extract_binary_name_no_prefix() {
-        assert_eq!(extract_binary_name("yq"), "yq");
-        assert_eq!(extract_binary_name("kubectl"), "kubectl");
-    }
-
-    #[test]
-    fn test_extract_binary_name_go_backend() {
-        assert_eq!(extract_binary_name("go:golang.org/x/tools/gopls"), "gopls");
-        assert_eq!(extract_binary_name("go:example.com/tool"), "tool");
-    }
-
-    #[test]
-    fn test_extract_binary_name_aqua_backend() {
-        assert_eq!(extract_binary_name("aqua:reteps/dockerfmt"), "dockerfmt");
-        assert_eq!(
-            extract_binary_name("aqua:owner/repo/tool_name"),
-            "tool_name"
-        );
-    }
-
-    #[test]
-    fn test_extract_binary_name_github_backend() {
-        assert_eq!(
-            extract_binary_name("github:GoogleCloudPlatform/kubectl-ai"),
-            "kubectl-ai"
-        );
     }
 
     #[test]
