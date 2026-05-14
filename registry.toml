@@ -10,6 +10,7 @@ completions = { zsh = "{} completions zsh", bash = "{} completions bash", fish =
 gh_style = { zsh = "{} completion -s zsh", bash = "{} completion -s bash", fish = "{} completion -s fish" }
 generate_shell = { zsh = "{} generate-shell-completion zsh", bash = "{} generate-shell-completion bash", fish = "{} generate-shell-completion fish" }
 gen_completions = { zsh = "{} gen-completions --shell zsh", bash = "{} gen-completions --shell bash", fish = "{} gen-completions --shell fish" }
+completions_flag = { zsh = "{} --completions zsh", bash = "{} --completions bash", fish = "{} --completions fish" }
 
 [tools]
 # Core tools
@@ -49,6 +50,9 @@ mdbook = "generate_shell"
 atuin = "gen_completions"
 gitu = "gen_completions"
 gitui = "gen_completions"
+just = "completions_flag"
+watchexec = "completions_flag"
+usage = "completions_flag"
 
 # Python tools
 poetry = "completions"
@@ -117,12 +121,10 @@ pipx = { zsh = "register-python-argcomplete pipx", bash = "register-python-argco
 prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util generate-shell-completion bash", fish = "prek util generate-shell-completion fish" }
 
 # Unique command patterns
-just = { zsh = "just --completions zsh", bash = "just --completions bash", fish = "just --completions fish" }
 task = { zsh = "task --completion zsh", bash = "task --completion bash", fish = "task --completion fish" }
 bat = { zsh = "bat --completion zsh", bash = "bat --completion bash", fish = "bat --completion fish" }
 fd = { zsh = "fd --gen-completions zsh", bash = "fd --gen-completions bash", fish = "fd --gen-completions fish" }
 delta = { zsh = "delta --generate-completion zsh", bash = "delta --generate-completion bash", fish = "delta --generate-completion fish" }
-watchexec = { zsh = "watchexec --completions zsh", bash = "watchexec --completions bash", fish = "watchexec --completions fish" }
 zellij = { zsh = "zellij setup --generate-completion zsh", bash = "zellij setup --generate-completion bash", fish = "zellij setup --generate-completion fish" }
 scaleway-cli = { zsh = "scw autocomplete script shell=zsh", bash = "scw autocomplete script shell=bash", fish = "scw autocomplete script shell=fish" }
 
