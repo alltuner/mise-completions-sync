@@ -52,6 +52,7 @@ gitui = "gen_completions"
 
 # Python tools
 poetry = "completions"
+pdm = "standard"
 
 # Cloud CLIs
 flyctl = "standard"
@@ -80,19 +81,28 @@ doggo = "completions"
 dyff = "standard"
 fnox = "standard"
 gitleaks = "standard"
+glow = "standard"
 golangci-lint = "standard"
 goreleaser = "standard"
+grafanactl = "standard"
+hishtory = "standard"
+hk = "standard"
 hugo = "standard"
+jules = "standard"
 lazygit = "standard"
+mermaid-ascii = "standard"
 oc = "standard"
+opencode = "standard"
 pitchfork = "standard"
 pulumi = "standard"
 restic = "standard"
 rumdl = "completions"
 saml2aws = "standard"
 step = "standard"
+whosthere = "standard"
 xh = "standard"
 yq = "standard"
+
 
 # Lefthook uses completions pattern
 lefthook = "completions"
@@ -118,6 +128,7 @@ prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util gene
 
 # Unique command patterns
 just = { zsh = "just --completions zsh", bash = "just --completions bash", fish = "just --completions fish" }
+usage = { zsh = "usage --completions zsh", bash = "usage --completions bash", fish = "usage --completions fish" }
 task = { zsh = "task --completion zsh", bash = "task --completion bash", fish = "task --completion fish" }
 bat = { zsh = "bat --completion zsh", bash = "bat --completion bash", fish = "bat --completion fish" }
 fd = { zsh = "fd --gen-completions zsh", bash = "fd --gen-completions bash", fish = "fd --gen-completions fish" }
@@ -141,3 +152,22 @@ nix = { zsh = "nix --extra-experimental-features 'nix-command' completion zsh 2>
 
 # tree-sitter has unique complete --shell {shell} pattern
 tree-sitter = { zsh = "tree-sitter complete --shell zsh", bash = "tree-sitter complete --shell bash", fish = "tree-sitter complete --shell fish" }
+
+# rclone requires - to output to stdout
+rclone = { zsh = "rclone completion zsh -", bash = "rclone completion bash -", fish = "rclone completion fish -" }
+
+# openspec requires completion generate <shell>
+openspec = { zsh = "openspec completion generate zsh", bash = "openspec completion generate bash", fish = "openspec completion generate fish" }
+
+# jj requires util completion <shell>
+jj = { zsh = "jj util completion zsh", bash = "jj util completion bash", fish = "jj util completion fish" }
+
+# fx requires --comp <shell>
+fx = { zsh = "fx --comp zsh", bash = "fx --comp bash", fish = "fx --comp fish" }
+
+# pkl requires shell-completion <shell>
+pkl = { zsh = "pkl shell-completion zsh", bash = "pkl shell-completion bash", fish = "pkl shell-completion fish" }
+
+# television provides the `tv` binary and requires init <shell>
+television = { zsh = "tv init zsh", bash = "tv init bash", fish = "tv init fish" }
+
