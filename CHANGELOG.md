@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.5.8](https://github.com/alltuner/mise-completions-sync/compare/v0.5.7...v0.5.8) (2026-05-27)
+
+
+### Features
+
+* add self-completion subcommand (closes [#75](https://github.com/alltuner/mise-completions-sync/issues/75)) ([#94](https://github.com/alltuner/mise-completions-sync/issues/94)) ([8521f7c](https://github.com/alltuner/mise-completions-sync/commit/8521f7c1f50605085ff3c852469dbe4dc9169a57))
+* add talosctl ([#95](https://github.com/alltuner/mise-completions-sync/issues/95)) ([a43f446](https://github.com/alltuner/mise-completions-sync/commit/a43f446f137f76690837bd0e17a040e9f9107d4d))
+
+
+### Bug Fixes
+
+* **ci:** restore x86_64-unknown-linux-musl release binary ([#90](https://github.com/alltuner/mise-completions-sync/issues/90)) ([0dccee5](https://github.com/alltuner/mise-completions-sync/commit/0dccee5f90df29ac58825515596ed72028f5f449)), closes [#89](https://github.com/alltuner/mise-completions-sync/issues/89)
+* use standard pattern for lefthook (closes [#86](https://github.com/alltuner/mise-completions-sync/issues/86)) ([#91](https://github.com/alltuner/mise-completions-sync/issues/91)) ([48b5a51](https://github.com/alltuner/mise-completions-sync/commit/48b5a5175f1d3e840a66a230a52338a987461f26))
+
+
+### Miscellaneous Chores
+
+* **deps:** update rust crate serde_json to v1.0.150 ([#87](https://github.com/alltuner/mise-completions-sync/issues/87)) ([2581de9](https://github.com/alltuner/mise-completions-sync/commit/2581de9137a55930358c7779a07d98122cf86d0a))
+
 ## [0.5.7](https://github.com/alltuner/mise-completions-sync/compare/v0.5.6...v0.5.7) (2026-05-12)
 
 
