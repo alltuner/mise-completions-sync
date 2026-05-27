@@ -26,7 +26,6 @@ The following tools have shell completion support in mise-completions-sync.
 | flux |  | ✓ | ✓ | ✓ |
 | [flyctl](https://github.com/superfly/flyctl) | Command line tools for fly.io services | ✓ | ✓ | ✓ |
 | fnox | Fort Knox for your secrets | ✓ | ✓ | ✓ |
-| [fzf](https://github.com/junegunn/fzf) | :cherry_blossom: A command-line fuzzy finder | ✓ | ✓ | ✓ |
 | [gh](https://github.com/cli/cli) | GitHub’s official command line tool | ✓ | ✓ | ✓ |
 | [gitleaks](https://github.com/gitleaks/gitleaks) | Find secrets with Gitleaks | ✓ | ✓ | ✓ |
 | [gitu](https://github.com/altsem/gitu) | A TUI Git client inspired by Magit | ✓ | ✓ | ✓ |
@@ -54,9 +53,10 @@ The following tools have shell completion support in mise-completions-sync.
 | [mdbook](https://github.com/rust-lang/mdBook) | Create book from markdown files. Like Gitbook b... | ✓ | ✓ | ✓ |
 | [minikube](https://github.com/kubernetes/minikube) | Run Kubernetes locally | ✓ | ✓ | ✓ |
 | mise |  | ✓ | ✓ | ✓ |
+| mise-completions-sync |  | ✓ | ✓ | ✓ |
 | [nerdctl](https://github.com/containerd/nerdctl) | contaiNERD CTL - Docker-compatible CLI for cont... | ✓ | ✓ | ✓ |
 | nix |  | ✓ | ✓ | ✓ |
-| npm | the package manager for JavaScript | ✓ | ✓ |  |
+| [npm](https://github.com/npm/cli) | the package manager for JavaScript | ✓ | ✓ |  |
 | oc | OpenShift Client CLI (oc) | ✓ | ✓ | ✓ |
 | oci | Oracle Cloud Infrastructure CLI | ✓ | ✓ | ✓ |
 | [oras](https://github.com/oras-project/oras) | ORAS CLI | ✓ | ✓ | ✓ |
@@ -83,10 +83,13 @@ The following tools have shell completion support in mise-completions-sync.
 | [step](https://github.com/smallstep/cli) | A zero trust swiss army knife for working with ... | ✓ | ✓ | ✓ |
 | [stern](https://github.com/stern/stern) | ⎈ Multi pod and container log tailing for Kuber... | ✓ | ✓ | ✓ |
 | [syft](https://github.com/anchore/syft) | CLI tool and library for generating a Software ... | ✓ | ✓ | ✓ |
+| [talosctl](https://github.com/siderolabs/talos) | Talos is a modern OS for Kubernetes. talosctl i... | ✓ | ✓ | ✓ |
 | [task](https://github.com/go-task/task) | A task runner / simpler Make alternative writte... | ✓ | ✓ | ✓ |
 | [tilt](https://github.com/tilt-dev/tilt) | Define your dev environment as code. For micros... | ✓ | ✓ | ✓ |
+| [tree-sitter](https://github.com/tree-sitter/tree-sitter) | An incremental parsing system for programming t... | ✓ | ✓ | ✓ |
 | [trivy](https://github.com/aquasecurity/trivy) | Find vulnerabilities, misconfigurations, secret... | ✓ | ✓ | ✓ |
 | [ty](https://github.com/astral-sh/ty) | An extremely fast Python type checker and langu... | ✓ | ✓ | ✓ |
+| [usage](https://github.com/jdx/usage) | A specification for CLIs | ✓ | ✓ | ✓ |
 | [uv](https://github.com/astral-sh/uv) | An extremely fast Python package installer and ... | ✓ | ✓ | ✓ |
 | [velero](https://github.com/vmware-tanzu/velero) | Backup and migrate Kubernetes applications and ... | ✓ | ✓ | ✓ |
 | vercel | Build and deploy on the Vercel cloud | ✓ | ✓ |  |
@@ -94,9 +97,8 @@ The following tools have shell completion support in mise-completions-sync.
 | [xh](https://github.com/ducaale/xh) | Friendly and fast tool for sending HTTP requests | ✓ | ✓ | ✓ |
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
-| [zoxide](https://github.com/ajeetdsouza/zoxide) | A smarter cd command. Supports all major shells | ✓ | ✓ | ✓ |
 
-**Total: 89 tools**
+**Total: 93 tools**
 
 ## Shell Support Legend
 

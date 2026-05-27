@@ -135,12 +135,6 @@ scaleway-cli = { zsh = "scw autocomplete script shell=zsh", bash = "scw autocomp
 rg = { zsh = "rg --generate complete-zsh", bash = "rg --generate complete-bash", fish = "rg --generate complete-fish" }
 ripgrep = { zsh = "rg --generate complete-zsh", bash = "rg --generate complete-bash", fish = "rg --generate complete-fish" }
 
-# zoxide uses init instead of completion
-zoxide = { zsh = "zoxide init zsh", bash = "zoxide init bash", fish = "zoxide init fish" }
-
-# fzf has unique shell flags
-fzf = { zsh = "fzf --zsh", bash = "fzf --bash", fish = "fzf --fish" }
-
 # nix needs extra experimental features flag
 nix = { zsh = "nix --extra-experimental-features 'nix-command' completion zsh 2>/dev/null || true", bash = "nix --extra-experimental-features 'nix-command' completion bash 2>/dev/null || true", fish = "nix --extra-experimental-features 'nix-command' completion fish 2>/dev/null || true" }
 

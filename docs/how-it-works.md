@@ -39,10 +39,10 @@ You can override the default output directory using the `MISE_COMPLETIONS_SYNC_H
 ```shell
 export MISE_COMPLETIONS_SYNC_HOME="$XDG_DATA_HOME/custom-vendor-completions"
 
-mise-completions-sync fzf
-#  [fish] -> ~/.local/share/custom-vendor-completions/fish/fzf.fish
-#  [zsh]  -> ~/.local/share/custom-vendor-completions/zsh/_fzf
-#  [bash] -> ~/.local/share/custom-vendor-completions/bash/fzf
+mise-completions-sync kubectl
+#  [fish] -> ~/.local/share/custom-vendor-completions/fish/kubectl.fish
+#  [zsh]  -> ~/.local/share/custom-vendor-completions/zsh/_kubectl
+#  [bash] -> ~/.local/share/custom-vendor-completions/bash/kubectl
 ```
 
 Or you can override output directories for one (or more) shells (e.g., `MISE_COMPLETIONS_SYNC_{SHELL}_DIR`)
@@ -50,10 +50,10 @@ Or you can override output directories for one (or more) shells (e.g., `MISE_COM
 ```shell
 export MISE_COMPLETIONS_SYNC_FISH_DIR="$XDG_CONFIG_HOME/fish/completions"
 
-mise-completions-sync fzf
-#  [fish] -> ~/.config/fish/completions/fzf.fish
-#  [zsh]  -> ~/.local/share/mise-completions/zsh/_fzf
-#  [bash] -> ~/.local/share/mise-completions/bash/fzf
+mise-completions-sync kubectl
+#  [fish] -> ~/.config/fish/completions/kubectl.fish
+#  [zsh]  -> ~/.local/share/mise-completions/zsh/_kubectl
+#  [bash] -> ~/.local/share/mise-completions/bash/kubectl
 ```
 
 Or a shell dir with base dir default (shell takes precedence):
@@ -62,10 +62,10 @@ Or a shell dir with base dir default (shell takes precedence):
 export MISE_COMPLETIONS_SYNC_HOME="$XDG_DATA_HOME/custom-vendor-completions"
 export MISE_COMPLETIONS_SYNC_ZSH_DIR="$XDG_DATA_HOME/zsh/site-functions"
 
-mise-completions-sync fzf
-#  [fish] -> ~/.local/share/custom-vendor-completions/fish/fzf.fish
-#  [zsh]  -> ~/.local/share/zsh/site-functions/_fzf
-#  [bash] -> ~/.local/share/custom-vendor-completions/bash/fzf
+mise-completions-sync kubectl
+#  [fish] -> ~/.local/share/custom-vendor-completions/fish/kubectl.fish
+#  [zsh]  -> ~/.local/share/zsh/site-functions/_kubectl
+#  [bash] -> ~/.local/share/custom-vendor-completions/bash/kubectl
 ```
 
 Note: Target directories will be created if they don't already exist.

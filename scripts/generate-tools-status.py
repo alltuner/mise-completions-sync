@@ -25,6 +25,7 @@ NO_COMPLETION_SUPPORT = {
     "croc",
     "dust",
     "evans",
+    "fzf",  # Ships shell integration script (key bindings), not a completion file
     "gcloud",  # Completions bundled as files in SDK, not generated via command
     "eza",
     "nomad",  # HashiCorp autocomplete-install pattern
@@ -33,6 +34,7 @@ NO_COMPLETION_SUPPORT = {
     "vault",  # HashiCorp autocomplete-install pattern
     "wrangler",
     "yarn",  # Requires project context
+    "zoxide",  # Ships shell init script (hooks), not a completion file
 }
 
 # Common completion patterns to check
