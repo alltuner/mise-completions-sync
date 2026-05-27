@@ -35,6 +35,7 @@ kubeseal = "standard"
 linkerd = "standard"
 skaffold = "standard"
 stern = "standard"
+talosctl = "standard"
 tilt = "standard"
 velero = "standard"
 
