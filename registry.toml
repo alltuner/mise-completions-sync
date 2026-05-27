@@ -97,6 +97,10 @@ yq = "standard"
 
 # Tools with explicit commands (unique patterns or partial shell support)
 
+# mise installs this tool as github:alltuner/mise-completions-sync (stripped to "mise-completions-sync"),
+# but the binary it provides is named misecompsync.
+mise-completions-sync = { zsh = "misecompsync completion zsh", bash = "misecompsync completion bash", fish = "misecompsync completion fish" }
+
 bun = { zsh = "bun completions", bash = "bun completions", fish = "bun completions" }
 
 # Partial shell support (zsh + bash)

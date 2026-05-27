@@ -5,7 +5,8 @@ mod registry;
 mod shells;
 mod sync;
 
-use clap::{Parser, Subcommand};
+use clap::{CommandFactory, Parser, Subcommand};
+use clap_complete::Shell;
 
 #[derive(Parser)]
 #[command(name = "misecompsync")]
@@ -36,6 +37,11 @@ enum Commands {
     },
     /// Remove completions for tools no longer installed
     Clean,
+    /// Print shell completions for misecompsync itself to stdout
+    Completion {
+        /// Shell to generate completions for
+        shell: Shell,
+    },
 }
 
 fn main() {
@@ -64,6 +70,12 @@ fn run() -> Result<(), sync::Error> {
             Ok(())
         }
         Some(Commands::Clean) => sync::clean_stale_completions(&dirs),
+        Some(Commands::Completion { shell }) => {
+            let mut cmd = Cli::command();
+            let bin_name = cmd.get_name().to_string();
+            clap_complete::generate(shell, &mut cmd, bin_name, &mut std::io::stdout());
+            Ok(())
+        }
         None => {
             let shells = cli
                 .shell
