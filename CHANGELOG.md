@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.9](https://github.com/alltuner/mise-completions-sync/compare/v0.5.8...v0.5.9) (2026-05-27)
+
+
+### Bug Fixes
+
+* **registry:** remove fzf and zoxide (closes [#78](https://github.com/alltuner/mise-completions-sync/issues/78)) ([#96](https://github.com/alltuner/mise-completions-sync/issues/96)) ([8f3f1d2](https://github.com/alltuner/mise-completions-sync/commit/8f3f1d2471691472c898821e89b4286ca2f4b21c))
+
 ## [0.5.8](https://github.com/alltuner/mise-completions-sync/compare/v0.5.7...v0.5.8) (2026-05-27)
 
 
