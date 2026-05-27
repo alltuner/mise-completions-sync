@@ -84,6 +84,7 @@ golangci-lint = "standard"
 goreleaser = "standard"
 hugo = "standard"
 lazygit = "standard"
+lefthook = "standard"
 oc = "standard"
 pitchfork = "standard"
 pulumi = "standard"
@@ -93,9 +94,6 @@ saml2aws = "standard"
 step = "standard"
 xh = "standard"
 yq = "standard"
-
-# Lefthook uses completions pattern
-lefthook = "completions"
 
 # Tools with explicit commands (unique patterns or partial shell support)
 
