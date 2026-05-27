@@ -69,6 +69,9 @@ misecompsync list
 
 # Clean up completions for uninstalled tools
 misecompsync clean
+
+# Print misecompsync's own completions to stdout
+misecompsync completion zsh
 ```
 
 ### Automatic sync

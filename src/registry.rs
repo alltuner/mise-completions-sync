@@ -148,4 +148,16 @@ mod tests {
             Some("prek util generate-shell-completion fish")
         );
     }
+
+    #[test]
+    fn test_self_in_registry() {
+        let registry = load_registry().expect("Failed to load registry");
+        let entry = registry
+            .tools
+            .get("mise-completions-sync")
+            .expect("mise-completions-sync should be in registry");
+        assert_eq!(entry.zsh.as_deref(), Some("misecompsync completion zsh"));
+        assert_eq!(entry.bash.as_deref(), Some("misecompsync completion bash"));
+        assert_eq!(entry.fish.as_deref(), Some("misecompsync completion fish"));
+    }
 }
