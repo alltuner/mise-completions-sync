@@ -119,7 +119,7 @@ sops = { zsh = "sops completion zsh", bash = "sops completion bash" }
 cargo = { zsh = "rustup completions zsh cargo", bash = "rustup completions bash cargo", fish = "rustup completions fish cargo" }
 
 # pipx uses argcomplete
-pipx = { zsh = "register-python-argcomplete pipx", bash = "register-python-argcomplete pipx" }
+pipx = { zsh = "register-python-argcomplete --shell zsh pipx", bash = "register-python-argcomplete --shell bash pipx", fish = "register-python-argcomplete --shell fish pipx" }
 
 prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util generate-shell-completion bash", fish = "prek util generate-shell-completion fish" }
 
