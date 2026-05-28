@@ -151,6 +151,22 @@ fn extract_tool_name(tool_id: &str) -> String {
     }
 }
 
+// When two installed tools resolve to the same short name (e.g. "kubectl" and
+// "aqua:org/kubectl"), prefer the bare entry — it's the one most likely to be on PATH.
+fn resolve_tool_binary(tool_map: &mut std::collections::HashMap<String, String>, tool_id: &str) {
+    let short_name = extract_tool_name(tool_id);
+    let is_bare = !tool_id.contains(':');
+    match tool_map.entry(short_name) {
+        std::collections::hash_map::Entry::Vacant(e) => {
+            e.insert(tool_id.to_string());
+        }
+        std::collections::hash_map::Entry::Occupied(mut e) if is_bare => {
+            e.insert(tool_id.to_string());
+        }
+        std::collections::hash_map::Entry::Occupied(_) => {}
+    }
+}
+
 /// Get list of installed tools from mise
 /// Returns a map of stripped tool names to their original IDs (with backend prefixes)
 /// This allows registry matching on short names while preserving the original ID for mise x
@@ -173,22 +189,46 @@ fn get_installed_tools() -> Result<std::collections::HashMap<String, String>, Er
     // Tool names may include backend prefixes like "go:package" or "aqua:repo/tool"
     // We need to extract the actual binary name for registry matching
     // but keep the original ID for mise x operations.
-    //
-    // When two installed tools resolve to the same short name (e.g. "kubectl" and
-    // "aqua:org/kubectl"), prefer the bare entry — it's the one most likely to be on PATH.
     let mut tool_map = std::collections::HashMap::new();
     if let Some(obj) = tools.as_object() {
         for tool_id in obj.keys() {
-            let short_name = extract_tool_name(tool_id);
-            let is_bare = !tool_id.contains(':');
-            match tool_map.entry(short_name) {
-                std::collections::hash_map::Entry::Vacant(e) => {
-                    e.insert(tool_id.to_string());
+            resolve_tool_binary(&mut tool_map, tool_id);
+        }
+    }
+
+    Ok(tool_map)
+}
+
+/// Get newly installed/updated tools from MISE_INSTALLED_TOOLS environment variable
+/// Format: [{"name":"node","version":"20.10.0"},{"name":"python","version":"3.12.0"}]
+/// Returns empty HashMap if env var is not set or empty (no newly installed tools)
+/// Returns a map of stripped tool names to their original IDs (same format as get_installed_tools)
+fn get_newly_installed_tools() -> Result<std::collections::HashMap<String, String>, Error> {
+    let installed_tools_json = match std::env::var("MISE_INSTALLED_TOOLS") {
+        Ok(val) if !val.is_empty() => val,
+        Ok(_) => return Ok(std::collections::HashMap::new()), // Empty string = no new tools
+        Err(_) => return Ok(std::collections::HashMap::new()), // Env var not set
+    };
+
+    parse_installed_tools_json(&installed_tools_json)
+}
+
+/// Parse the MISE_INSTALLED_TOOLS JSON string and extract tool names
+/// Returns a map of stripped tool names to their original IDs (with backend prefixes)
+fn parse_installed_tools_json(
+    json: &str,
+) -> Result<std::collections::HashMap<String, String>, Error> {
+    let tools: serde_json::Value = serde_json::from_str(json)
+        .map_err(|e| Error::MiseList(format!("failed to parse MISE_INSTALLED_TOOLS: {e}")))?;
+
+    let mut tool_map = std::collections::HashMap::new();
+
+    if let Some(arr) = tools.as_array() {
+        for item in arr {
+            if let Some(name) = item.get("name") {
+                if let Some(s) = name.as_str() {
+                    resolve_tool_binary(&mut tool_map, s);
                 }
-                std::collections::hash_map::Entry::Occupied(mut e) if is_bare => {
-                    e.insert(tool_id.to_string());
-                }
-                std::collections::hash_map::Entry::Occupied(_) => {}
             }
         }
     }
@@ -234,13 +274,19 @@ pub fn sync_completions(
     dirs: &CompletionsDirs,
     shells: &[String],
     specific_tools: &[String],
+    new_only: bool,
 ) -> Result<(), Error> {
     let registry = registry::load_registry()?;
 
     // Determine which tools to sync
     let tools_map: std::collections::HashMap<String, String> = if specific_tools.is_empty() {
-        // Get all installed tools from mise (maps short name -> original ID)
-        get_installed_tools()?
+        if new_only {
+            // Only sync newly installed tools from MISE_INSTALLED_TOOLS env var
+            get_newly_installed_tools()?
+        } else {
+            // Get all installed tools from mise (maps short name -> original ID)
+            get_installed_tools()?
+        }
     } else {
         // For specific tools, short name equals original ID
         specific_tools
@@ -260,7 +306,7 @@ pub fn sync_completions(
     tools_in_registry.sort_by(|a, b| a.0.cmp(b.0));
 
     if tools_in_registry.is_empty() {
-        println!("No installed tools have completion support in registry.");
+        println!("No newly-installed tools have completion support in registry.");
         return Ok(());
     }
 
@@ -517,5 +563,40 @@ mod tests {
         );
         // Single component after colon
         assert_eq!(extract_tool_name("aqua:simple-tool"), "simple-tool");
+    }
+
+    #[test]
+    fn test_parse_installed_tools_json_parses_correctly() {
+        let json = r#"[{"name":"node","version":"20.10.0"},{"name":"python","version":"3.12.0"}]"#;
+        let tools = parse_installed_tools_json(json).expect("should parse JSON");
+        assert_eq!(tools.get("node"), Some(&"node".to_string()));
+        assert_eq!(tools.get("python"), Some(&"python".to_string()));
+    }
+
+    #[test]
+    fn test_parse_installed_tools_json_short_names() {
+        let json =
+            r#"[{"name":"gopls","version":"0.12.0"},{"name":"dockerfmt","version":"1.0.0"}]"#;
+        let tools = parse_installed_tools_json(json).expect("should parse short names");
+        assert_eq!(tools.get("gopls"), Some(&"gopls".to_string()));
+        assert_eq!(tools.get("dockerfmt"), Some(&"dockerfmt".to_string()));
+    }
+
+    #[test]
+    fn test_parse_installed_tools_json_empty_array() {
+        let json = "[]";
+        let tools = parse_installed_tools_json(json).expect("should return empty HashMap");
+        assert!(tools.is_empty());
+    }
+
+    #[test]
+    fn test_parse_installed_tools_json_invalid_json() {
+        let json = "invalid json";
+        let result = parse_installed_tools_json(json);
+        assert!(result.is_err());
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("failed to parse MISE_INSTALLED_TOOLS"));
     }
 }

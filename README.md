@@ -112,6 +112,13 @@ export MISE_COMPLETIONS_SYNC_FISH_DIR="$XDG_DATA_HOME/fish/vendor_completions.d"
 
 Note: Target directories will be created if they don't already exist. Don't forget to update your shell setup above.
 
+If you want to only generate completions for newly installed or updated tools, you can add the flag `--new-only`:
+
+```toml
+[hooks]
+postinstall = "misecompsync --new-only"
+```
+
 ## Updating
 
 ```bash
@@ -127,6 +134,7 @@ mise upgrade github:alltuner/mise-completions-sync
 # Pin a specific version with mise
 mise use -g github:alltuner/mise-completions-sync@0.5.1
 ```
+
 ## Documentation
 
 Full docs at [alltuner.github.io/mise-completions-sync](https://alltuner.github.io/mise-completions-sync/) — supported tools, completion details, and troubleshooting.
