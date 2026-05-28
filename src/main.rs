@@ -25,7 +25,7 @@ struct Cli {
     tools: Vec<String>,
 
     /// Only sync completions for newly installed/updated tools (reads MISE_INSTALLED_TOOLS env var)
-    #[arg(long)]
+    #[arg(long, conflicts_with = "tools")]
     new_only: bool,
 }
 
