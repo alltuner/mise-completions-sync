@@ -116,7 +116,7 @@ If you want to only generate completions for newly installed or updated tools, y
 
 ```toml
 [hooks]
-postinstall = "mise-completions-sync --new-only"
+postinstall = "misecompsync --new-only"
 ```
 
 ## Updating
