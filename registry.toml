@@ -77,6 +77,7 @@ syft = "standard"
 trivy = "standard"
 
 # Dev tools
+ast-grep = "completions"
 chezmoi = "standard"
 crush = "standard"
 cue = "standard"
