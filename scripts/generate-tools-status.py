@@ -28,6 +28,7 @@ NO_COMPLETION_SUPPORT = {
     "fzf",  # Ships shell integration script (key bindings), not a completion file
     "gcloud",  # Completions bundled as files in SDK, not generated via command
     "eza",
+    "kubectx",  # No completion command (errors "too many arguments"); ships completion files instead
     "nomad",  # HashiCorp autocomplete-install pattern
     "terraform",  # HashiCorp autocomplete-install pattern
     "tokei",

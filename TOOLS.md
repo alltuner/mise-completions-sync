@@ -5,7 +5,7 @@ Use this to identify tools that could be added to mise-completions-sync.
 
 ## Supported Tools
 
-Currently **93 tools** have completion support.
+Currently **92 tools** have completion support.
 
 See [docs/tools.md](docs/tools.md) for the full list with shell support details.
 
@@ -55,8 +55,8 @@ These tools are in mise's registry but not yet supported. They may have completi
 | [atlas](https://github.com/ariga/atlas) | A modern tool for managing database schemas | Needs testing |
 | [atlas-community](https://github.com/ariga/atlas) | A modern tool for managing database schemas (Co... | Needs testing |
 | [atmos](https://github.com/cloudposse/atmos) | Workflow automation tool for DevOps. Keep confi... | Needs testing |
-| aube | A fast Node.js package manager | Needs testing |
-| auto-doc | Github action that turns your reusable workflow... | Needs testing |
+| [aube](https://github.com/endevco/aube) | A fast Node.js package manager | Needs testing |
+| auto-doc | GitHub action that turns your reusable workflow... | Needs testing |
 | aws-amplify | The AWS Amplify CLI is a toolchain for simplify... | Needs testing |
 | [aws-cli](https://github.com/aws/aws-cli) | The AWS Command Line Interface (AWS CLI v2) is ... | Needs testing |
 | [aws-copilot](https://github.com/aws/copilot-cli) | The AWS Copilot CLI is a tool for developers to... | Needs testing |
@@ -66,7 +66,7 @@ These tools are in mise's registry but not yet supported. They may have completi
 | [aws-sso](https://github.com/synfinatic/aws-sso-cli) | A powerful tool for using AWS Identity Center f... | Needs testing |
 | [aws-vault](https://github.com/ByteNess/aws-vault) | A vault for securely storing and accessing AWS ... | Needs testing |
 
-*...and 775 more tools in mise registry*
+*...and 781 more tools in mise registry*
 
 ## Tools Without Completion Support
 
@@ -82,6 +82,7 @@ These tools have been tested and confirmed to NOT output shell completion script
 - **eza**: A modern, maintained replacement for ls
 - **fzf**: :cherry_blossom: A command-line fuzzy finder
 - **gcloud**: GCloud CLI (Google Cloud SDK)
+- **kubectx**: Faster way to switch between clusters and names...
 - **nomad**: Nomad is an easy-to-use, flexible, and performa...
 - **terraform**: Terraform enables you to safely and predictably...
 - **tokei**: Count your code, quickly
