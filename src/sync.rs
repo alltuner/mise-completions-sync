@@ -306,7 +306,11 @@ pub fn sync_completions(
     tools_in_registry.sort_by(|a, b| a.0.cmp(b.0));
 
     if tools_in_registry.is_empty() {
-        println!("No newly-installed tools have completion support in registry.");
+        if new_only {
+            println!("No newly-installed tools have completion support in registry.");
+        } else {
+            println!("No installed tools have completion support in registry.");
+        }
         return Ok(());
     }
 
