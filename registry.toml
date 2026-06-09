@@ -93,7 +93,6 @@ lefthook = "standard"
 oc = "standard"
 pitchfork = "standard"
 pulumi = "standard"
-restic = "standard"
 rumdl = "completions"
 saml2aws = "standard"
 step = "standard"
@@ -139,3 +138,6 @@ nix = { zsh = "nix --extra-experimental-features 'nix-command' completion zsh 2>
 
 # tree-sitter has unique complete --shell {shell} pattern
 tree-sitter = { zsh = "tree-sitter complete --shell zsh", bash = "tree-sitter complete --shell bash", fish = "tree-sitter complete --shell fish" }
+
+# restic writes completions via `generate --{shell}-completion`; `-` sends them to stdout
+restic = { zsh = "restic generate --zsh-completion -", bash = "restic generate --bash-completion -", fish = "restic generate --fish-completion -" }
