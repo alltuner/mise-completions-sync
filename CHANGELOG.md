@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.5.10](https://github.com/alltuner/mise-completions-sync/compare/v0.5.9...v0.5.10) (2026-06-09)
+
+
+### Features
+
+* add --new-only flag ([#83](https://github.com/alltuner/mise-completions-sync/issues/83)) ([26ae9ca](https://github.com/alltuner/mise-completions-sync/commit/26ae9caf25fc890c92067c4b6eb746fbbaa67865))
+* **pipx:** add fish support ([#98](https://github.com/alltuner/mise-completions-sync/issues/98)) ([7c329df](https://github.com/alltuner/mise-completions-sync/commit/7c329df376ef174debfe1eb5bc4a05b3b647dfd0))
+
+
+### Bug Fixes
+
+* **registry:** correct restic completion command ([#107](https://github.com/alltuner/mise-completions-sync/issues/107)) ([019e8d1](https://github.com/alltuner/mise-completions-sync/commit/019e8d1165c6dcfdd597a2086a7e6d1866a6f00f))
+* **registry:** remove kubectx (closes [#104](https://github.com/alltuner/mise-completions-sync/issues/104)) ([#106](https://github.com/alltuner/mise-completions-sync/issues/106)) ([57944a5](https://github.com/alltuner/mise-completions-sync/commit/57944a5e52072a1eec91c8abca9388a394c74411))
+
+
+### Miscellaneous Chores
+
+* **deps:** update astral-sh/setup-uv action to v8.2.0 ([#102](https://github.com/alltuner/mise-completions-sync/issues/102)) ([8d3d29a](https://github.com/alltuner/mise-completions-sync/commit/8d3d29aaf404b7b5793a1aa95d557909dd3ee206))
+
 ## [0.5.9](https://github.com/alltuner/mise-completions-sync/compare/v0.5.8...v0.5.9) (2026-05-27)
 
 
