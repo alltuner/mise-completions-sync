@@ -111,7 +111,6 @@ bun = { zsh = "bun completions", bash = "bun completions", fish = "bun completio
 # Partial shell support (zsh + bash)
 npm = { zsh = "npm completion", bash = "npm completion" }
 pnpm = { zsh = "pnpm completion zsh", bash = "pnpm completion bash" }
-kubectx = { zsh = "kubectx completion zsh", bash = "kubectx completion bash" }
 vercel = { zsh = "vercel completion zsh", bash = "vercel completion bash" }
 sops = { zsh = "sops completion zsh", bash = "sops completion bash" }
 

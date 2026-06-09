@@ -44,7 +44,6 @@ The following tools have shell completion support in mise-completions-sync.
 | [ko](https://github.com/ko-build/ko) | Build and deploy Go applications on Kubernetes | ✓ | ✓ | ✓ |
 | [kubectl](https://github.com/kubernetes/kubernetes) | kubectl cli | ✓ | ✓ | ✓ |
 | kubectl-ai |  | ✓ | ✓ | ✓ |
-| [kubectx](https://github.com/ahmetb/kubectx) | Faster way to switch between clusters and names... | ✓ | ✓ |  |
 | [kubeseal](https://github.com/bitnami-labs/sealed-secrets) | A Kubernetes controller and tool for one-way en... | ✓ | ✓ | ✓ |
 | [kustomize](https://github.com/kubernetes-sigs/kustomize) | Customization of kubernetes YAML configurations | ✓ | ✓ | ✓ |
 | [lazygit](https://github.com/jesseduffield/lazygit) | simple terminal UI for git commands | ✓ | ✓ | ✓ |
@@ -60,7 +59,7 @@ The following tools have shell completion support in mise-completions-sync.
 | oc | OpenShift Client CLI (oc) | ✓ | ✓ | ✓ |
 | oci | Oracle Cloud Infrastructure CLI | ✓ | ✓ | ✓ |
 | [oras](https://github.com/oras-project/oras) | ORAS CLI | ✓ | ✓ | ✓ |
-| [pipx](https://github.com/pypa/pipx) |  | ✓ | ✓ |  |
+| [pipx](https://github.com/pypa/pipx) |  | ✓ | ✓ | ✓ |
 | [pitchfork](https://github.com/jdx/pitchfork) | Daemons with DX | ✓ | ✓ | ✓ |
 | [pluto](https://github.com/FairwindsOps/pluto) | A cli tool to help discover deprecated apiVersi... | ✓ | ✓ | ✓ |
 | [pnpm](https://github.com/pnpm/pnpm) | Fast, disk space efficient package manager | ✓ | ✓ |  |
@@ -98,7 +97,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 93 tools**
+**Total: 92 tools**
 
 ## Shell Support Legend
 
