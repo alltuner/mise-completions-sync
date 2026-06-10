@@ -11,6 +11,7 @@ gh_style = { zsh = "{} completion -s zsh", bash = "{} completion -s bash", fish 
 generate_shell = { zsh = "{} generate-shell-completion zsh", bash = "{} generate-shell-completion bash", fish = "{} generate-shell-completion fish" }
 gen_completions = { zsh = "{} gen-completions --shell zsh", bash = "{} gen-completions --shell bash", fish = "{} gen-completions --shell fish" }
 completions_flag = { zsh = "{} --completions zsh", bash = "{} --completions bash", fish = "{} --completions fish" }
+argcomplete = { zsh = "register-python-argcomplete -s zsh {}", bash = "register-python-argcomplete -s bash {}", fish = "register-python-argcomplete -s fish {}" }
 
 [tools]
 # Core tools
@@ -56,7 +57,11 @@ watchexec = "completions_flag"
 usage = "completions_flag"
 
 # Python tools
+ipython = "argcomplete"
+patool = "argcomplete"
+pipx = "argcomplete"
 poetry = "completions"
+ratarmount = "argcomplete"
 
 # Cloud CLIs
 flyctl = "standard"
@@ -115,9 +120,6 @@ sops = { zsh = "sops completion zsh", bash = "sops completion bash" }
 
 # Cargo uses rustup
 cargo = { zsh = "rustup completions zsh cargo", bash = "rustup completions bash cargo", fish = "rustup completions fish cargo" }
-
-# pipx uses argcomplete
-pipx = { zsh = "register-python-argcomplete --shell zsh pipx", bash = "register-python-argcomplete --shell bash pipx", fish = "register-python-argcomplete --shell fish pipx" }
 
 prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util generate-shell-completion bash", fish = "prek util generate-shell-completion fish" }
 
