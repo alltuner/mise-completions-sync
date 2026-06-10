@@ -51,7 +51,7 @@ enum Commands {
         #[arg(default_value = "zsh")]
         shell: String,
     },
-    /// Remove completions for tools no longer installed
+    /// Remove completions for tools no longer installed. Use caution with --global/--local/--current — may remove for tools not in scope
     Clean,
     /// Print shell completions for misecompsync itself to stdout
     Completion {
