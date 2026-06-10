@@ -90,6 +90,44 @@ impl CompletionsDirs {
     }
 }
 
+/// Pass-through scope flags for `mise ls`.
+///
+/// These mirror the corresponding `mise ls` options and narrow which installed
+/// tools are discovered. `--global` and `--local` are mutually exclusive (enforced
+/// at the CLI layer); `--current` combines freely with either. With no flags set,
+/// behavior is unchanged: `mise ls --installed --json`.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct MiseLsFlags {
+    global: bool,
+    local: bool,
+    current: bool,
+}
+
+impl MiseLsFlags {
+    pub fn new(global: bool, local: bool, current: bool) -> Self {
+        Self {
+            global,
+            local,
+            current,
+        }
+    }
+
+    /// Build the full `mise ls` argument list, including any scope flags.
+    fn args(&self) -> Vec<&'static str> {
+        let mut args = vec!["ls", "--installed", "--json"];
+        if self.global {
+            args.push("--global");
+        }
+        if self.local {
+            args.push("--local");
+        }
+        if self.current {
+            args.push("--current");
+        }
+        args
+    }
+}
+
 /// Check if a string looks like a version identifier
 fn is_version_component(s: &str) -> bool {
     // Common version patterns:
@@ -170,9 +208,11 @@ fn resolve_tool_binary(tool_map: &mut std::collections::HashMap<String, String>,
 /// Get list of installed tools from mise
 /// Returns a map of stripped tool names to their original IDs (with backend prefixes)
 /// This allows registry matching on short names while preserving the original ID for mise x
-fn get_installed_tools() -> Result<std::collections::HashMap<String, String>, Error> {
+fn get_installed_tools(
+    flags: MiseLsFlags,
+) -> Result<std::collections::HashMap<String, String>, Error> {
     let output = Command::new("mise")
-        .args(["ls", "--installed", "--json"])
+        .args(flags.args())
         .output()
         .map_err(|e| Error::MiseList(e.to_string()))?;
 
@@ -274,6 +314,7 @@ pub fn sync_completions(
     dirs: &CompletionsDirs,
     shells: &[String],
     specific_tools: &[String],
+    flags: MiseLsFlags,
     new_only: bool,
 ) -> Result<(), Error> {
     let registry = registry::load_registry()?;
@@ -281,11 +322,9 @@ pub fn sync_completions(
     // Determine which tools to sync
     let tools_map: std::collections::HashMap<String, String> = if specific_tools.is_empty() {
         if new_only {
-            // Only sync newly installed tools from MISE_INSTALLED_TOOLS env var
             get_newly_installed_tools()?
         } else {
-            // Get all installed tools from mise (maps short name -> original ID)
-            get_installed_tools()?
+            get_installed_tools(flags)?
         }
     } else {
         // For specific tools, short name equals original ID
@@ -343,9 +382,9 @@ pub fn sync_completions(
 }
 
 /// Remove completions for tools that are no longer installed
-pub fn clean_stale_completions(dirs: &CompletionsDirs) -> Result<(), Error> {
+pub fn clean_stale_completions(dirs: &CompletionsDirs, flags: MiseLsFlags) -> Result<(), Error> {
     let registry = registry::load_registry()?;
-    let installed_map = get_installed_tools()?;
+    let installed_map = get_installed_tools(flags)?;
     let installed_set: HashSet<_> = installed_map.keys().collect();
 
     let shells = ["zsh", "bash", "fish"];
@@ -466,6 +505,47 @@ mod tests {
     fn test_get_dir_unsupported_shell() {
         let dirs = dirs_with_base("/any");
         assert!(dirs.get_dir("tcsh").is_err());
+    }
+
+    #[test]
+    fn test_mise_ls_flags_default() {
+        // No scope flags -> unchanged behavior.
+        let flags = MiseLsFlags::default();
+        assert_eq!(flags.args(), vec!["ls", "--installed", "--json"]);
+    }
+
+    #[test]
+    fn test_mise_ls_flags_global() {
+        let flags = MiseLsFlags::new(true, false, false);
+        assert_eq!(
+            flags.args(),
+            vec!["ls", "--installed", "--json", "--global"]
+        );
+    }
+
+    #[test]
+    fn test_mise_ls_flags_local() {
+        let flags = MiseLsFlags::new(false, true, false);
+        assert_eq!(flags.args(), vec!["ls", "--installed", "--json", "--local"]);
+    }
+
+    #[test]
+    fn test_mise_ls_flags_current() {
+        let flags = MiseLsFlags::new(false, false, true);
+        assert_eq!(
+            flags.args(),
+            vec!["ls", "--installed", "--json", "--current"]
+        );
+    }
+
+    #[test]
+    fn test_mise_ls_flags_global_and_current() {
+        // --current combines freely with --global.
+        let flags = MiseLsFlags::new(true, false, true);
+        assert_eq!(
+            flags.args(),
+            vec!["ls", "--installed", "--json", "--global", "--current"]
+        );
     }
 
     #[test]
