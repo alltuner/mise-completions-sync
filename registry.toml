@@ -11,6 +11,10 @@ gh_style = { zsh = "{} completion -s zsh", bash = "{} completion -s bash", fish 
 generate_shell = { zsh = "{} generate-shell-completion zsh", bash = "{} generate-shell-completion bash", fish = "{} generate-shell-completion fish" }
 gen_completions = { zsh = "{} gen-completions --shell zsh", bash = "{} gen-completions --shell bash", fish = "{} gen-completions --shell fish" }
 completions_flag = { zsh = "{} --completions zsh", bash = "{} --completions bash", fish = "{} --completions fish" }
+# clap_complete aot generator exposed via a `--generate` ValueEnum (e.g. xh).
+# Only works when the binary name equals the tool name; tools like ripgrep (binary
+# `rg`) whose binary differs need an explicit entry instead.
+generate_complete = { zsh = "{} --generate=complete-zsh", bash = "{} --generate=complete-bash", fish = "{} --generate=complete-fish" }
 
 [tools]
 # Core tools
@@ -96,7 +100,7 @@ pulumi = "standard"
 rumdl = "completions"
 saml2aws = "standard"
 step = "standard"
-xh = "standard"
+xh = "generate_complete"
 yq = "standard"
 
 # Tools with explicit commands (unique patterns or partial shell support)

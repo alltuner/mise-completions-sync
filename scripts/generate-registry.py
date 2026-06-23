@@ -109,7 +109,7 @@ TOOL_PATTERNS = {
     "saml2aws": "standard",
     "croc": "standard",
     "httpie": "standard",
-    "xh": "standard",
+    "xh": "generate_complete",
     "grpcurl": "standard",
     "evans": "standard",
     "mkcert": "standard",
