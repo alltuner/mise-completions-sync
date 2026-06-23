@@ -11,6 +11,10 @@ gh_style = { zsh = "{} completion -s zsh", bash = "{} completion -s bash", fish 
 generate_shell = { zsh = "{} generate-shell-completion zsh", bash = "{} generate-shell-completion bash", fish = "{} generate-shell-completion fish" }
 gen_completions = { zsh = "{} gen-completions --shell zsh", bash = "{} gen-completions --shell bash", fish = "{} gen-completions --shell fish" }
 completions_flag = { zsh = "{} --completions zsh", bash = "{} --completions bash", fish = "{} --completions fish" }
+# clap_complete's dynamic completion (CompleteEnv): driven by the COMPLETE env var.
+# This is the one standardized clap completion interface, but it is opt-in, so most
+# clap tools do NOT support it (e.g. xh, ripgrep emit nothing). Verify before using.
+clap_dynamic = { zsh = "COMPLETE=zsh {}", bash = "COMPLETE=bash {}", fish = "COMPLETE=fish {}" }
 
 [tools]
 # Core tools
