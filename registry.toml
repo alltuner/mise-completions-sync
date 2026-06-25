@@ -22,6 +22,7 @@ gh = "gh_style"
 glab = "gh_style"
 
 # Kubernetes ecosystem
+clusterctl = "standard"
 cmctl = "standard"
 k9s = "standard"
 kind = "standard"
