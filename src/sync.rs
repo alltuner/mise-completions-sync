@@ -1,7 +1,7 @@
 // ABOUTME: Core sync logic for generating shell completions.
 // ABOUTME: Gets installed tools from mise and generates completion files.
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::path::PathBuf;
 use std::process::Command;
 
@@ -236,6 +236,62 @@ fn parse_installed_tools_json(
     Ok(tool_map)
 }
 
+#[derive(Debug, PartialEq, Eq)]
+struct SyncTarget {
+    tool_name: String,
+    tool_id: String,
+}
+
+fn installed_sync_targets(
+    registry: &registry::Registry,
+    installed_tools: &HashMap<String, String>,
+) -> Vec<SyncTarget> {
+    let mut targets: Vec<_> = registry
+        .tools
+        .iter()
+        .filter_map(|(tool_name, entry)| {
+            let runtime_tool = entry.provided_by.as_deref().unwrap_or(tool_name);
+            installed_tools.get(runtime_tool).map(|tool_id| SyncTarget {
+                tool_name: tool_name.clone(),
+                tool_id: tool_id.clone(),
+            })
+        })
+        .collect();
+    targets.sort_by(|a, b| a.tool_name.cmp(&b.tool_name));
+    targets
+}
+
+fn specific_sync_targets(
+    registry: &registry::Registry,
+    specific_tools: &[String],
+) -> Vec<SyncTarget> {
+    let mut targets: Vec<_> = specific_tools
+        .iter()
+        .filter_map(|tool_name| {
+            registry.tools.get(tool_name).map(|entry| SyncTarget {
+                tool_name: tool_name.clone(),
+                tool_id: entry
+                    .provided_by
+                    .as_deref()
+                    .unwrap_or(tool_name)
+                    .to_string(),
+            })
+        })
+        .collect();
+    targets.sort_by(|a, b| a.tool_name.cmp(&b.tool_name));
+    targets.dedup_by(|a, b| a.tool_name == b.tool_name);
+    targets
+}
+
+fn is_tool_installed(
+    tool_name: &str,
+    entry: &registry::ToolEntry,
+    installed_tools: &HashMap<String, String>,
+) -> bool {
+    let runtime_tool = entry.provided_by.as_deref().unwrap_or(tool_name);
+    installed_tools.contains_key(runtime_tool)
+}
+
 /// Generate completion for a single tool and shell
 fn generate_completion(
     tool_id: &str,   // Original ID with backend prefix (for mise x)
@@ -279,31 +335,18 @@ pub fn sync_completions(
     let registry = registry::load_registry()?;
 
     // Determine which tools to sync
-    let tools_map: std::collections::HashMap<String, String> = if specific_tools.is_empty() {
-        if new_only {
+    let tools_in_registry = if specific_tools.is_empty() {
+        let tools_map = if new_only {
             // Only sync newly installed tools from MISE_INSTALLED_TOOLS env var
             get_newly_installed_tools()?
         } else {
             // Get all installed tools from mise (maps short name -> original ID)
             get_installed_tools()?
-        }
+        };
+        installed_sync_targets(&registry, &tools_map)
     } else {
-        // For specific tools, short name equals original ID
-        specific_tools
-            .iter()
-            .cloned()
-            .map(|t| (t.clone(), t))
-            .collect()
+        specific_sync_targets(&registry, specific_tools)
     };
-
-    // Filter to only tools in our registry (match on short names)
-    let mut tools_in_registry: Vec<(&String, &String)> = tools_map
-        .iter()
-        .filter(|(short_name, _)| registry.tools.contains_key(*short_name))
-        .collect();
-
-    // Sort alphabetically by short name for consistent output
-    tools_in_registry.sort_by(|a, b| a.0.cmp(b.0));
 
     if tools_in_registry.is_empty() {
         if new_only {
@@ -323,15 +366,19 @@ pub fn sync_completions(
         let output_dir = dirs.get_dir(shell)?;
         println!("\n[{shell}] -> {}", output_dir.display());
 
-        for (short_name, original_id) in &tools_in_registry {
-            if let Some(completions) = registry.tools.get(*short_name) {
-                if let Some(cmd) = completions.get(shell) {
-                    // Use the original tool ID (with backend prefix) for mise x
-                    // and the stripped name for the filename
-                    if let Err(e) =
-                        generate_completion(original_id, short_name, cmd, shell, &output_dir)
-                    {
-                        eprintln!("  {short_name}: {e}");
+        for target in &tools_in_registry {
+            if let Some(entry) = registry.tools.get(&target.tool_name) {
+                if let Some(cmd) = entry.completions.get(shell) {
+                    // Use the provider's original tool ID (with backend prefix) for mise x
+                    // and the registry entry name for the filename.
+                    if let Err(e) = generate_completion(
+                        &target.tool_id,
+                        &target.tool_name,
+                        cmd,
+                        shell,
+                        &output_dir,
+                    ) {
+                        eprintln!("  {}: {e}", target.tool_name);
                     }
                 }
             }
@@ -346,7 +393,6 @@ pub fn sync_completions(
 pub fn clean_stale_completions(dirs: &CompletionsDirs) -> Result<(), Error> {
     let registry = registry::load_registry()?;
     let installed_map = get_installed_tools()?;
-    let installed_set: HashSet<_> = installed_map.keys().collect();
 
     let shells = ["zsh", "bash", "fish"];
     let mut removed = 0;
@@ -365,8 +411,10 @@ pub fn clean_stale_completions(dirs: &CompletionsDirs) -> Result<(), Error> {
                 // Extract tool name from filename
                 let tool = shells::tool_from_filename(shell, filename);
                 if let Some(tool) = tool {
-                    if registry.tools.contains_key(&tool)
-                        && !installed_set.contains(&tool)
+                    if registry
+                        .tools
+                        .get(&tool)
+                        .is_some_and(|entry| !is_tool_installed(&tool, entry, &installed_map))
                         && std::fs::remove_file(&path).is_ok()
                     {
                         println!("Removed: {}", path.display());
@@ -389,6 +437,33 @@ mod tests {
         CompletionsDirs {
             base_dir: PathBuf::from(base),
             shell_overrides: HashMap::new(),
+        }
+    }
+
+    fn registry_with_provider() -> registry::Registry {
+        let completions = || registry::ToolCompletions {
+            zsh: Some("completion zsh".to_string()),
+            bash: None,
+            fish: None,
+        };
+
+        registry::Registry {
+            tools: HashMap::from([
+                (
+                    "uv".to_string(),
+                    registry::ToolEntry {
+                        completions: completions(),
+                        provided_by: None,
+                    },
+                ),
+                (
+                    "uvx".to_string(),
+                    registry::ToolEntry {
+                        completions: completions(),
+                        provided_by: Some("uv".to_string()),
+                    },
+                ),
+            ]),
         }
     }
 
@@ -602,5 +677,65 @@ mod tests {
             .unwrap_err()
             .to_string()
             .contains("failed to parse MISE_INSTALLED_TOOLS"));
+    }
+
+    #[test]
+    fn test_installed_sync_targets_include_provider_children() {
+        let registry = registry_with_provider();
+        let installed = HashMap::from([("uv".to_string(), "aqua:astral-sh/uv".to_string())]);
+
+        assert_eq!(
+            installed_sync_targets(&registry, &installed),
+            vec![
+                SyncTarget {
+                    tool_name: "uv".to_string(),
+                    tool_id: "aqua:astral-sh/uv".to_string(),
+                },
+                SyncTarget {
+                    tool_name: "uvx".to_string(),
+                    tool_id: "aqua:astral-sh/uv".to_string(),
+                },
+            ]
+        );
+    }
+
+    #[test]
+    fn test_installed_sync_targets_exclude_missing_provider() {
+        let registry = registry_with_provider();
+        let installed = HashMap::from([("node".to_string(), "node".to_string())]);
+
+        assert!(installed_sync_targets(&registry, &installed).is_empty());
+    }
+
+    #[test]
+    fn test_specific_sync_targets_do_not_expand_provider() {
+        let registry = registry_with_provider();
+
+        assert_eq!(
+            specific_sync_targets(&registry, &["uvx".to_string(), "uvx".to_string()]),
+            vec![SyncTarget {
+                tool_name: "uvx".to_string(),
+                tool_id: "uv".to_string(),
+            }]
+        );
+        assert_eq!(
+            specific_sync_targets(&registry, &["uv".to_string()]),
+            vec![SyncTarget {
+                tool_name: "uv".to_string(),
+                tool_id: "uv".to_string(),
+            }]
+        );
+    }
+
+    #[test]
+    fn test_provider_controls_installed_liveness() {
+        let registry = registry_with_provider();
+        let installed = HashMap::from([("uv".to_string(), "uv".to_string())]);
+        let uv = registry.tools.get("uv").unwrap();
+        let uvx = registry.tools.get("uvx").unwrap();
+
+        assert!(is_tool_installed("uv", uv, &installed));
+        assert!(is_tool_installed("uvx", uvx, &installed));
+        assert!(!is_tool_installed("uvx", uvx, &HashMap::new()));
     }
 }

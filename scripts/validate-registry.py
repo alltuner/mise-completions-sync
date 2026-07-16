@@ -38,7 +38,7 @@ def get_installed_tools() -> set[str]:
         return set()
 
 
-def load_registry() -> dict[str, dict[str, str]]:
+def load_registry() -> dict[str, tuple[str, dict[str, str]]]:
     """Load registry.toml and expand patterns to get tool completions."""
     registry_path = Path(__file__).parent.parent / "registry.toml"
     with open(registry_path, "rb") as f:
@@ -47,7 +47,7 @@ def load_registry() -> dict[str, dict[str, str]]:
     patterns = raw.get("patterns", {})
     tools_raw = raw.get("tools", {})
 
-    expanded = {}
+    expanded: dict[str, tuple[str, dict[str, str]]] = {}
     for tool_name, entry in tools_raw.items():
         if isinstance(entry, str):
             # Pattern reference
@@ -56,20 +56,26 @@ def load_registry() -> dict[str, dict[str, str]]:
                 print(f"Warning: unknown pattern '{entry}' for tool '{tool_name}'", file=sys.stderr)
                 continue
             # Expand {} placeholder with tool name
-            expanded[tool_name] = {
-                shell: cmd.replace("{}", tool_name)
-                for shell, cmd in pattern.items()
+            completions = {
+                shell: cmd.replace("{}", tool_name) for shell, cmd in pattern.items()
             }
+            expanded[tool_name] = (tool_name, completions)
         else:
-            # Explicit commands
-            expanded[tool_name] = entry
+            # Explicit commands, optionally provided by another mise tool
+            provider = entry.get("provided_by", tool_name)
+            completions = {
+                shell: entry[shell]
+                for shell in ("zsh", "bash", "fish")
+                if shell in entry
+            }
+            expanded[tool_name] = (provider, completions)
 
     return expanded
 
 
-def test_completion(tool: str, shell: str, command: str) -> tuple[bool, str]:
+def test_completion(provider: str, shell: str, command: str) -> tuple[bool, str]:
     """Test a completion command. Returns (success, error_message)."""
-    wrapped = f"mise x {tool} -- {command}"
+    wrapped = f"mise x {provider} -- {command}"
     result = subprocess.run(
         ["sh", "-c", wrapped],
         capture_output=True,
@@ -99,10 +105,10 @@ def main():
     print(f"Validating {total} tools...\n")
 
     for i, tool in enumerate(tools, 1):
-        if installed_only and tool not in installed:
+        provider, completions = registry[tool]
+        if installed_only and provider not in installed:
             continue
 
-        completions = registry[tool]
         results[tool] = {}
 
         print(f"[{i}/{total}] {tool}...", end=" ", flush=True)
@@ -114,7 +120,7 @@ def main():
 
             command = completions[shell]
             try:
-                ok, err = test_completion(tool, shell, command)
+                ok, err = test_completion(provider, shell, command)
                 results[tool][shell] = (ok, err)
                 if not ok:
                     tool_ok = False

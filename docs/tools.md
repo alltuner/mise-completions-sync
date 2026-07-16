@@ -112,3 +112,16 @@ If a tool you use isn't listed:
 2. Add an entry to `registry.toml` using an existing pattern or explicit commands
 3. Test with `uv run scripts/validate-registry.py --installed-only`
 4. Submit a PR
+
+### Companion binaries
+
+Some mise tools install additional binaries that generate their own completions.
+Use an explicit entry with `provided_by` to link the binary to its mise tool:
+
+```toml
+uvx = { provided_by = "uv", zsh = "uvx --generate-shell-completion zsh", bash = "uvx --generate-shell-completion bash", fish = "uvx --generate-shell-completion fish" }
+```
+
+`provided_by` is a one-hop link and is supported only on explicit entries.
+Normal sync and `--new-only` include the child when its provider is installed.
+`misecompsync uvx` syncs only `uvx`; `misecompsync uv` does not expand children.
