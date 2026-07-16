@@ -248,6 +248,29 @@ mod tests {
     }
 
     #[test]
+    fn test_uvx_in_registry() {
+        let registry = load_registry().expect("Failed to load registry");
+        let uvx = registry
+            .tools
+            .get("uvx")
+            .expect("uvx should be in registry");
+
+        assert_eq!(uvx.provided_by.as_deref(), Some("uv"));
+        assert_eq!(
+            uvx.completions.zsh.as_deref(),
+            Some("uvx --generate-shell-completion zsh")
+        );
+        assert_eq!(
+            uvx.completions.bash.as_deref(),
+            Some("uvx --generate-shell-completion bash")
+        );
+        assert_eq!(
+            uvx.completions.fish.as_deref(),
+            Some("uvx --generate-shell-completion fish")
+        );
+    }
+
+    #[test]
     fn test_explicit_entry_with_provider() {
         let registry = parse_registry(
             r#"

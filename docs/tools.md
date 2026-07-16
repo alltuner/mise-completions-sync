@@ -97,6 +97,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [ty](https://github.com/astral-sh/ty) | An extremely fast Python type checker and langu... | ✓ | ✓ | ✓ |
 | [usage](https://github.com/jdx/usage) | A specification for CLIs | ✓ | ✓ | ✓ |
 | [uv](https://github.com/astral-sh/uv) | An extremely fast Python package installer and ... | ✓ | ✓ | ✓ |
+| uvx |  | ✓ | ✓ | ✓ |
 | [velero](https://github.com/vmware-tanzu/velero) | Backup and migrate Kubernetes applications and ... | ✓ | ✓ | ✓ |
 | vercel | Build and deploy on the Vercel cloud | ✓ | ✓ |  |
 | [watchexec](https://github.com/watchexec/watchexec) | Executes commands in response to file modificat... | ✓ | ✓ | ✓ |
@@ -104,7 +105,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 99 tools**
+**Total: 100 tools**
 
 ## Shell Support Legend
 
