@@ -28,7 +28,6 @@ kubectl-ai = "standard"
 minikube = "standard"
 kustomize = "standard"
 argocd = "standard"
-flux = "standard"
 istioctl = "standard"
 k3d = "standard"
 ko = "standard"
@@ -106,6 +105,9 @@ yq = "standard"
 mise-completions-sync = { zsh = "misecompsync completion zsh", bash = "misecompsync completion bash", fish = "misecompsync completion fish" }
 
 bun = { zsh = "bun completions", bash = "bun completions", fish = "bun completions" }
+
+# mise installs this tool as flux2, but the binary it provides is named flux.
+flux2 = { zsh = "flux completion zsh", bash = "flux completion bash", fish = "flux completion fish" }
 
 # Partial shell support (zsh + bash)
 npm = { zsh = "npm completion", bash = "npm completion" }

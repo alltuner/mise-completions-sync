@@ -31,7 +31,6 @@ TOOL_PATTERNS = {
     "minikube": "standard",
     "kustomize": "standard",
     "argocd": "standard",
-    "flux": "standard",
     "k3d": "standard",
     "kubeseal": "standard",
     "krew": "standard",
