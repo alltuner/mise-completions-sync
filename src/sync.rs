@@ -248,6 +248,22 @@ fn wrap_command(tool_id: &str, requires: Option<&str>, command: &str) -> String 
     }
 }
 
+/// Lines to report for a command that succeeded but still wrote to stderr.
+///
+/// mise installs a missing `requires` tool on demand and reports it here, so
+/// discarding stderr on success hides software being installed.
+fn diagnostics(tool_name: &str, stderr: &[u8]) -> Vec<String> {
+    let stderr = String::from_utf8_lossy(stderr);
+    if stderr.trim().is_empty() {
+        return Vec::new();
+    }
+    stderr
+        .trim_end()
+        .lines()
+        .map(|line| format!("  {tool_name}: {line}"))
+        .collect()
+}
+
 fn generate_completion(
     tool_id: &str,   // Original ID with backend prefix (for mise x)
     tool_name: &str, // Stripped name (for filename)
@@ -269,6 +285,10 @@ fn generate_completion(
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr);
         return Err(Error::Generate(tool_name.to_string(), stderr.to_string()));
+    }
+
+    for line in diagnostics(tool_name, &output.stderr) {
+        eprintln!("{line}");
     }
 
     // Write the completion file using the stripped name (not the original ID)
@@ -407,6 +427,34 @@ mod tests {
             base_dir: PathBuf::from(base),
             shell_overrides: HashMap::new(),
         }
+    }
+
+    #[test]
+    fn test_diagnostics_empty_when_nothing_written() {
+        assert!(diagnostics("fnox", b"").is_empty());
+        assert!(diagnostics("fnox", b"  \n\t \n").is_empty());
+    }
+
+    #[test]
+    fn test_diagnostics_attribute_each_line_to_the_tool() {
+        assert_eq!(
+            diagnostics(
+                "fnox",
+                b"mise usage@4.0.0 install\nmise usage@4.0.0 download\n"
+            ),
+            vec![
+                "  fnox: mise usage@4.0.0 install",
+                "  fnox: mise usage@4.0.0 download",
+            ]
+        );
+    }
+
+    #[test]
+    fn test_diagnostics_handle_invalid_utf8() {
+        assert_eq!(
+            diagnostics("fnox", b"warn: \xff\xfe"),
+            vec!["  fnox: warn: ��"]
+        );
     }
 
     #[test]
