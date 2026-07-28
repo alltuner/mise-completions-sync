@@ -236,7 +236,6 @@ fn parse_installed_tools_json(
     Ok(tool_map)
 }
 
-/// Generate completion for a single tool and shell
 /// Build the `mise x` invocation for a completion command.
 ///
 /// A tool listing `requires` needs a second binary on PATH to render its
@@ -264,6 +263,25 @@ fn diagnostics(tool_name: &str, stderr: &[u8]) -> Vec<String> {
         .collect()
 }
 
+/// Reject completion output that is empty or whitespace-only.
+///
+/// `generate_completion` trusts the command's exit status, but some tools — or a
+/// wrong registry guess — exit 0 while emitting nothing useful (e.g. the old `xh
+/// completion zsh`, which parsed its args as a URL). Without this guard we would
+/// silently write an empty completion file. Fail loudly instead.
+fn validate_completion_output(tool_name: &str, stdout: &[u8]) -> Result<(), Error> {
+    if stdout.iter().all(u8::is_ascii_whitespace) {
+        return Err(Error::Generate(
+            tool_name.to_string(),
+            "completion command produced no output (empty or whitespace-only); \
+             the registry command for this tool is likely wrong"
+                .to_string(),
+        ));
+    }
+    Ok(())
+}
+
+/// Generate completion for a single tool and shell
 fn generate_completion(
     tool_id: &str,   // Original ID with backend prefix (for mise x)
     tool_name: &str, // Stripped name (for filename)
@@ -290,6 +308,8 @@ fn generate_completion(
     for line in diagnostics(tool_name, &output.stderr) {
         eprintln!("{line}");
     }
+    // A zero exit code is not enough: a wrong command can exit 0 with no output.
+    validate_completion_output(tool_name, &output.stdout)?;
 
     // Write the completion file using the stripped name (not the original ID)
     let filename = shells::completion_filename(shell, tool_name);
@@ -481,6 +501,20 @@ mod tests {
             wrap_command("pipx:ipython", Some("pipx:argcomplete"), "ipython x"),
             "mise x pipx:ipython pipx:argcomplete -- ipython x"
         );
+    }
+
+    #[test]
+    fn test_validate_completion_output_rejects_empty() {
+        // Regression: a wrong registry command can exit 0 with no output (the old
+        // `xh completion zsh` did exactly this). We must fail loudly, not write an
+        // empty completion file.
+        assert!(validate_completion_output("xh", b"").is_err());
+        assert!(validate_completion_output("xh", b"   \n\t  ").is_err());
+    }
+
+    #[test]
+    fn test_validate_completion_output_accepts_real_script() {
+        assert!(validate_completion_output("xh", b"#compdef xh\n...").is_ok());
     }
 
     #[test]
