@@ -5,6 +5,7 @@ The following tools have shell completion support in mise-completions-sync.
 | Tool | Description | ZSH | Bash | Fish |
 |------|-------------|-----|------|------|
 | [argocd](https://github.com/argoproj/argo-cd) | Declarative continuous deployment for Kubernetes | ✓ | ✓ | ✓ |
+| [ast-grep](https://github.com/ast-grep/ast-grep) | A CLI tool for code structural search, lint and... | ✓ | ✓ | ✓ |
 | [atuin](https://github.com/atuinsh/atuin) | ✨ Magical shell history | ✓ | ✓ | ✓ |
 | [bat](https://github.com/sharkdp/bat) | A cat(1) clone with wings | ✓ | ✓ | ✓ |
 | bun | Bun is a fast JavaScript all-in-one toolkit | ✓ | ✓ | ✓ |
@@ -100,7 +101,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 95 tools**
+**Total: 96 tools**
 
 ## Shell Support Legend
 
