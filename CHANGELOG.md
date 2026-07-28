@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.12](https://github.com/alltuner/mise-completions-sync/compare/v0.5.11...v0.5.12) (2026-07-28)
+
+
+### Features
+
+* add ipython, patool, ratarmount ([#108](https://github.com/alltuner/mise-completions-sync/issues/108)) ([5ceda4e](https://github.com/alltuner/mise-completions-sync/commit/5ceda4e331181202ae5f4e5d0a3f3f6d97332f45))
+* **registry:** support companion binaries ([#119](https://github.com/alltuner/mise-completions-sync/issues/119)) ([663e8a1](https://github.com/alltuner/mise-completions-sync/commit/663e8a1bd83935a9b0a150df46615e58dde5e1e2))
+* **sync-with-flags:** Allow flags --global --local --current ([#103](https://github.com/alltuner/mise-completions-sync/issues/103)) ([469e900](https://github.com/alltuner/mise-completions-sync/commit/469e90016ef60733ddb975aaab92ccf5bdc4a0b3))
+
+
+### Code Refactoring
+
+* **sync:** fail loudly on empty completion output ([#114](https://github.com/alltuner/mise-completions-sync/issues/114)) ([b663a7b](https://github.com/alltuner/mise-completions-sync/commit/b663a7b76b63183e4880ff31b34476eeedac2d4b))
+
+
+### Miscellaneous Chores
+
+* **deps:** update rust crate toml to v1.1.4 ([#128](https://github.com/alltuner/mise-completions-sync/issues/128)) ([04d81d2](https://github.com/alltuner/mise-completions-sync/commit/04d81d2c8d099fe8fd5ea81c02eadec2d3c2a76e))
+* remove unused release-please config ([#129](https://github.com/alltuner/mise-completions-sync/issues/129)) ([7467e04](https://github.com/alltuner/mise-completions-sync/commit/7467e047aac6fc6da3f464c2b105d7e15e6a8120))
+
 ## [0.5.11](https://github.com/alltuner/mise-completions-sync/compare/v0.5.10...v0.5.11) (2026-07-28)
 
 
