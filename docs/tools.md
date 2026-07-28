@@ -23,7 +23,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [doggo](https://github.com/mr-karan/doggo) | :dog: Command-line DNS Client for Humans. Writt... | ✓ | ✓ | ✓ |
 | [dyff](https://github.com/homeport/dyff) | A diff tool for YAML files, and sometimes JSON | ✓ | ✓ | ✓ |
 | [fd](https://github.com/sharkdp/fd) | A simple, fast and user-friendly alternative to... | ✓ | ✓ | ✓ |
-| flux |  | ✓ | ✓ | ✓ |
+| [flux2](https://github.com/fluxcd/flux2) | Open and extensible continuous delivery solutio... | ✓ | ✓ | ✓ |
 | [flyctl](https://github.com/superfly/flyctl) | Command line tools for fly.io services | ✓ | ✓ | ✓ |
 | fnox | Fort Knox for your secrets | ✓ | ✓ | ✓ |
 | [gh](https://github.com/cli/cli) | GitHub’s official command line tool | ✓ | ✓ | ✓ |
