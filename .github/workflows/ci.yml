@@ -31,3 +31,11 @@ jobs:
 
       - name: Test
         run: cargo test
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check docs/tools.md matches registry.toml
+        run: python3 scripts/check-docs-sync.py
