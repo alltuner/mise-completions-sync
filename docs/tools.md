@@ -116,3 +116,16 @@ If a tool you use isn't listed:
 2. Add an entry to `registry.toml` using an existing pattern or explicit commands
 3. Test with `uv run scripts/validate-registry.py --installed-only`
 4. Submit a PR
+
+### Tools that need another binary
+
+Some tools shell out to a second binary to render completions, and fail
+when it is missing. `fnox`, for example, renders through `usage`. Name it
+with `requires` and it joins the same `mise x` invocation:
+
+```toml
+fnox = { requires = "usage", zsh = "fnox completion zsh" }
+```
+
+`requires` works on patterns too, when every tool sharing the pattern
+needs the same helper.

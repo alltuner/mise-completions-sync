@@ -39,6 +39,9 @@ pub struct ToolCompletions {
     pub zsh: Option<String>,
     pub bash: Option<String>,
     pub fish: Option<String>,
+    /// Another mise tool that must be on PATH for the command to work, because
+    /// the tool shells out to it to render completions (e.g. fnox needs `usage`).
+    pub requires: Option<String>,
 }
 
 impl ToolCompletions {
@@ -57,6 +60,7 @@ impl ToolCompletions {
             zsh: self.zsh.as_ref().map(|s| s.replace("{}", tool_name)),
             bash: self.bash.as_ref().map(|s| s.replace("{}", tool_name)),
             fish: self.fish.as_ref().map(|s| s.replace("{}", tool_name)),
+            requires: self.requires.clone(),
         }
     }
 }
@@ -158,6 +162,29 @@ mod tests {
         assert_eq!(xh.zsh.as_deref(), Some("xh --generate=complete-zsh"));
         assert_eq!(xh.bash.as_deref(), Some("xh --generate=complete-bash"));
         assert_eq!(xh.fish.as_deref(), Some("xh --generate=complete-fish"));
+    }
+
+    #[test]
+    fn test_fnox_requires_usage() {
+        // fnox renders completions by shelling out to the `usage` CLI, which is not
+        // on PATH inside `mise x fnox`. The command itself stays plain; `requires`
+        // is what puts usage there.
+        let registry = load_registry().expect("Failed to load registry");
+        let fnox = registry
+            .tools
+            .get("fnox")
+            .expect("fnox should be in registry");
+        assert_eq!(fnox.requires.as_deref(), Some("usage"));
+        assert_eq!(fnox.zsh.as_deref(), Some("fnox completion zsh"));
+        assert_eq!(fnox.bash.as_deref(), Some("fnox completion bash"));
+        assert_eq!(fnox.fish.as_deref(), Some("fnox completion fish"));
+    }
+
+    #[test]
+    fn test_requires_defaults_to_none() {
+        let registry = load_registry().expect("Failed to load registry");
+        let yq = registry.tools.get("yq").expect("yq should be in registry");
+        assert_eq!(yq.requires, None);
     }
 
     #[test]

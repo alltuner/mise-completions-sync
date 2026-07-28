@@ -67,9 +67,12 @@ def load_registry() -> dict[str, dict[str, str]]:
     return expanded
 
 
-def test_completion(tool: str, shell: str, command: str) -> tuple[bool, str]:
+def test_completion(
+    tool: str, shell: str, command: str, requires: str | None = None
+) -> tuple[bool, str]:
     """Test a completion command. Returns (success, error_message)."""
-    wrapped = f"mise x {tool} -- {command}"
+    tools = f"{tool} {requires}" if requires else tool
+    wrapped = f"mise x {tools} -- {command}"
     result = subprocess.run(
         ["sh", "-c", wrapped],
         capture_output=True,
@@ -103,6 +106,7 @@ def main():
             continue
 
         completions = registry[tool]
+        requires = completions.get("requires")
         results[tool] = {}
 
         print(f"[{i}/{total}] {tool}...", end=" ", flush=True)
@@ -114,7 +118,7 @@ def main():
 
             command = completions[shell]
             try:
-                ok, err = test_completion(tool, shell, command)
+                ok, err = test_completion(tool, shell, command, requires)
                 results[tool][shell] = (ok, err)
                 if not ok:
                     tool_ok = False
