@@ -83,7 +83,6 @@ cue = "standard"
 dagger = "standard"
 doggo = "completions"
 dyff = "standard"
-fnox = "standard"
 gitleaks = "standard"
 golangci-lint = "standard"
 goreleaser = "standard"
@@ -118,6 +117,11 @@ cargo = { zsh = "rustup completions zsh cargo", bash = "rustup completions bash 
 
 # pipx uses argcomplete
 pipx = { zsh = "register-python-argcomplete --shell zsh pipx", bash = "register-python-argcomplete --shell bash pipx", fish = "register-python-argcomplete --shell fish pipx" }
+
+# fnox renders its completions with the `usage` CLI, which is a separate tool and
+# is not on PATH inside `mise x fnox`. The nested `mise x usage` supplies it, and
+# installs it on demand when it is missing.
+fnox = { zsh = "mise x usage -- fnox completion zsh", bash = "mise x usage -- fnox completion bash", fish = "mise x usage -- fnox completion fish" }
 
 prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util generate-shell-completion bash", fish = "prek util generate-shell-completion fish" }
 
