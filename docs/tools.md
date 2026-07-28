@@ -40,6 +40,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [grype](https://github.com/anchore/grype) | A vulnerability scanner for container images an... | ✓ | ✓ | ✓ |
 | [helm](https://github.com/helm/helm) | The Kubernetes Package Manager | ✓ | ✓ | ✓ |
 | [hugo](https://github.com/gohugoio/hugo) | The world’s fastest framework for building webs... | ✓ | ✓ | ✓ |
+| [ipython](https://github.com/ipython/ipython) | A command shell for interactive computing ... | ✓ | ✓ | ✓ |
 | [istioctl](https://github.com/istio/istio) | Istio configuration command line utility for se... | ✓ | ✓ | ✓ |
 | [just](https://github.com/casey/just) | Just a command runner | ✓ | ✓ | ✓ |
 | [k3d](https://github.com/k3d-io/k3d) | Little helper to run CNCF's k3s in Docker | ✓ | ✓ | ✓ |
@@ -63,6 +64,7 @@ The following tools have shell completion support in mise-completions-sync.
 | oc | OpenShift Client CLI (oc) | ✓ | ✓ | ✓ |
 | oci | Oracle Cloud Infrastructure CLI | ✓ | ✓ | ✓ |
 | [oras](https://github.com/oras-project/oras) | ORAS CLI | ✓ | ✓ | ✓ |
+| [patool](https://github.com/wummel/patool) | A portable command line archive file manager | ✓ | ✓ | ✓ |
 | [pipx](https://github.com/pypa/pipx) |  | ✓ | ✓ | ✓ |
 | [pitchfork](https://github.com/jdx/pitchfork) | Daemons with DX | ✓ | ✓ | ✓ |
 | [pluto](https://github.com/FairwindsOps/pluto) | A cli tool to help discover deprecated apiVersi... | ✓ | ✓ | ✓ |
@@ -71,6 +73,7 @@ The following tools have shell completion support in mise-completions-sync.
 | poetry | Python packaging and dependency management made... | ✓ | ✓ | ✓ |
 | [prek](https://github.com/j178/prek) |  | ✓ | ✓ | ✓ |
 | [pulumi](https://github.com/pulumi/pulumi) | Pulumi - Infrastructure as Code in any programm... | ✓ | ✓ | ✓ |
+| [ratarmount](https://github.com/mxmlnkn/ratarmount) | Access large archives as a filesystem efficiently... | ✓ | ✓ | ✓ |
 | [regctl](https://github.com/regclient/regclient) | Docker and OCI Registry Client in Go and toolin... | ✓ | ✓ | ✓ |
 | [restic](https://github.com/restic/restic) | Fast, secure, efficient backup program | ✓ | ✓ | ✓ |
 | [rg](https://github.com/BurntSushi/ripgrep) | ripgrep recursively searches directories for a ... | ✓ | ✓ | ✓ |
@@ -101,7 +104,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 96 tools**
+**Total: 99 tools**
 
 ## Shell Support Legend
 

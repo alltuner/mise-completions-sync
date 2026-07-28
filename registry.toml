@@ -127,7 +127,6 @@ pnpm = { zsh = "pnpm completion zsh", bash = "pnpm completion bash" }
 vercel = { zsh = "vercel completion zsh", bash = "vercel completion bash" }
 sops = { zsh = "sops completion zsh", bash = "sops completion bash" }
 
-
 # Cargo uses rustup
 cargo = { zsh = "rustup completions zsh cargo", bash = "rustup completions bash cargo", fish = "rustup completions fish cargo" }
 
@@ -135,7 +134,6 @@ cargo = { zsh = "rustup completions zsh cargo", bash = "rustup completions bash 
 # fnox renders its completions with the `usage` CLI, which is not on PATH inside
 # `mise x fnox` on its own.
 fnox = { requires = "usage", zsh = "fnox completion zsh", bash = "fnox completion bash", fish = "fnox completion fish" }
-
 
 prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util generate-shell-completion bash", fish = "prek util generate-shell-completion fish" }
 
