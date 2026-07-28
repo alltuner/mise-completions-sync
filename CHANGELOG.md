@@ -1,5 +1,36 @@
 # Changelog
 
+## [0.5.11](https://github.com/alltuner/mise-completions-sync/compare/v0.5.10...v0.5.11) (2026-07-28)
+
+
+### Features
+
+* add new tools to completion registry ([#112](https://github.com/alltuner/mise-completions-sync/issues/112)) ([4310554](https://github.com/alltuner/mise-completions-sync/commit/4310554dda76bdff5f1925835e34ff4e03b37635))
+* add support for ast-grep ([#100](https://github.com/alltuner/mise-completions-sync/issues/100)) ([ed10974](https://github.com/alltuner/mise-completions-sync/commit/ed109741f3d855066dbe2172937d76f416601e25))
+* **registry:** add requires for tools needing a helper binary ([#126](https://github.com/alltuner/mise-completions-sync/issues/126)) ([476e5e9](https://github.com/alltuner/mise-completions-sync/commit/476e5e90ebd78570e513a62e8ec9677311dfd9c4))
+
+
+### Bug Fixes
+
+* **registry:** correct xh completion command ([#113](https://github.com/alltuner/mise-completions-sync/issues/113)) ([38401b7](https://github.com/alltuner/mise-completions-sync/commit/38401b7cbc2fd11cf0914fbae76066c9bbfecd89))
+* **registry:** generate fnox completions via usage ([#124](https://github.com/alltuner/mise-completions-sync/issues/124)) ([8c821b1](https://github.com/alltuner/mise-completions-sync/commit/8c821b1eed1c0436d1bb34bb55694ec796ff4477))
+* **registry:** use right name for flux ([#121](https://github.com/alltuner/mise-completions-sync/issues/121)) ([4a0f671](https://github.com/alltuner/mise-completions-sync/commit/4a0f67177169d0ea6a8b2380c20b44c953c026f9))
+* **sync:** report stderr from commands that succeed ([#127](https://github.com/alltuner/mise-completions-sync/issues/127)) ([1d6e7d7](https://github.com/alltuner/mise-completions-sync/commit/1d6e7d72b98593890099a16023583538ab677f70))
+
+
+### Miscellaneous Chores
+
+* **deps:** update actions/checkout action to v7 ([#110](https://github.com/alltuner/mise-completions-sync/issues/110)) ([4b58e6f](https://github.com/alltuner/mise-completions-sync/commit/4b58e6f06b3e030a1a285d7d946525f61927253f))
+* **deps:** update astral-sh/setup-uv action to v9 ([#120](https://github.com/alltuner/mise-completions-sync/issues/120)) ([1c77676](https://github.com/alltuner/mise-completions-sync/commit/1c77676558a71a19584bb24e37d8ad126c2c602e))
+* **deps:** update houseabsolute/actions-rust-cross action to v1.0.8 ([#111](https://github.com/alltuner/mise-completions-sync/issues/111)) ([b6cd8b0](https://github.com/alltuner/mise-completions-sync/commit/b6cd8b0b8e392091f85582e190ac038751a46bda))
+* **deps:** update rust dependencies ([#116](https://github.com/alltuner/mise-completions-sync/issues/116)) ([1f7c534](https://github.com/alltuner/mise-completions-sync/commit/1f7c534f40afd29ff4f136eabdf9b2eaf0b4d9fb))
+
+
+### CI/CD Changes
+
+* check docs/tools.md lists the same tools as registry.toml ([#125](https://github.com/alltuner/mise-completions-sync/issues/125)) ([3b66c7d](https://github.com/alltuner/mise-completions-sync/commit/3b66c7dd37eb4b777c3f7a8916acad52f6824169))
+* run claude review on renovate PRs and skip forks ([#123](https://github.com/alltuner/mise-completions-sync/issues/123)) ([f67fdad](https://github.com/alltuner/mise-completions-sync/commit/f67fdadf397b9d2a1d2c65e34572b1a12ce39c4c))
+
 ## [0.5.10](https://github.com/alltuner/mise-completions-sync/compare/v0.5.9...v0.5.10) (2026-06-09)
 
 
