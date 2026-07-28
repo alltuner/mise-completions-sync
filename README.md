@@ -139,6 +139,34 @@ If you want to only generate completions for newly installed or updated tools, y
 postinstall = "misecompsync --new-only"
 ```
 
+## Custom Registry
+
+The list of supported tools is built into the binary, but you don't have to wait
+for a release (or send a PR) to add your own. Drop a `registry.toml` at
+`$XDG_DATA_HOME/mise-completions-sync/registry.toml`, or next to the
+`misecompsync` executable, and it is laid on top of the built-in registry:
+
+```toml
+schema_version = 1
+
+[tools]
+# a tool the built-in registry doesn't cover
+graphite-cli = { zsh = "gt completion zsh", bash = "gt completion bash" }
+
+# built-in patterns are available to your own entries
+mytool = "standard"
+
+# override a built-in entry
+yq = { zsh = "yq shell-completion zsh" }
+```
+
+Your entries are merged with the built-in ones rather than replacing them, so a
+short file like the above adds `graphite-cli` and `mytool` and changes `yq`,
+while every other tool keeps working. `schema_version` is required.
+
+If an entry turns out to be generally useful, [open a PR](https://github.com/alltuner/mise-completions-sync/blob/main/registry.toml)
+so everyone gets it.
+
 ## Updating
 
 ```bash

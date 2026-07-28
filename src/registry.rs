@@ -78,40 +78,41 @@ impl ToolCompletions {
     }
 }
 
-/// Try to load registry from external file, with fallback to embedded
-fn get_registry_content() -> Result<(String, Option<PathBuf>), Error> {
-    // Check for registry.toml next to the executable (allows user customization)
+/// Find a user-provided registry to lay over the built-in one, if there is one.
+///
+/// The executable's own directory wins over the XDG one; only a single user
+/// registry applies.
+fn user_registry_content() -> Result<Option<(String, PathBuf)>, Error> {
+    let mut candidates = Vec::new();
+
     if let Ok(exe_path) = std::env::current_exe() {
-        let alongside = exe_path.parent().unwrap().join("registry.toml");
-        if alongside.exists() {
-            let content = std::fs::read_to_string(&alongside)
-                .map_err(|e| Error::RegistryRead(alongside.clone(), e))?;
-            return Ok((content, Some(alongside)));
-        }
+        candidates.push(exe_path.parent().unwrap().join("registry.toml"));
     }
-
-    // Check XDG data directory for user-provided registry
     if let Some(data_dir) = dirs::data_dir() {
-        let user_registry = data_dir.join("mise-completions-sync").join("registry.toml");
-        if user_registry.exists() {
-            let content = std::fs::read_to_string(&user_registry)
-                .map_err(|e| Error::RegistryRead(user_registry.clone(), e))?;
-            return Ok((content, Some(user_registry)));
+        candidates.push(data_dir.join("mise-completions-sync").join("registry.toml"));
+    }
+
+    for path in candidates {
+        if path.exists() {
+            let content =
+                std::fs::read_to_string(&path).map_err(|e| Error::RegistryRead(path.clone(), e))?;
+            return Ok(Some((content, path)));
         }
     }
 
-    // Use embedded registry
-    Ok((EMBEDDED_REGISTRY.to_string(), None))
+    Ok(None)
 }
 
 pub fn load_registry() -> Result<Registry, Error> {
-    let (content, path) = get_registry_content()?;
-    let path_for_error = path.clone().unwrap_or_else(|| PathBuf::from("<embedded>"));
-
-    parse_registry(&content, path_for_error)
+    let user = user_registry_content()?;
+    build_registry(
+        EMBEDDED_REGISTRY,
+        user.as_ref()
+            .map(|(content, path)| (content.as_str(), path.clone())),
+    )
 }
 
-fn parse_registry(content: &str, path_for_error: PathBuf) -> Result<Registry, Error> {
+fn parse_raw(content: &str, path_for_error: PathBuf) -> Result<RawRegistry, Error> {
     let raw: RawRegistry =
         toml::from_str(content).map_err(|e| Error::RegistryParse(path_for_error.clone(), e))?;
 
@@ -127,6 +128,26 @@ fn parse_registry(content: &str, path_for_error: PathBuf) -> Result<Registry, Er
         Some(_) => {}
     }
 
+    Ok(raw)
+}
+
+/// Parse the built-in registry and lay a user registry over it.
+///
+/// Merging happens before patterns are resolved, so a user entry can reference
+/// a built-in pattern, and redefining a pattern reaches the tools that use it.
+fn build_registry(embedded: &str, user: Option<(&str, PathBuf)>) -> Result<Registry, Error> {
+    let mut raw = parse_raw(embedded, PathBuf::from("<embedded>"))?;
+
+    if let Some((content, path)) = user {
+        let overlay = parse_raw(content, path)?;
+        raw.patterns.extend(overlay.patterns);
+        raw.tools.extend(overlay.tools);
+    }
+
+    expand(raw)
+}
+
+fn expand(raw: RawRegistry) -> Result<Registry, Error> {
     let mut tools = HashMap::new();
 
     for (tool_name, entry) in raw.tools {
@@ -247,9 +268,123 @@ mod tests {
         );
     }
 
+    const BASE: &str = r#"
+schema_version = 1
+
+[patterns]
+standard = { zsh = "{} completion zsh", bash = "{} completion bash" }
+
+[tools]
+builtin = "standard"
+override_me = { zsh = "original zsh" }
+"#;
+
+    fn overlaid(user: &str) -> Registry {
+        build_registry(BASE, Some((user, PathBuf::from("<user>"))))
+            .expect("Failed to build registry")
+    }
+
+    #[test]
+    fn test_user_registry_adds_a_tool_without_losing_builtins() {
+        // The whole point: a three-line user file must not switch off the other
+        // entries, which is what replacing the registry used to do.
+        let registry = overlaid(
+            r#"
+schema_version = 1
+
+[tools]
+graphite-cli = { zsh = "gt completion zsh" }
+"#,
+        );
+
+        assert_eq!(
+            registry.tools["graphite-cli"].completions.zsh.as_deref(),
+            Some("gt completion zsh")
+        );
+        assert_eq!(
+            registry.tools["builtin"].completions.zsh.as_deref(),
+            Some("builtin completion zsh")
+        );
+    }
+
+    #[test]
+    fn test_user_entry_overrides_builtin() {
+        let registry = overlaid(
+            r#"
+schema_version = 1
+
+[tools]
+override_me = { zsh = "user zsh" }
+"#,
+        );
+
+        assert_eq!(
+            registry.tools["override_me"].completions.zsh.as_deref(),
+            Some("user zsh")
+        );
+    }
+
+    #[test]
+    fn test_user_entry_can_reference_a_builtin_pattern() {
+        // Patterns are resolved after merging, so a user never has to redeclare
+        // `standard` just to use it.
+        let registry = overlaid(
+            r#"
+schema_version = 1
+
+[tools]
+mytool = "standard"
+"#,
+        );
+
+        assert_eq!(
+            registry.tools["mytool"].completions.zsh.as_deref(),
+            Some("mytool completion zsh")
+        );
+    }
+
+    #[test]
+    fn test_user_can_redefine_a_builtin_pattern() {
+        let registry = overlaid(
+            r#"
+schema_version = 1
+
+[patterns]
+standard = { zsh = "{} --fixed-completions zsh" }
+"#,
+        );
+
+        assert_eq!(
+            registry.tools["builtin"].completions.zsh.as_deref(),
+            Some("builtin --fixed-completions zsh")
+        );
+    }
+
+    #[test]
+    fn test_no_user_registry_leaves_builtins_untouched() {
+        let registry = build_registry(BASE, None).expect("Failed to build registry");
+
+        assert_eq!(registry.tools.len(), 2);
+        assert_eq!(
+            registry.tools["override_me"].completions.zsh.as_deref(),
+            Some("original zsh")
+        );
+    }
+
+    #[test]
+    fn test_user_registry_still_needs_a_schema_version() {
+        let err = build_registry(
+            BASE,
+            Some(("[tools]\nfoo = \"standard\"\n", PathBuf::from("<user>"))),
+        )
+        .expect_err("a user registry without schema_version should be rejected");
+
+        assert!(matches!(err, Error::MissingSchemaVersion));
+    }
+
     #[test]
     fn test_explicit_entry_with_provider() {
-        let registry = parse_registry(
+        let registry = build_registry(
             r#"
 schema_version = 1
 
@@ -260,7 +395,7 @@ standard = { zsh = "{} completion zsh" }
 parent = "standard"
 child = { provided_by = "parent", zsh = "child completion zsh", bash = "child completion bash" }
 "#,
-            PathBuf::from("<test>"),
+            None,
         )
         .expect("Failed to parse registry");
 
