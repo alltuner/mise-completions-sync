@@ -2,7 +2,7 @@
 
 mise-completions-sync follows a simple process to generate shell completions:
 
-1. **Discover installed tools** - Gets list of installed tools via `mise ls --installed --json`
+1. **Discover installed tools** - Gets list of installed tools via `mise ls --installed --json` (or optional flags `--global`, `--local`, `--current`)
 2. **Look up registry entries** - Each tool is matched against the built-in registry
 3. **Generate completions** - Runs the tool's completion command (e.g., `kubectl completion zsh`)
 4. **Save output** - Writes completions to `~/.local/share/mise-completions/<shell>/`
