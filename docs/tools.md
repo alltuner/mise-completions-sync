@@ -10,6 +10,8 @@ The following tools have shell completion support in mise-completions-sync.
 | bun | Bun is a fast JavaScript all-in-one toolkit | ✓ | ✓ | ✓ |
 | cargo |  | ✓ | ✓ | ✓ |
 | [chezmoi](https://github.com/twpayne/chezmoi) | Manage your dotfiles across multiple diverse ma... | ✓ | ✓ | ✓ |
+| [clusterctl](https://github.com/kubernetes-sigs/cluster-api) | Home for Cluster API, a subproject of sig-clust... | ✓ | ✓ | ✓ |
+| [cmctl](https://github.com/cert-manager/cmctl) | the command line utility that makes cert-manage... | ✓ | ✓ | ✓ |
 | [cosign](https://github.com/sigstore/cosign) | Code signing and transparency for containers an... | ✓ | ✓ | ✓ |
 | [crush](https://github.com/charmbracelet/crush) | The glamourous AI coding agent for your favouri... | ✓ | ✓ | ✓ |
 | [cue](https://github.com/cue-lang/cue) | The home of the CUE language! Validate and defi... | ✓ | ✓ | ✓ |
@@ -27,6 +29,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [flyctl](https://github.com/superfly/flyctl) | Command line tools for fly.io services | ✓ | ✓ | ✓ |
 | fnox | Fort Knox for your secrets | ✓ | ✓ | ✓ |
 | [gh](https://github.com/cli/cli) | GitHub’s official command line tool | ✓ | ✓ | ✓ |
+| [ghorg](https://github.com/gabrie30/ghorg) | Quickly clone an entire org/users repositories ... | ✓ | ✓ | ✓ |
 | [gitleaks](https://github.com/gitleaks/gitleaks) | Find secrets with Gitleaks | ✓ | ✓ | ✓ |
 | [gitu](https://github.com/altsem/gitu) | A TUI Git client inspired by Magit | ✓ | ✓ | ✓ |
 | [gitui](https://github.com/extrawurst/gitui) | Blazing 💥 fast terminal-ui for git written in rust | ✓ | ✓ | ✓ |
@@ -97,7 +100,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 92 tools**
+**Total: 95 tools**
 
 ## Shell Support Legend
 
