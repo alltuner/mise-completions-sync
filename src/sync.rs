@@ -237,10 +237,22 @@ fn parse_installed_tools_json(
 }
 
 /// Generate completion for a single tool and shell
+/// Build the `mise x` invocation for a completion command.
+///
+/// A tool listing `requires` needs a second binary on PATH to render its
+/// completions. Naming it here puts both tools in the same environment.
+fn wrap_command(tool_id: &str, requires: Option<&str>, command: &str) -> String {
+    match requires {
+        Some(required) => format!("mise x {tool_id} {required} -- {command}"),
+        None => format!("mise x {tool_id} -- {command}"),
+    }
+}
+
 fn generate_completion(
     tool_id: &str,   // Original ID with backend prefix (for mise x)
     tool_name: &str, // Stripped name (for filename)
     command: &str,
+    requires: Option<&str>,
     shell: &str,
     output_dir: &PathBuf,
 ) -> Result<(), Error> {
@@ -248,7 +260,7 @@ fn generate_completion(
     std::fs::create_dir_all(output_dir).map_err(|e| Error::CreateDir(output_dir.clone(), e))?;
 
     // Run the completion command wrapped with mise to ensure the tool is available
-    let wrapped_command = format!("mise x {tool_id} -- {command}");
+    let wrapped_command = wrap_command(tool_id, requires, command);
     let output = Command::new("sh")
         .args(["-c", &wrapped_command])
         .output()
@@ -328,9 +340,14 @@ pub fn sync_completions(
                 if let Some(cmd) = completions.get(shell) {
                     // Use the original tool ID (with backend prefix) for mise x
                     // and the stripped name for the filename
-                    if let Err(e) =
-                        generate_completion(original_id, short_name, cmd, shell, &output_dir)
-                    {
+                    if let Err(e) = generate_completion(
+                        original_id,
+                        short_name,
+                        cmd,
+                        completions.requires.as_deref(),
+                        shell,
+                        &output_dir,
+                    ) {
                         eprintln!("  {short_name}: {e}");
                     }
                 }
@@ -390,6 +407,32 @@ mod tests {
             base_dir: PathBuf::from(base),
             shell_overrides: HashMap::new(),
         }
+    }
+
+    #[test]
+    fn test_wrap_command_without_requires() {
+        assert_eq!(
+            wrap_command("yq", None, "yq completion zsh"),
+            "mise x yq -- yq completion zsh"
+        );
+    }
+
+    #[test]
+    fn test_wrap_command_with_requires() {
+        // The helper tool joins the same `mise x` invocation, so it lands on PATH
+        // for the command without a nested `mise x`.
+        assert_eq!(
+            wrap_command("fnox", Some("usage"), "fnox completion zsh"),
+            "mise x fnox usage -- fnox completion zsh"
+        );
+    }
+
+    #[test]
+    fn test_wrap_command_preserves_backend_prefix() {
+        assert_eq!(
+            wrap_command("pipx:ipython", Some("pipx:argcomplete"), "ipython x"),
+            "mise x pipx:ipython pipx:argcomplete -- ipython x"
+        );
     }
 
     #[test]

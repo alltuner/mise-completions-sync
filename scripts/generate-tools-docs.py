@@ -110,6 +110,19 @@ def main():
     print("2. Add an entry to `registry.toml` using an existing pattern or explicit commands")
     print("3. Test with `uv run scripts/validate-registry.py --installed-only`")
     print("4. Submit a PR")
+    print()
+    print("### Tools that need another binary")
+    print()
+    print("Some tools shell out to a second binary to render completions, and fail")
+    print("when it is missing. `fnox`, for example, renders through `usage`. Name it")
+    print("with `requires` and it joins the same `mise x` invocation:")
+    print()
+    print("```toml")
+    print('fnox = { requires = "usage", zsh = "fnox completion zsh" }')
+    print("```")
+    print()
+    print("`requires` works on patterns too, when every tool sharing the pattern")
+    print("needs the same helper.")
 
 
 if __name__ == "__main__":
