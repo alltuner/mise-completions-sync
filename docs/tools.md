@@ -40,7 +40,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [grype](https://github.com/anchore/grype) | A vulnerability scanner for container images an... | ✓ | ✓ | ✓ |
 | [helm](https://github.com/helm/helm) | The Kubernetes Package Manager | ✓ | ✓ | ✓ |
 | [hugo](https://github.com/gohugoio/hugo) | The world’s fastest framework for building webs... | ✓ | ✓ | ✓ |
-| [ipython](https://github.com/ipython/ipython) | A command shell for interactive computing ... | ✓ | ✓ | ✓ |
+| ipython |  | ✓ | ✓ | ✓ |
 | [istioctl](https://github.com/istio/istio) | Istio configuration command line utility for se... | ✓ | ✓ | ✓ |
 | [just](https://github.com/casey/just) | Just a command runner | ✓ | ✓ | ✓ |
 | [k3d](https://github.com/k3d-io/k3d) | Little helper to run CNCF's k3s in Docker | ✓ | ✓ | ✓ |
@@ -64,7 +64,7 @@ The following tools have shell completion support in mise-completions-sync.
 | oc | OpenShift Client CLI (oc) | ✓ | ✓ | ✓ |
 | oci | Oracle Cloud Infrastructure CLI | ✓ | ✓ | ✓ |
 | [oras](https://github.com/oras-project/oras) | ORAS CLI | ✓ | ✓ | ✓ |
-| [patool](https://github.com/wummel/patool) | A portable command line archive file manager | ✓ | ✓ | ✓ |
+| patool |  | ✓ | ✓ | ✓ |
 | [pipx](https://github.com/pypa/pipx) |  | ✓ | ✓ | ✓ |
 | [pitchfork](https://github.com/jdx/pitchfork) | Daemons with DX | ✓ | ✓ | ✓ |
 | [pluto](https://github.com/FairwindsOps/pluto) | A cli tool to help discover deprecated apiVersi... | ✓ | ✓ | ✓ |
@@ -73,7 +73,7 @@ The following tools have shell completion support in mise-completions-sync.
 | poetry | Python packaging and dependency management made... | ✓ | ✓ | ✓ |
 | [prek](https://github.com/j178/prek) |  | ✓ | ✓ | ✓ |
 | [pulumi](https://github.com/pulumi/pulumi) | Pulumi - Infrastructure as Code in any programm... | ✓ | ✓ | ✓ |
-| [ratarmount](https://github.com/mxmlnkn/ratarmount) | Access large archives as a filesystem efficiently... | ✓ | ✓ | ✓ |
+| ratarmount |  | ✓ | ✓ | ✓ |
 | [regctl](https://github.com/regclient/regclient) | Docker and OCI Registry Client in Go and toolin... | ✓ | ✓ | ✓ |
 | [restic](https://github.com/restic/restic) | Fast, secure, efficient backup program | ✓ | ✓ | ✓ |
 | [rg](https://github.com/BurntSushi/ripgrep) | ripgrep recursively searches directories for a ... | ✓ | ✓ | ✓ |
@@ -132,3 +132,15 @@ fnox = { requires = "usage", zsh = "fnox completion zsh" }
 
 `requires` works on patterns too, when every tool sharing the pattern
 needs the same helper.
+### Companion binaries
+
+Some mise tools install additional binaries that generate their own completions.
+Use an explicit entry with `provided_by` to link the binary to its mise tool:
+
+```toml
+uvx = { provided_by = "uv", zsh = "uvx --generate-shell-completion zsh", bash = "uvx --generate-shell-completion bash", fish = "uvx --generate-shell-completion fish" }
+```
+
+`provided_by` is a one-hop link and is supported only on explicit entries.
+Normal sync and `--new-only` include the child when its provider is installed.
+`misecompsync uvx` syncs only `uvx`; `misecompsync uv` does not expand children.

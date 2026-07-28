@@ -17,21 +17,34 @@ struct RawRegistry {
     #[serde(default)]
     patterns: HashMap<String, ToolCompletions>,
     #[serde(default)]
-    tools: HashMap<String, ToolEntry>,
+    tools: HashMap<String, RawToolEntry>,
 }
 
 /// A tool entry: either a pattern name or explicit shell commands
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
-enum ToolEntry {
+enum RawToolEntry {
     Pattern(String),
-    Explicit(ToolCompletions),
+    Explicit(ExplicitToolEntry),
+}
+
+#[derive(Debug, Deserialize)]
+struct ExplicitToolEntry {
+    #[serde(flatten)]
+    completions: ToolCompletions,
+    provided_by: Option<String>,
 }
 
 /// Expanded registry with all patterns resolved
 #[derive(Debug)]
 pub struct Registry {
-    pub tools: HashMap<String, ToolCompletions>,
+    pub tools: HashMap<String, ToolEntry>,
+}
+
+#[derive(Debug, Clone)]
+pub struct ToolEntry {
+    pub completions: ToolCompletions,
+    pub provided_by: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -95,8 +108,12 @@ pub fn load_registry() -> Result<Registry, Error> {
     let (content, path) = get_registry_content()?;
     let path_for_error = path.clone().unwrap_or_else(|| PathBuf::from("<embedded>"));
 
+    parse_registry(&content, path_for_error)
+}
+
+fn parse_registry(content: &str, path_for_error: PathBuf) -> Result<Registry, Error> {
     let raw: RawRegistry =
-        toml::from_str(&content).map_err(|e| Error::RegistryParse(path_for_error.clone(), e))?;
+        toml::from_str(content).map_err(|e| Error::RegistryParse(path_for_error.clone(), e))?;
 
     // Check schema version
     match raw.schema_version {
@@ -113,16 +130,22 @@ pub fn load_registry() -> Result<Registry, Error> {
     let mut tools = HashMap::new();
 
     for (tool_name, entry) in raw.tools {
-        let completions = match entry {
-            ToolEntry::Pattern(pattern_name) => {
+        let entry = match entry {
+            RawToolEntry::Pattern(pattern_name) => {
                 let pattern = raw.patterns.get(&pattern_name).ok_or_else(|| {
                     Error::UnknownPattern(tool_name.clone(), pattern_name.clone())
                 })?;
-                pattern.expand(&tool_name)
+                ToolEntry {
+                    completions: pattern.expand(&tool_name),
+                    provided_by: None,
+                }
             }
-            ToolEntry::Explicit(completions) => completions,
+            RawToolEntry::Explicit(entry) => ToolEntry {
+                completions: entry.completions,
+                provided_by: entry.provided_by,
+            },
         };
-        tools.insert(tool_name, completions);
+        tools.insert(tool_name, entry);
     }
 
     Ok(Registry { tools })
@@ -140,17 +163,18 @@ mod tests {
             .get("prek")
             .expect("prek should be in registry");
         assert_eq!(
-            prek.zsh.as_deref(),
+            prek.completions.zsh.as_deref(),
             Some("prek util generate-shell-completion zsh")
         );
         assert_eq!(
-            prek.bash.as_deref(),
+            prek.completions.bash.as_deref(),
             Some("prek util generate-shell-completion bash")
         );
         assert_eq!(
-            prek.fish.as_deref(),
+            prek.completions.fish.as_deref(),
             Some("prek util generate-shell-completion fish")
         );
+        assert_eq!(prek.provided_by, None);
     }
 
     #[test]
@@ -159,9 +183,18 @@ mod tests {
         // args as URLs and tries to send HTTP requests). It uses `xh --generate=complete-<shell>`.
         let registry = load_registry().expect("Failed to load registry");
         let xh = registry.tools.get("xh").expect("xh should be in registry");
-        assert_eq!(xh.zsh.as_deref(), Some("xh --generate=complete-zsh"));
-        assert_eq!(xh.bash.as_deref(), Some("xh --generate=complete-bash"));
-        assert_eq!(xh.fish.as_deref(), Some("xh --generate=complete-fish"));
+        assert_eq!(
+            xh.completions.zsh.as_deref(),
+            Some("xh --generate=complete-zsh")
+        );
+        assert_eq!(
+            xh.completions.bash.as_deref(),
+            Some("xh --generate=complete-bash")
+        );
+        assert_eq!(
+            xh.completions.fish.as_deref(),
+            Some("xh --generate=complete-fish")
+        );
     }
 
     #[test]
@@ -174,17 +207,23 @@ mod tests {
             .tools
             .get("fnox")
             .expect("fnox should be in registry");
-        assert_eq!(fnox.requires.as_deref(), Some("usage"));
-        assert_eq!(fnox.zsh.as_deref(), Some("fnox completion zsh"));
-        assert_eq!(fnox.bash.as_deref(), Some("fnox completion bash"));
-        assert_eq!(fnox.fish.as_deref(), Some("fnox completion fish"));
+        assert_eq!(fnox.completions.requires.as_deref(), Some("usage"));
+        assert_eq!(fnox.completions.zsh.as_deref(), Some("fnox completion zsh"));
+        assert_eq!(
+            fnox.completions.bash.as_deref(),
+            Some("fnox completion bash")
+        );
+        assert_eq!(
+            fnox.completions.fish.as_deref(),
+            Some("fnox completion fish")
+        );
     }
 
     #[test]
     fn test_requires_defaults_to_none() {
         let registry = load_registry().expect("Failed to load registry");
         let yq = registry.tools.get("yq").expect("yq should be in registry");
-        assert_eq!(yq.requires, None);
+        assert_eq!(yq.completions.requires, None);
     }
 
     #[test]
@@ -194,8 +233,54 @@ mod tests {
             .tools
             .get("mise-completions-sync")
             .expect("mise-completions-sync should be in registry");
-        assert_eq!(entry.zsh.as_deref(), Some("misecompsync completion zsh"));
-        assert_eq!(entry.bash.as_deref(), Some("misecompsync completion bash"));
-        assert_eq!(entry.fish.as_deref(), Some("misecompsync completion fish"));
+        assert_eq!(
+            entry.completions.zsh.as_deref(),
+            Some("misecompsync completion zsh")
+        );
+        assert_eq!(
+            entry.completions.bash.as_deref(),
+            Some("misecompsync completion bash")
+        );
+        assert_eq!(
+            entry.completions.fish.as_deref(),
+            Some("misecompsync completion fish")
+        );
+    }
+
+    #[test]
+    fn test_explicit_entry_with_provider() {
+        let registry = parse_registry(
+            r#"
+schema_version = 1
+
+[patterns]
+standard = { zsh = "{} completion zsh" }
+
+[tools]
+parent = "standard"
+child = { provided_by = "parent", zsh = "child completion zsh", bash = "child completion bash" }
+"#,
+            PathBuf::from("<test>"),
+        )
+        .expect("Failed to parse registry");
+
+        let parent = registry.tools.get("parent").expect("parent should exist");
+        assert_eq!(parent.provided_by, None);
+        assert_eq!(
+            parent.completions.zsh.as_deref(),
+            Some("parent completion zsh")
+        );
+
+        let child = registry.tools.get("child").expect("child should exist");
+        assert_eq!(child.provided_by.as_deref(), Some("parent"));
+        assert_eq!(
+            child.completions.zsh.as_deref(),
+            Some("child completion zsh")
+        );
+        assert_eq!(
+            child.completions.bash.as_deref(),
+            Some("child completion bash")
+        );
+        assert_eq!(child.completions.fish, None);
     }
 }

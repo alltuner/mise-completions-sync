@@ -123,6 +123,22 @@ def main():
     print()
     print("`requires` works on patterns too, when every tool sharing the pattern")
     print("needs the same helper.")
+    print("### Companion binaries")
+    print()
+    print("Some mise tools install additional binaries that generate their own completions.")
+    print("Use an explicit entry with `provided_by` to link the binary to its mise tool:")
+    print()
+    print("```toml")
+    print(
+        'uvx = { provided_by = "uv", zsh = "uvx --generate-shell-completion zsh", '
+        'bash = "uvx --generate-shell-completion bash", '
+        'fish = "uvx --generate-shell-completion fish" }'
+    )
+    print("```")
+    print()
+    print("`provided_by` is a one-hop link and is supported only on explicit entries.")
+    print("Normal sync and `--new-only` include the child when its provider is installed.")
+    print("`misecompsync uvx` syncs only `uvx`; `misecompsync uv` does not expand children.")
 
 
 if __name__ == "__main__":
