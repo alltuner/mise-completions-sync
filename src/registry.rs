@@ -150,6 +150,17 @@ mod tests {
     }
 
     #[test]
+    fn test_xh_in_registry() {
+        // Regression test: xh does not support `xh completion <shell>` (it treats the
+        // args as URLs and tries to send HTTP requests). It uses `xh --generate=complete-<shell>`.
+        let registry = load_registry().expect("Failed to load registry");
+        let xh = registry.tools.get("xh").expect("xh should be in registry");
+        assert_eq!(xh.zsh.as_deref(), Some("xh --generate=complete-zsh"));
+        assert_eq!(xh.bash.as_deref(), Some("xh --generate=complete-bash"));
+        assert_eq!(xh.fish.as_deref(), Some("xh --generate=complete-fish"));
+    }
+
+    #[test]
     fn test_self_in_registry() {
         let registry = load_registry().expect("Failed to load registry");
         let entry = registry
