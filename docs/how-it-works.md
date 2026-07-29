@@ -29,7 +29,7 @@ shell means the tool doesn't support it:
 npm = { zsh = "npm completion", bash = "npm completion" }
 ```
 
-Two optional fields cover tools that need more than a command:
+Three optional fields cover tools that need more than a command:
 
 - `requires` names another mise tool that must be on PATH while generating,
   for tools that shell out to a helper. `fnox` renders through `usage`:
@@ -42,8 +42,21 @@ Two optional fields cover tools that need more than a command:
   than being one itself, like `uvx` from `uv`. Its completions are generated
   whenever the provider is installed.
 
+- `bundled` means the tool has no completion command and ships the files in its
+  download instead. Each shell's value is then the *filename* to look for:
+
+  ```toml
+  hyperfine = { bundled = true, zsh = "_hyperfine", bash = "hyperfine.bash", fish = "hyperfine.fish" }
+  ```
+
+  The file is searched for by name beneath `mise where <tool>`, because the
+  directory holding it encodes the version and platform
+  (`hyperfine-v1.20.0-x86_64-apple-darwin/autocomplete`) and cannot be written
+  down in advance. The shallowest match wins.
+
 Commands run inside `mise x <tool> -- …`, so they resolve against the version
-mise has installed rather than whatever is on your PATH.
+mise has installed rather than whatever is on your PATH. A `bundled` entry runs
+nothing — its file is copied straight out of the install directory.
 
 ## Custom Registry
 
