@@ -38,11 +38,13 @@ The following tools have shell completion support in mise-completions-sync.
 | [grype](https://github.com/anchore/grype) | A vulnerability scanner for container images an... | ✓ | ✓ | ✓ |
 | [helm](https://github.com/helm/helm) | The Kubernetes Package Manager | ✓ | ✓ | ✓ |
 | [hugo](https://github.com/gohugoio/hugo) | The world’s fastest framework for building webs... | ✓ | ✓ | ✓ |
+| [hyperfine](https://github.com/sharkdp/hyperfine) | A command-line benchmarking tool | ✓ | ✓ | ✓ |
 | ipython |  | ✓ | ✓ | ✓ |
 | [istioctl](https://github.com/istio/istio) | Istio configuration command line utility for se... | ✓ | ✓ | ✓ |
 | [just](https://github.com/casey/just) | Just a command runner | ✓ | ✓ | ✓ |
 | [k3d](https://github.com/k3d-io/k3d) | Little helper to run CNCF's k3s in Docker | ✓ | ✓ | ✓ |
 | [k9s](https://github.com/derailed/k9s) | Kubernetes CLI To Manage Your Clusters In Style | ✓ | ✓ | ✓ |
+| [killport](https://github.com/jkfran/killport) | A command-line tool to easily kill processes ru... | ✓ | ✓ | ✓ |
 | [kind](https://github.com/kubernetes-sigs/kind) | Kubernetes IN Docker - local clusters for testi... | ✓ | ✓ | ✓ |
 | [ko](https://github.com/ko-build/ko) | Build and deploy Go applications on Kubernetes | ✓ | ✓ | ✓ |
 | [kubectl](https://github.com/kubernetes/kubernetes) | kubectl cli | ✓ | ✓ | ✓ |
@@ -103,7 +105,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 98 tools**
+**Total: 100 tools**
 
 ## Shell Support Legend
 
@@ -131,6 +133,21 @@ fnox = { requires = "usage", zsh = "fnox completion zsh" }
 
 `requires` works on patterns too, when every tool sharing the pattern
 needs the same helper.
+
+### Tools that ship completion files
+
+Some tools have no completion command at all and instead ship the files
+in their download, like `hyperfine` and `killport`. Set `bundled = true`
+and give each shell the *filename* to look for instead of a command:
+
+```toml
+hyperfine = { bundled = true, zsh = "_hyperfine", bash = "hyperfine.bash", fish = "hyperfine.fish" }
+```
+
+The file is searched for by name beneath `mise where <tool>`, because the
+directory holding it encodes the version and platform
+(`hyperfine-v1.20.0-x86_64-apple-darwin/autocomplete`) and cannot be
+written down in advance. The shallowest match wins.
 ### Companion binaries
 
 Some mise tools install additional binaries that generate their own completions.

@@ -378,6 +378,93 @@ fn is_tool_installed(
 }
 
 /// Generate completion for a single tool and shell
+/// Locate a bundled completion file somewhere beneath a tool's install directory.
+///
+/// The directory between the root and the file encodes the version and platform
+/// (`hyperfine-v1.20.0-x86_64-apple-darwin/autocomplete`), and not consistently,
+/// so the file is found by name rather than by path. Breadth-first, so the
+/// shallowest match wins over a copy vendored deeper in the tree.
+fn find_bundled(root: &std::path::Path, filename: &str) -> Option<PathBuf> {
+    let mut queue = std::collections::VecDeque::from([root.to_path_buf()]);
+
+    while let Some(dir) = queue.pop_front() {
+        let Ok(entries) = std::fs::read_dir(&dir) else {
+            continue;
+        };
+
+        let mut subdirs = Vec::new();
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if path.is_dir() {
+                subdirs.push(path);
+            } else if entry.file_name() == filename {
+                return Some(path);
+            }
+        }
+        subdirs.sort();
+        queue.extend(subdirs);
+    }
+
+    None
+}
+
+/// Where mise installed a tool.
+fn tool_install_dir(tool_id: &str) -> Result<PathBuf, Error> {
+    let output = Command::new("mise")
+        .args(["where", tool_id])
+        .output()
+        .map_err(|e| Error::Generate(tool_id.to_string(), e.to_string()))?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(Error::Generate(
+            tool_id.to_string(),
+            stderr.trim().to_string(),
+        ));
+    }
+
+    Ok(PathBuf::from(
+        String::from_utf8_lossy(&output.stdout).trim(),
+    ))
+}
+
+/// Copy a completion file that ships inside the tool's own download.
+fn install_bundled_completion(
+    tool_id: &str,
+    tool_name: &str,
+    filename: &str,
+    shell: &str,
+    output_dir: &PathBuf,
+) -> Result<(), Error> {
+    std::fs::create_dir_all(output_dir).map_err(|e| Error::CreateDir(output_dir.clone(), e))?;
+
+    let root = tool_install_dir(tool_id)?;
+    let source = find_bundled(&root, filename).ok_or_else(|| {
+        Error::Generate(
+            tool_name.to_string(),
+            format!(
+                "bundled completion '{filename}' not found under {}",
+                root.display()
+            ),
+        )
+    })?;
+
+    let contents = std::fs::read(&source).map_err(|e| Error::RegistryRead(source.clone(), e))?;
+    if contents.iter().all(u8::is_ascii_whitespace) {
+        return Err(Error::Generate(
+            tool_name.to_string(),
+            format!("bundled completion {} is empty", source.display()),
+        ));
+    }
+
+    let target = shells::completion_filename(shell, tool_name);
+    let filepath = output_dir.join(&target);
+    std::fs::write(&filepath, &contents).map_err(|e| Error::WriteFile(filepath.clone(), e))?;
+
+    println!("  {tool_name} -> {target}");
+    Ok(())
+}
+
 fn generate_completion(
     tool_id: &str,   // Original ID with backend prefix (for mise x)
     tool_name: &str, // Stripped name (for filename)
@@ -461,17 +548,29 @@ pub fn sync_completions(
 
         for target in &tools_in_registry {
             if let Some(entry) = registry.tools.get(&target.tool_name) {
-                if let Some(cmd) = entry.completions.get(shell) {
+                if let Some(value) = entry.completions.get(shell) {
                     // Use the provider's original tool ID (with backend prefix) for mise x
-                    // and the registry entry name for the filename.
-                    if let Err(e) = generate_completion(
-                        &target.tool_id,
-                        &target.tool_name,
-                        cmd,
-                        entry.completions.requires.as_deref(),
-                        shell,
-                        &output_dir,
-                    ) {
+                    // and the registry entry name for the filename. For a bundled
+                    // entry the value is a filename to copy, not a command to run.
+                    let result = if entry.completions.is_bundled() {
+                        install_bundled_completion(
+                            &target.tool_id,
+                            &target.tool_name,
+                            value,
+                            shell,
+                            &output_dir,
+                        )
+                    } else {
+                        generate_completion(
+                            &target.tool_id,
+                            &target.tool_name,
+                            value,
+                            entry.completions.requires.as_deref(),
+                            shell,
+                            &output_dir,
+                        )
+                    };
+                    if let Err(e) = result {
                         eprintln!("  {}: {e}", target.tool_name);
                     }
                 }
@@ -527,6 +626,56 @@ pub fn clean_stale_completions(dirs: &CompletionsDirs, flags: MiseLsFlags) -> Re
 mod tests {
     use super::*;
 
+    /// Build a throwaway directory tree; returns the root, caller removes it.
+    fn scratch_tree(name: &str, files: &[&str]) -> PathBuf {
+        let root = std::env::temp_dir().join(format!("misecompsync-{name}-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        for file in files {
+            let path = root.join(file);
+            std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+            std::fs::write(&path, "contents").unwrap();
+        }
+        root
+    }
+
+    #[test]
+    fn test_find_bundled_locates_a_nested_file() {
+        // The directory between the root and the file carries the version and
+        // platform, so it can't be named up front -- only the file can.
+        let root = scratch_tree(
+            "nested",
+            &["hyperfine-v1.20.0-x86_64-apple-darwin/autocomplete/_hyperfine"],
+        );
+
+        let found = find_bundled(&root, "_hyperfine").expect("should find the file");
+        assert!(found.ends_with("autocomplete/_hyperfine"));
+
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn test_find_bundled_returns_none_when_absent() {
+        let root = scratch_tree("absent", &["bin/hyperfine"]);
+        assert!(find_bundled(&root, "_hyperfine").is_none());
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn test_find_bundled_prefers_the_shallowest_match() {
+        let root = scratch_tree(
+            "shallow",
+            &["completions/_tool", "vendor/copy/deep/completions/_tool"],
+        );
+
+        let found = find_bundled(&root, "_tool").expect("should find a file");
+        assert!(
+            found.ends_with("completions/_tool") && !found.to_string_lossy().contains("vendor"),
+            "expected the shallowest match, got {found:?}"
+        );
+
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+
     fn dirs_with_base(base: &str) -> CompletionsDirs {
         CompletionsDirs {
             base_dir: PathBuf::from(base),
@@ -540,6 +689,7 @@ mod tests {
             bash: None,
             fish: None,
             requires: None,
+            bundled: None,
         };
 
         registry::Registry {

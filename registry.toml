@@ -136,6 +136,11 @@ fnox = { requires = "usage", zsh = "fnox completion zsh", bash = "fnox completio
 
 prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util generate-shell-completion bash", fish = "prek util generate-shell-completion fish" }
 
+# Tools that ship completion files in their download rather than generating
+# them. The per-shell value is the filename to look for, not a command.
+hyperfine = { bundled = true, zsh = "_hyperfine", bash = "hyperfine.bash", fish = "hyperfine.fish" }
+killport = { bundled = true, zsh = "_killport", bash = "killport.bash", fish = "killport.fish" }
+
 # Unique command patterns
 task = { zsh = "task --completion zsh", bash = "task --completion bash", fish = "task --completion fish" }
 bat = { zsh = "bat --completion zsh", bash = "bat --completion bash", fish = "bat --completion fish" }
