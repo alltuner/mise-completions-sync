@@ -117,6 +117,9 @@ yq = "standard"
 # but the binary it provides is named misecompsync.
 mise-completions-sync = { zsh = "misecompsync completion zsh", bash = "misecompsync completion bash", fish = "misecompsync completion fish" }
 
+# forgeji-cli's binary is just called fj
+forgejo-cli = { zsh = "fj completion zsh", bash = "fj completion bash", fish = "fj completion fish" }
+
 bun = { zsh = "bun completions", bash = "bun completions", fish = "bun completions" }
 
 # mise installs this tool as flux2, but the binary it provides is named flux.
