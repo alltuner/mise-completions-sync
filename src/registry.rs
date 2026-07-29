@@ -251,6 +251,41 @@ mod tests {
     }
 
     #[test]
+    fn test_pitchfork_requires_usage() {
+        // Regression: pitchfork renders through `usage`, like fnox, so the bare
+        // `standard` pattern failed with "No version is set for shim: usage".
+        let registry = load_registry().expect("Failed to load registry");
+        let pitchfork = registry
+            .tools
+            .get("pitchfork")
+            .expect("pitchfork should be in registry");
+        assert_eq!(pitchfork.completions.requires.as_deref(), Some("usage"));
+    }
+
+    #[test]
+    fn test_saml2aws_uses_completion_flags() {
+        // Regression: saml2aws is kingpin-based and has no `completion` command.
+        let registry = load_registry().expect("Failed to load registry");
+        let saml2aws = registry
+            .tools
+            .get("saml2aws")
+            .expect("saml2aws should be in registry");
+        assert_eq!(
+            saml2aws.completions.zsh.as_deref(),
+            Some("saml2aws --completion-script-zsh")
+        );
+        // kingpin has no fish support
+        assert_eq!(saml2aws.completions.fish, None);
+    }
+
+    #[test]
+    fn test_vercel_removed() {
+        // vercel dropped its `completion` command; nothing replaced it.
+        let registry = load_registry().expect("Failed to load registry");
+        assert!(!registry.tools.contains_key("vercel"));
+    }
+
+    #[test]
     fn test_hyperfine_is_bundled() {
         // hyperfine ships completion files in its download rather than having a
         // command, so the per-shell values are filenames to find, not commands.

@@ -76,3 +76,16 @@ whether the entry is correct.
 
 Run it locally with `mise run audit-registry`. It installs every tool in the
 registry, so expect it to be slow and to leave a lot behind.
+
+A few tools need a working environment — not just an install — before they will
+print a completion script, so the audit can't judge them. `kubeseal` wants a
+reachable cluster config even to emit a static file. Those entries carry
+`audit_skip` with a reason and are reported as unverified rather than broken:
+
+```toml
+kubeseal = { audit_skip = "needs a reachable cluster config even to print completions", zsh = "kubeseal completion zsh" }
+```
+
+Use it sparingly: it silences the only check that would catch the entry going
+stale. `mise run validate-registry` still tests these normally, since a
+developer running it locally usually does have the environment.

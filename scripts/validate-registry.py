@@ -76,6 +76,10 @@ def load_registry() -> dict[str, tuple[str, dict[str, str]]]:
             # download, not commands, so they are checked differently.
             if entry.get("bundled"):
                 completions["bundled"] = True
+            # Some tools need a working environment (a cluster config, say) even
+            # to print a static script, so the audit cannot judge them.
+            if "audit_skip" in entry:
+                completions["audit_skip"] = entry["audit_skip"]
             expanded[tool_name] = (provider, completions)
 
     return expanded
@@ -160,6 +164,12 @@ def main():
             continue
 
         print(f"[{i}/{total}] {tool}...", end=" ", flush=True)
+
+        skip_reason = completions.get("audit_skip")
+        if install and skip_reason:
+            unavailable[tool] = f"skipped: {skip_reason}"
+            print("skipped (cannot be audited)")
+            continue
 
         if install:
             ok, reason = install_tool(provider)
