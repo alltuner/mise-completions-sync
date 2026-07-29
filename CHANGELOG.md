@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.15](https://github.com/alltuner/mise-completions-sync/compare/v0.5.14...v0.5.15) (2026-07-29)
+
+
+### Features
+
+* add 14 new tool patterns to registry ([#88](https://github.com/alltuner/mise-completions-sync/issues/88)) ([4ad153b](https://github.com/alltuner/mise-completions-sync/commit/4ad153be3517323ae79105c8ba8786f55a22925a))
+
 ## [0.5.14](https://github.com/alltuner/mise-completions-sync/compare/v0.5.13...v0.5.14) (2026-07-29)
 
 
