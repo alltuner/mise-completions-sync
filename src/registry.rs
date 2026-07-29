@@ -198,6 +198,30 @@ mod tests {
     }
 
     #[test]
+    fn test_mdbook_uses_completions_subcommand() {
+        // Regression: mdbook was mapped to `generate_shell`, but it has no
+        // `generate-shell-completion` subcommand -- it uses `mdbook completions`.
+        let registry = load_registry().expect("Failed to load registry");
+        let mdbook = registry
+            .tools
+            .get("mdbook")
+            .expect("mdbook should be in registry");
+        assert_eq!(
+            mdbook.completions.zsh.as_deref(),
+            Some("mdbook completions zsh")
+        );
+    }
+
+    #[test]
+    fn test_tools_without_completion_support_are_absent() {
+        // gitu and gitui generate no completions at all, so they must not be
+        // listed -- an entry here means sync will try and fail every run.
+        let registry = load_registry().expect("Failed to load registry");
+        assert!(!registry.tools.contains_key("gitu"));
+        assert!(!registry.tools.contains_key("gitui"));
+    }
+
+    #[test]
     fn test_fnox_requires_usage() {
         // fnox renders completions by shelling out to the `usage` CLI, which is not
         // on PATH inside `mise x fnox`. The command itself stays plain; `requires`

@@ -5,7 +5,7 @@ Use this to identify tools that could be added to mise-completions-sync.
 
 ## Supported Tools
 
-Currently **100 tools** have completion support.
+Currently **98 tools** have completion support.
 
 See [docs/tools.md](docs/tools.md) for the full list with shell support details.
 
@@ -39,7 +39,9 @@ These tools are in mise's registry but not yet supported. They may have completi
 | ansible | ansible python package contains the core runtim... | Needs testing |
 | ansible-core | ansible-core python package contains the core r... | Needs testing |
 | ant | Apache Ant is a Java library and command-line t... | Needs testing |
+| [antigravity-cli](https://github.com/google-antigravity/antigravity-cli) | Google's agentic development platform CLI compa... | Needs testing |
 | [apko](https://github.com/chainguard-dev/apko) | Build OCI images from APK packages directly wit... | Needs testing |
+| apm | Agent Package Manager | Needs testing |
 | apollo-ios | Apollo iOS Code Generation | Needs testing |
 | apollo-router | A configurable, high-performance routing runtim... | Needs testing |
 | apollo-rover | The CLI for Apollo GraphOS | Needs testing |
@@ -49,13 +51,13 @@ These tools are in mise's registry but not yet supported. They may have completi
 | [argo](https://github.com/argoproj/argo-workflows) | Argo Workflows CLI. Workflow engine for Kubernetes | Needs testing |
 | [argo-rollouts](https://github.com/argoproj/argo-rollouts) | Progressive Delivery for Kubernetes | Needs testing |
 | asciidoctorj | AsciidoctorJ is the official library for runnin... | Needs testing |
+| aspire | Aspire is the tool for code-first, extensible, ... | Needs testing |
 | assh | make your ssh client smarter | Needs testing |
-| [ast-grep](https://github.com/ast-grep/ast-grep) | A CLI tool for code structural search, lint and... | Needs testing |
 | astro | CLI that makes it easy to create, test and depl... | Needs testing |
 | [atlas](https://github.com/ariga/atlas) | A modern tool for managing database schemas | Needs testing |
 | [atlas-community](https://github.com/ariga/atlas) | A modern tool for managing database schemas (Co... | Needs testing |
 | [atmos](https://github.com/cloudposse/atmos) | Workflow automation tool for DevOps. Keep confi... | Needs testing |
-| [aube](https://github.com/endevco/aube) | A fast Node.js package manager | Needs testing |
+| [aube](https://github.com/jdx/aube) | A fast Node.js package manager | Needs testing |
 | auto-doc | GitHub action that turns your reusable workflow... | Needs testing |
 | aws-amplify | The AWS Amplify CLI is a toolchain for simplify... | Needs testing |
 | [aws-cli](https://github.com/aws/aws-cli) | The AWS Command Line Interface (AWS CLI v2) is ... | Needs testing |
@@ -63,10 +65,8 @@ These tools are in mise's registry but not yet supported. They may have completi
 | [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator) | A tool to use AWS IAM credentials to authentica... | Needs testing |
 | [aws-nuke](https://github.com/ekristen/aws-nuke) | Remove all the resources from an AWS account | Needs testing |
 | [aws-sam](https://github.com/aws/aws-sam-cli) | CLI tool to build, test, debug, and deploy Serv... | Needs testing |
-| [aws-sso](https://github.com/synfinatic/aws-sso-cli) | A powerful tool for using AWS Identity Center f... | Needs testing |
-| [aws-vault](https://github.com/ByteNess/aws-vault) | A vault for securely storing and accessing AWS ... | Needs testing |
 
-*...and 781 more tools in mise registry*
+*...and 800 more tools in mise registry*
 
 ## Tools Without Completion Support
 

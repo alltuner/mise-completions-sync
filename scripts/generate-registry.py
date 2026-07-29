@@ -82,12 +82,10 @@ TOOL_PATTERNS = {
     "hyperfine": "generate_shell",
     "tokei": "generate_shell",
     "miniserve": "generate_shell",
-    "mdbook": "generate_shell",
+    "mdbook": "completions",
     "cargo-watch": "generate_shell",
     # Rust tools with gen-completions pattern
     "atuin": "gen_completions",
-    "gitui": "gen_completions",
-    "gitu": "gen_completions",
     # Node tools
     "pnpm": "standard",
     "biome": "standard",
