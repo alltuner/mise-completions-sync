@@ -1,6 +1,6 @@
 site_name: mise-completions-sync
 site_description: Automatically sync shell completions for tools managed by mise
-site_url: https://alltuner.github.io/mise-completions-sync/
+site_url: https://mise-completions.alltuner.com/
 site_author: All Tuner Labs, S.L.
 
 repo_url: https://github.com/alltuner/mise-completions-sync
