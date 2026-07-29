@@ -32,8 +32,6 @@ The following tools have shell completion support in mise-completions-sync.
 | [gh](https://github.com/cli/cli) | GitHub’s official command line tool | ✓ | ✓ | ✓ |
 | [ghorg](https://github.com/gabrie30/ghorg) | Quickly clone an entire org/users repositories ... | ✓ | ✓ | ✓ |
 | [gitleaks](https://github.com/gitleaks/gitleaks) | Find secrets with Gitleaks | ✓ | ✓ | ✓ |
-| [gitu](https://github.com/altsem/gitu) | A TUI Git client inspired by Magit | ✓ | ✓ | ✓ |
-| [gitui](https://github.com/extrawurst/gitui) | Blazing 💥 fast terminal-ui for git written in rust | ✓ | ✓ | ✓ |
 | glab | gitlab cli | ✓ | ✓ | ✓ |
 | [golangci-lint](https://github.com/golangci/golangci-lint) | Fast linters Runner for Go | ✓ | ✓ | ✓ |
 | [goreleaser](https://github.com/goreleaser/goreleaser) | Deliver Go binaries as fast and easily as possible | ✓ | ✓ | ✓ |
@@ -65,13 +63,13 @@ The following tools have shell completion support in mise-completions-sync.
 | oci | Oracle Cloud Infrastructure CLI | ✓ | ✓ | ✓ |
 | [oras](https://github.com/oras-project/oras) | ORAS CLI | ✓ | ✓ | ✓ |
 | patool |  | ✓ | ✓ | ✓ |
-| [pipx](https://github.com/pypa/pipx) |  | ✓ | ✓ | ✓ |
+| [pipx](https://github.com/pypa/pipx) | Install and Run Python Applications in Isolated... | ✓ | ✓ | ✓ |
 | [pitchfork](https://github.com/jdx/pitchfork) | Daemons with DX | ✓ | ✓ | ✓ |
 | [pluto](https://github.com/FairwindsOps/pluto) | A cli tool to help discover deprecated apiVersi... | ✓ | ✓ | ✓ |
 | [pnpm](https://github.com/pnpm/pnpm) | Fast, disk space efficient package manager | ✓ | ✓ |  |
 | podman | Podman: A tool for managing OCI containers and ... | ✓ | ✓ | ✓ |
 | poetry | Python packaging and dependency management made... | ✓ | ✓ | ✓ |
-| [prek](https://github.com/j178/prek) |  | ✓ | ✓ | ✓ |
+| [prek](https://github.com/j178/prek) | ⚡ A fast Git hook manager written in Rust, desi... | ✓ | ✓ | ✓ |
 | [pulumi](https://github.com/pulumi/pulumi) | Pulumi - Infrastructure as Code in any programm... | ✓ | ✓ | ✓ |
 | ratarmount |  | ✓ | ✓ | ✓ |
 | [regctl](https://github.com/regclient/regclient) | Docker and OCI Registry Client in Go and toolin... | ✓ | ✓ | ✓ |
@@ -105,7 +103,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 100 tools**
+**Total: 98 tools**
 
 ## Shell Support Legend
 
