@@ -9,24 +9,70 @@ mise-completions-sync follows a simple process to generate shell completions:
 
 ## Registry
 
-The registry (`registry.toml`) contains patterns for generating completions. Each entry specifies:
-
-- The tool name (matching mise's tool name)
-- A format pattern for the completion command
-- Which shells are supported
-
-Example entry:
+The registry (`registry.toml`) maps each tool to the command that prints its
+completion script. Most tools share a handful of conventions, so those live in
+`[patterns]`, where `{}` stands in for the tool name:
 
 ```toml
-[tools.kubectl]
-format = "{bin} completion {shell}"
-shells = ["zsh", "bash", "fish"]
+[patterns]
+standard = { zsh = "{} completion zsh", bash = "{} completion bash", fish = "{} completion fish" }
+
+[tools]
+kubectl = "standard"
 ```
 
-The format pattern supports these placeholders:
+A tool whose command doesn't fit a pattern spells it out per shell. Omitting a
+shell means the tool doesn't support it:
 
-- `{bin}` - The tool's binary path
-- `{shell}` - The target shell (zsh, bash, fish)
+```toml
+[tools]
+npm = { zsh = "npm completion", bash = "npm completion" }
+```
+
+Two optional fields cover tools that need more than a command:
+
+- `requires` names another mise tool that must be on PATH while generating,
+  for tools that shell out to a helper. `fnox` renders through `usage`:
+
+  ```toml
+  fnox = { requires = "usage", zsh = "fnox completion zsh" }
+  ```
+
+- `provided_by` marks a binary that arrives as part of another mise tool rather
+  than being one itself, like `uvx` from `uv`. Its completions are generated
+  whenever the provider is installed.
+
+Commands run inside `mise x <tool> -- …`, so they resolve against the version
+mise has installed rather than whatever is on your PATH.
+
+## Custom Registry
+
+The built-in registry is embedded in the binary, but you can extend it. If a
+`registry.toml` exists next to the executable, or at
+`$XDG_DATA_HOME/mise-completions-sync/registry.toml`, it is laid **on top of**
+the built-in one rather than replacing it.
+
+```toml
+schema_version = 1
+
+[tools]
+# a tool the built-in registry doesn't know about
+graphite-cli = { zsh = "gt completion zsh", bash = "gt completion bash" }
+
+# built-in patterns are available to your entries
+mytool = "standard"
+
+# and you can override a built-in entry
+yq = { zsh = "yq shell-completion zsh" }
+```
+
+Merging happens before patterns are resolved, so your entries can use the
+built-in patterns, and redefining a pattern reaches every tool that references
+it. `schema_version` is required. Entries can be added or overridden; there is
+no way to remove a built-in entry.
+
+The executable's directory takes precedence over the XDG location, and only one
+user registry applies.
 
 ## Output Locations
 

@@ -91,6 +91,31 @@ export MISE_COMPLETIONS_SYNC_FISH_DIR="$XDG_DATA_HOME/fish/vendor_completions.d"
 
 Note: Target directories will be created if they don't already exist. Don't forget to update your shell setup above.
 
+## Custom Registry
+
+The supported tool list is built into the binary, but you can extend it without
+waiting for a release. Put a `registry.toml` at
+`$XDG_DATA_HOME/mise-completions-sync/registry.toml`, or next to the
+`misecompsync` executable, and it is laid on top of the built-in registry:
+
+```toml
+schema_version = 1
+
+[tools]
+# a tool the built-in registry doesn't cover
+graphite-cli = { zsh = "gt completion zsh", bash = "gt completion bash" }
+
+# built-in patterns are available to your own entries
+mytool = "standard"
+
+# override a built-in entry
+yq = { zsh = "yq shell-completion zsh" }
+```
+
+Entries are merged with the built-in ones rather than replacing them, so the
+tools you don't mention keep working. `schema_version` is required. See
+[How It Works](how-it-works.md) for the full registry format.
+
 ## Updating
 
 ### Homebrew
