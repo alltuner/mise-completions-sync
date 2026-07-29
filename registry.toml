@@ -66,6 +66,7 @@ patool = "argcomplete"
 pipx = "argcomplete"
 poetry = "completions"
 ratarmount = "argcomplete"
+pdm = "standard"
 
 # Cloud CLIs
 flyctl = "standard"
@@ -94,17 +95,34 @@ doggo = "completions"
 dyff = "standard"
 ghorg = "standard"
 gitleaks = "standard"
+glow = "standard"
 golangci-lint = "standard"
 goreleaser = "standard"
+# not in mise's registry; install as aqua:grafana/grafanactl
+grafanactl = "standard"
+# the default github: backend fails SLSA verification, and the backend that does
+# work (asdf:asdf-community/asdf-hishtory) strips to a different short name, so
+# both keys are listed -- same idea as rg/ripgrep below.
+hishtory = "standard"
+asdf-hishtory = { zsh = "hishtory completion zsh", bash = "hishtory completion bash", fish = "hishtory completion fish" }
 hugo = "standard"
+jules = "standard"
 lazygit = "standard"
 lefthook = "standard"
 oc = "standard"
+mermaid-ascii = "standard"
+opencode = "standard"
 pulumi = "standard"
 rumdl = "completions"
 step = "standard"
 xh = "generate_complete"
 yq = "standard"
+
+# not in mise's registry; install as github:ramonvermeulen/whosthere
+whosthere = "standard"
+
+
+# Lefthook uses completions pattern
 
 # Tools with explicit commands (unique patterns or partial shell support)
 
@@ -131,9 +149,10 @@ saml2aws = { zsh = "saml2aws --completion-script-zsh", bash = "saml2aws --comple
 cargo = { zsh = "rustup completions zsh cargo", bash = "rustup completions bash cargo", fish = "rustup completions fish cargo" }
 
 
-# fnox and pitchfork render their completions with the `usage` CLI, which is not
+# fnox, hk and pitchfork render their completions with the `usage` CLI, which is not
 # on PATH inside `mise x <tool>` on its own.
 fnox = { requires = "usage", zsh = "fnox completion zsh", bash = "fnox completion bash", fish = "fnox completion fish" }
+hk = { requires = "usage", zsh = "hk completion zsh", bash = "hk completion bash", fish = "hk completion fish" }
 pitchfork = { requires = "usage", zsh = "pitchfork completion zsh", bash = "pitchfork completion bash", fish = "pitchfork completion fish" }
 
 prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util generate-shell-completion bash", fish = "prek util generate-shell-completion fish" }
@@ -163,3 +182,23 @@ tree-sitter = { zsh = "tree-sitter complete --shell zsh", bash = "tree-sitter co
 
 # restic writes completions via `generate --{shell}-completion`; `-` sends them to stdout
 restic = { zsh = "restic generate --zsh-completion -", bash = "restic generate --bash-completion -", fish = "restic generate --fish-completion -" }
+# rclone requires - to output to stdout
+rclone = { zsh = "rclone completion zsh -", bash = "rclone completion bash -", fish = "rclone completion fish -" }
+
+# openspec requires completion generate <shell>
+# not in mise's registry; install as npm:@fission-ai/openspec
+# (bare npm:openspec is an unrelated placeholder package)
+openspec = { zsh = "openspec completion generate zsh", bash = "openspec completion generate bash", fish = "openspec completion generate fish" }
+
+# jj requires util completion <shell>
+jj = { zsh = "jj util completion zsh", bash = "jj util completion bash", fish = "jj util completion fish" }
+
+# fx requires --comp <shell>
+fx = { zsh = "fx --comp zsh", bash = "fx --comp bash", fish = "fx --comp fish" }
+
+# pkl requires shell-completion <shell>
+pkl = { zsh = "pkl shell-completion zsh", bash = "pkl shell-completion bash", fish = "pkl shell-completion fish" }
+
+# television provides the `tv` binary and requires init <shell>
+television = { zsh = "tv init zsh", bash = "tv init bash", fish = "tv init fish" }
+
