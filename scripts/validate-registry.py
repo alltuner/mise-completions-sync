@@ -116,29 +116,61 @@ def test_completion(
     return False, error
 
 
+def install_tool(target: str) -> tuple[bool, str]:
+    """Install a tool with mise. Returns (installed, reason_if_not)."""
+    try:
+        result = subprocess.run(
+            ["mise", "install", f"{target}@latest"],
+            capture_output=True,
+            text=True,
+            timeout=600,
+        )
+    except subprocess.TimeoutExpired:
+        return False, "install timed out"
+
+    if result.returncode == 0:
+        return True, ""
+
+    for line in result.stderr.splitlines():
+        if "ERROR" in line:
+            return False, line.split("ERROR", 1)[1].strip()
+    return False, result.stderr.strip().splitlines()[0] if result.stderr.strip() else "install failed"
+
+
 def main():
     installed_only = "--installed-only" in sys.argv
+    install = "--install" in sys.argv
+    only = [a for a in sys.argv[1:] if not a.startswith("--")]
 
     registry = load_registry()
     installed = get_installed_tools() if installed_only else set()
 
     results: dict[str, dict[str, tuple[bool, str]]] = {}
+    unavailable: dict[str, str] = {}
     shells = ["zsh", "bash", "fish"]
 
-    tools = sorted(registry.keys())
+    tools = [t for t in sorted(registry.keys()) if not only or t in only]
     total = len(tools)
 
-    print(f"Validating {total} tools...\n")
+    print(f"Validating {total} tools{' (installing first)' if install else ''}...\n")
 
     for i, tool in enumerate(tools, 1):
         provider, completions = registry[tool]
         if installed_only and provider not in installed:
             continue
 
+        print(f"[{i}/{total}] {tool}...", end=" ", flush=True)
+
+        if install:
+            ok, reason = install_tool(provider)
+            if not ok:
+                # Not installable here, so the entry is untested rather than wrong.
+                unavailable[tool] = reason
+                print("skipped (not installable)")
+                continue
+
         requires = completions.get("requires")
         results[tool] = {}
-
-        print(f"[{i}/{total}] {tool}...", end=" ", flush=True)
         tool_ok = True
 
         for shell in shells:
@@ -161,12 +193,7 @@ def main():
                 results[tool][shell] = (False, str(e))
                 tool_ok = False
 
-        print("✓" if tool_ok else "✗")
-
-    # Summary
-    print("\n" + "=" * 60)
-    print("SUMMARY")
-    print("=" * 60)
+        print("\u2713" if tool_ok else "\u2717")
 
     failures: dict[str, list[tuple[str, str, str]]] = {}
     successes = 0
@@ -178,22 +205,30 @@ def main():
             if ok:
                 successes += 1
             else:
-                if tool not in failures:
-                    failures[tool] = []
+                failures.setdefault(tool, [])
                 _, completions = registry[tool]
                 failures[tool].append((shell, completions[shell], err))
 
+    print("\n" + "=" * 60)
+    print("SUMMARY")
+    print("=" * 60)
     print(f"\nPassed: {successes}/{total_tests}")
 
     if failures:
-        print(f"\nFailed tools ({len(failures)}):\n")
+        print(f"\n## Broken entries ({len(failures)})\n")
         for tool, errs in sorted(failures.items()):
             print(f"  [{tool}]")
             for shell, cmd, err in errs:
-                # Truncate long errors
                 err_short = err[:60] + "..." if len(err) > 60 else err
-                print(f"    {shell}: {err_short}")
+                print(f"    {shell}: `{cmd}` -> {err_short}")
             print()
+
+    if unavailable:
+        # Reported separately: these say nothing about whether the entry is right.
+        print(f"\n## Could not verify ({len(unavailable)})\n")
+        for tool, reason in sorted(unavailable.items()):
+            print(f"  {tool}: {reason[:70]}")
+        print()
 
     return 0 if not failures else 1
 

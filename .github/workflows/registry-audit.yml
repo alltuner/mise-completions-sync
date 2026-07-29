@@ -1,0 +1,59 @@
+name: Registry Audit
+
+# Installs every tool in the registry and checks its completion command still
+# works. CI only ever validates tools that happen to be installed on the runner,
+# so an entry that is wrong for everyone otherwise goes unnoticed indefinitely.
+
+on:
+  schedule:
+    - cron: '0 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v4
+        with:
+          # Only uv is needed to run the script; the audit installs the rest
+          # itself, and caching those would both bloat the cache and let a stale
+          # install mask a broken entry.
+          install_args: uv
+          cache: false
+
+      - name: Audit registry
+        id: audit
+        run: |
+          set -o pipefail
+          uv run scripts/validate-registry.py --install 2>&1 | tee audit.log
+
+      - name: Open or update tracking issue
+        if: failure() && steps.audit.conclusion == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TITLE: 'Registry audit: broken completion commands'
+        run: |
+          {
+            echo "The scheduled registry audit installed each tool and found entries whose"
+            echo "completion command no longer works."
+            echo
+            echo "[Full run](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})"
+            echo
+            sed -n '/^## Broken entries/,$p' audit.log
+          } > issue.md
+
+          number=$(gh issue list --state open --search "$TITLE in:title" --json number,title \
+            --jq ".[] | select(.title == \"$TITLE\") | .number" | head -1)
+
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body-file issue.md
+          else
+            gh issue create --title "$TITLE" --body-file issue.md
+          fi
