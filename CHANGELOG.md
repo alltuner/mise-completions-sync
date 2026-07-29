@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.16](https://github.com/alltuner/mise-completions-sync/compare/v0.5.15...v0.5.16) (2026-07-29)
+
+
+### Documentation Updates
+
+* point at the canonical docs domain ([#143](https://github.com/alltuner/mise-completions-sync/issues/143)) ([f81c5c7](https://github.com/alltuner/mise-completions-sync/commit/f81c5c7870ff7d0e23a601c9331045f6dee90069))
+
 ## [0.5.15](https://github.com/alltuner/mise-completions-sync/compare/v0.5.14...v0.5.15) (2026-07-29)
 
 
