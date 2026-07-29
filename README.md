@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="https://alltuner.github.io/mise-completions-sync/">Docs</a> &middot;
+  <a href="https://mise-completions.alltuner.com/">Docs</a> &middot;
   <a href="https://alltuner.com/sponsor">Sponsor</a>
 </p>
 
@@ -185,7 +185,7 @@ mise use -g github:alltuner/mise-completions-sync@0.5.1
 
 ## Documentation
 
-Full docs at [alltuner.github.io/mise-completions-sync](https://alltuner.github.io/mise-completions-sync/) — supported tools, completion details, and troubleshooting.
+Full docs at [mise-completions.alltuner.com](https://mise-completions.alltuner.com/) — supported tools, completion details, and troubleshooting.
 
 ## License
 
@@ -193,7 +193,7 @@ Full docs at [alltuner.github.io/mise-completions-sync](https://alltuner.github.
 
 ## Support the project
 
-mise-completions-sync is an open source project built by [David Poblador i Garcia](https://davidpoblador.com/) through [All Tuner Labs](https://www.alltuner.com/).
+mise-completions-sync is an open source project built by [David Poblador i Garcia](https://davidpoblador.com/) through [All Tuner Labs](https://alltuner.com/).
 
 If this project was useful to you, [consider supporting its development](https://alltuner.com/sponsor).
 
