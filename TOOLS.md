@@ -5,7 +5,7 @@ Use this to identify tools that could be added to mise-completions-sync.
 
 ## Supported Tools
 
-Currently **98 tools** have completion support.
+Currently **100 tools** have completion support.
 
 See [docs/tools.md](docs/tools.md) for the full list with shell support details.
 
@@ -66,7 +66,7 @@ These tools are in mise's registry but not yet supported. They may have completi
 | [aws-nuke](https://github.com/ekristen/aws-nuke) | Remove all the resources from an AWS account | Needs testing |
 | [aws-sam](https://github.com/aws/aws-sam-cli) | CLI tool to build, test, debug, and deploy Serv... | Needs testing |
 
-*...and 800 more tools in mise registry*
+*...and 798 more tools in mise registry*
 
 ## Tools Without Completion Support
 

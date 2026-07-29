@@ -72,9 +72,28 @@ def load_registry() -> dict[str, tuple[str, dict[str, str]]]:
             # here so the invocation can put it on PATH.
             if "requires" in entry:
                 completions["requires"] = entry["requires"]
+            # A bundled entry's shell values are filenames shipped in the
+            # download, not commands, so they are checked differently.
+            if entry.get("bundled"):
+                completions["bundled"] = True
             expanded[tool_name] = (provider, completions)
 
     return expanded
+
+
+def find_bundled(provider: str, filename: str) -> tuple[bool, str]:
+    """Check a bundled completion file exists in the tool's install directory."""
+    where = subprocess.run(
+        ["mise", "where", provider], capture_output=True, text=True, timeout=30
+    )
+    if where.returncode != 0:
+        return False, where.stderr.strip() or "mise where failed"
+
+    root = Path(where.stdout.strip())
+    for path in sorted(root.rglob(filename)):
+        if path.is_file() and path.stat().st_size > 0:
+            return True, ""
+    return False, f"{filename} not found under {root}"
 
 
 def test_completion(
@@ -128,7 +147,10 @@ def main():
 
             command = completions[shell]
             try:
-                ok, err = test_completion(provider, shell, command, requires)
+                if completions.get("bundled"):
+                    ok, err = find_bundled(provider, command)
+                else:
+                    ok, err = test_completion(provider, shell, command, requires)
                 results[tool][shell] = (ok, err)
                 if not ok:
                     tool_ok = False

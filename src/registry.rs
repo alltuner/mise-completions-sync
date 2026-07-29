@@ -55,9 +55,16 @@ pub struct ToolCompletions {
     /// Another mise tool that must be on PATH for the command to work, because
     /// the tool shells out to it to render completions (e.g. fnox needs `usage`).
     pub requires: Option<String>,
+    /// The tool ships completion files in its download instead of generating
+    /// them. Each shell's value is then the filename to look for, not a command.
+    pub bundled: Option<bool>,
 }
 
 impl ToolCompletions {
+    pub fn is_bundled(&self) -> bool {
+        self.bundled.unwrap_or(false)
+    }
+
     pub fn get(&self, shell: &str) -> Option<&String> {
         match shell {
             "zsh" => self.zsh.as_ref(),
@@ -74,6 +81,7 @@ impl ToolCompletions {
             bash: self.bash.as_ref().map(|s| s.replace("{}", tool_name)),
             fish: self.fish.as_ref().map(|s| s.replace("{}", tool_name)),
             requires: self.requires.clone(),
+            bundled: self.bundled,
         }
     }
 }
@@ -219,6 +227,33 @@ mod tests {
         let registry = load_registry().expect("Failed to load registry");
         assert!(!registry.tools.contains_key("gitu"));
         assert!(!registry.tools.contains_key("gitui"));
+    }
+
+    #[test]
+    fn test_hyperfine_is_bundled() {
+        // hyperfine ships completion files in its download rather than having a
+        // command, so the per-shell values are filenames to find, not commands.
+        let registry = load_registry().expect("Failed to load registry");
+        let hyperfine = registry
+            .tools
+            .get("hyperfine")
+            .expect("hyperfine should be in registry");
+        assert!(hyperfine.completions.is_bundled());
+        assert_eq!(hyperfine.completions.zsh.as_deref(), Some("_hyperfine"));
+        assert_eq!(
+            hyperfine.completions.bash.as_deref(),
+            Some("hyperfine.bash")
+        );
+        assert_eq!(
+            hyperfine.completions.fish.as_deref(),
+            Some("hyperfine.fish")
+        );
+    }
+
+    #[test]
+    fn test_command_entries_are_not_bundled() {
+        let registry = load_registry().expect("Failed to load registry");
+        assert!(!registry.tools["yq"].completions.is_bundled());
     }
 
     #[test]
