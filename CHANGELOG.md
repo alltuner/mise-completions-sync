@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.5.14](https://github.com/alltuner/mise-completions-sync/compare/v0.5.13...v0.5.14) (2026-07-29)
+
+
+### Features
+
+* **registry:** merge a user registry over the built-in one ([#131](https://github.com/alltuner/mise-completions-sync/issues/131)) ([e62224f](https://github.com/alltuner/mise-completions-sync/commit/e62224faa159fcbcddd0f81fac5238babc442cf4))
+* **registry:** support tools shipping completion files ([#136](https://github.com/alltuner/mise-completions-sync/issues/136)) ([d51283b](https://github.com/alltuner/mise-completions-sync/commit/d51283b822017141237bf0d0a70e8005f769b775)), closes [#101](https://github.com/alltuner/mise-completions-sync/issues/101)
+
+
+### Bug Fixes
+
+* **registry:** correct entries the audit found broken ([#141](https://github.com/alltuner/mise-completions-sync/issues/141)) ([07e7a55](https://github.com/alltuner/mise-completions-sync/commit/07e7a555b6f783cbe07218d596aae5e0f55af9e6))
+
+
+### Documentation Updates
+
+* describe bundled entries in the registry reference ([#139](https://github.com/alltuner/mise-completions-sync/issues/139)) ([3140829](https://github.com/alltuner/mise-completions-sync/commit/3140829f0551ba569ff207565258a9c0e812f39a))
+
+
+### CI/CD Changes
+
+* audit the whole registry on a schedule ([#138](https://github.com/alltuner/mise-completions-sync/issues/138)) ([087e01d](https://github.com/alltuner/mise-completions-sync/commit/087e01d990581180803761c801fa9226fe4230f3))
+
 ## [0.5.13](https://github.com/alltuner/mise-completions-sync/compare/v0.5.12...v0.5.13) (2026-07-29)
 
 
