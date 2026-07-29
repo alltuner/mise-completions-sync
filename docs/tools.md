@@ -81,7 +81,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [ruff](https://github.com/astral-sh/ruff) | An extremely fast Python linter and code format... | ✓ | ✓ | ✓ |
 | [rumdl](https://github.com/rvben/rumdl) | Markdown Linter and Formatter written in Rust | ✓ | ✓ | ✓ |
 | rustup |  | ✓ | ✓ | ✓ |
-| [saml2aws](https://github.com/Versent/saml2aws) | CLI tool which enables you to login and retriev... | ✓ | ✓ | ✓ |
+| [saml2aws](https://github.com/Versent/saml2aws) | CLI tool which enables you to login and retriev... | ✓ | ✓ |  |
 | [scaleway-cli](https://github.com/scaleway/scaleway-cli) | Command Line Interface for Scaleway | ✓ | ✓ | ✓ |
 | [skaffold](https://github.com/GoogleContainerTools/skaffold) | Easy and Repeatable Kubernetes Development | ✓ | ✓ | ✓ |
 | [sops](https://github.com/getsops/sops) | Simple and flexible tool for managing secrets | ✓ | ✓ |  |
@@ -99,13 +99,12 @@ The following tools have shell completion support in mise-completions-sync.
 | [uv](https://github.com/astral-sh/uv) | An extremely fast Python package installer and ... | ✓ | ✓ | ✓ |
 | uvx |  | ✓ | ✓ | ✓ |
 | [velero](https://github.com/vmware-tanzu/velero) | Backup and migrate Kubernetes applications and ... | ✓ | ✓ | ✓ |
-| vercel | Build and deploy on the Vercel cloud | ✓ | ✓ |  |
 | [watchexec](https://github.com/watchexec/watchexec) | Executes commands in response to file modificat... | ✓ | ✓ | ✓ |
 | [xh](https://github.com/ducaale/xh) | Friendly and fast tool for sending HTTP requests | ✓ | ✓ | ✓ |
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 100 tools**
+**Total: 99 tools**
 
 ## Shell Support Legend
 

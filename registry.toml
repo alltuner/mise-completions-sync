@@ -38,7 +38,7 @@ argocd = "standard"
 istioctl = "standard"
 k3d = "standard"
 ko = "standard"
-kubeseal = "standard"
+kubeseal = { audit_skip = "needs a reachable cluster config even to print completions", zsh = "kubeseal completion zsh", bash = "kubeseal completion bash", fish = "kubeseal completion fish" }
 linkerd = "standard"
 skaffold = "standard"
 stern = "standard"
@@ -70,7 +70,6 @@ ratarmount = "argcomplete"
 # Cloud CLIs
 flyctl = "standard"
 doctl = "standard"
-oci = "standard"
 
 # Container tools
 cosign = "standard"
@@ -101,10 +100,8 @@ hugo = "standard"
 lazygit = "standard"
 lefthook = "standard"
 oc = "standard"
-pitchfork = "standard"
 pulumi = "standard"
 rumdl = "completions"
-saml2aws = "standard"
 step = "standard"
 xh = "generate_complete"
 yq = "standard"
@@ -123,16 +120,21 @@ flux2 = { zsh = "flux completion zsh", bash = "flux completion bash", fish = "fl
 # Partial shell support (zsh + bash)
 npm = { zsh = "npm completion", bash = "npm completion" }
 pnpm = { zsh = "pnpm completion zsh", bash = "pnpm completion bash" }
-vercel = { zsh = "vercel completion zsh", bash = "vercel completion bash" }
 sops = { zsh = "sops completion zsh", bash = "sops completion bash" }
+# oci is click-based: completions come from an env var, not a subcommand.
+oci = { zsh = "env _OCI_COMPLETE=zsh_source oci", bash = "env _OCI_COMPLETE=bash_source oci", fish = "env _OCI_COMPLETE=fish_source oci" }
+
+# saml2aws is kingpin-based: completion comes from flags, and it has no fish support
+saml2aws = { zsh = "saml2aws --completion-script-zsh", bash = "saml2aws --completion-script-bash" }
 
 # Cargo uses rustup
 cargo = { zsh = "rustup completions zsh cargo", bash = "rustup completions bash cargo", fish = "rustup completions fish cargo" }
 
 
-# fnox renders its completions with the `usage` CLI, which is not on PATH inside
-# `mise x fnox` on its own.
+# fnox and pitchfork render their completions with the `usage` CLI, which is not
+# on PATH inside `mise x <tool>` on its own.
 fnox = { requires = "usage", zsh = "fnox completion zsh", bash = "fnox completion bash", fish = "fnox completion fish" }
+pitchfork = { requires = "usage", zsh = "pitchfork completion zsh", bash = "pitchfork completion bash", fish = "pitchfork completion fish" }
 
 prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util generate-shell-completion bash", fish = "prek util generate-shell-completion fish" }
 
