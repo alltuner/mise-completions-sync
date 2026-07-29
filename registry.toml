@@ -51,6 +51,7 @@ rustup = "completions"
 deno = "completions"
 starship = "completions"
 uv = "generate_shell"
+uvx = { provided_by = "uv", zsh = "uvx --generate-shell-completion zsh", bash = "uvx --generate-shell-completion bash", fish = "uvx --generate-shell-completion fish" }
 ruff = "generate_shell"
 ty = "generate_shell"
 mdbook = "generate_shell"
