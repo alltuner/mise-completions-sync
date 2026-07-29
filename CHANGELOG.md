@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.5.13](https://github.com/alltuner/mise-completions-sync/compare/v0.5.12...v0.5.13) (2026-07-29)
+
+
+### Features
+
+* **registry:** add uvx completions ([#132](https://github.com/alltuner/mise-completions-sync/issues/132)) ([c26e3a5](https://github.com/alltuner/mise-completions-sync/commit/c26e3a58776f927edeb72fd33f4593beacf17e73)), closes [#76](https://github.com/alltuner/mise-completions-sync/issues/76)
+
+
+### Bug Fixes
+
+* **registry:** correct mdbook and drop tools without completions ([#134](https://github.com/alltuner/mise-completions-sync/issues/134)) ([07ef18d](https://github.com/alltuner/mise-completions-sync/commit/07ef18d423cf1b515a52948b009b04a26cbe3269))
+
+
+### CI/CD Changes
+
+* publish to crates.io via OIDC trusted publishing ([#135](https://github.com/alltuner/mise-completions-sync/issues/135)) ([cdbb476](https://github.com/alltuner/mise-completions-sync/commit/cdbb47625ff9f44efd841b0c8b928ebc4d5bf9e8))
+
 ## [0.5.12](https://github.com/alltuner/mise-completions-sync/compare/v0.5.11...v0.5.12) (2026-07-28)
 
 
