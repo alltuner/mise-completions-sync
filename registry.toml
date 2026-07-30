@@ -202,3 +202,9 @@ pkl = { zsh = "pkl shell-completion zsh", bash = "pkl shell-completion bash", fi
 # television provides the `tv` binary and requires init <shell>
 television = { zsh = "tv init zsh", bash = "tv init bash", fish = "tv init fish" }
 
+# trash-cli requires --print-completion
+trash = { provided_by = "trash-cli", zsh = "trash --print-completion zsh", bash = "trash --print-completion bash" }
+trash-empty = { provided_by = "trash-cli", zsh = "trash-empty --print-completion zsh", bash = "trash-empty --print-completion bash" }
+trash-list = { provided_by = "trash-cli", zsh = "trash-list --print-completion zsh", bash = "trash-list --print-completion bash" }
+trash-restore = { provided_by = "trash-cli", zsh = "trash-restore --print-completion zsh", bash = "trash-restore --print-completion bash" }
+trash-put = { provided_by = "trash-cli", zsh = "trash-put --print-completion zsh", bash = "trash-put --print-completion bash" }
