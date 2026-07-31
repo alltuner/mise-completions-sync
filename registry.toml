@@ -161,6 +161,8 @@ prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util gene
 # them. The per-shell value is the filename to look for, not a command.
 hyperfine = { bundled = true, zsh = "_hyperfine", bash = "hyperfine.bash", fish = "hyperfine.fish" }
 killport = { bundled = true, zsh = "_killport", bash = "killport.bash", fish = "killport.fish" }
+yazi = { bundled = true, zsh = "_yazi", bash = "yazi.bash", fish = "yazi.fish" }
+ya = { provided_by = "yazi", bundled = true, zsh = "_ya", bash = "ya.bash", fish = "ya.fish" }
 
 # Unique command patterns
 task = { zsh = "task --completion zsh", bash = "task --completion bash", fish = "task --completion fish" }
