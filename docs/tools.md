@@ -117,10 +117,12 @@ The following tools have shell completion support in mise-completions-sync.
 | [watchexec](https://github.com/watchexec/watchexec) | Executes commands in response to file modificat... | ✓ | ✓ | ✓ |
 | whosthere |  | ✓ | ✓ | ✓ |
 | [xh](https://github.com/ducaale/xh) | Friendly and fast tool for sending HTTP requests | ✓ | ✓ | ✓ |
+| ya |  | ✓ | ✓ | ✓ |
+| [yazi](https://github.com/sxyazi/yazi) | Blazing fast terminal file manager written in R... | ✓ | ✓ | ✓ |
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 115 tools**
+**Total: 117 tools**
 
 ## Shell Support Legend
 
