@@ -155,8 +155,13 @@ def main():
     print("```")
     print()
     print("`provided_by` is a one-hop link and is supported only on explicit entries.")
-    print("Normal sync and `--new-only` include the child when its provider is installed.")
-    print("`misecompsync uvx` syncs only `uvx`; `misecompsync uv` does not expand children.")
+    print("By default, explicitly named tools are parent-only: `misecompsync uv`")
+    print("syncs only `uv`. Use `misecompsync --children uv` to add direct companion")
+    print("binaries provided by `uv`. Expansion is downward and one hop only.")
+    print("With multiple explicit tools, misecompsync syncs the sorted, deduplicated")
+    print("union of those tools and their direct children.")
+    print("Automatic sync and `--new-only` are unchanged: they include a child when")
+    print("its provider is installed.")
 
 
 if __name__ == "__main__":

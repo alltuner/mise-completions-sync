@@ -173,5 +173,10 @@ uvx = { provided_by = "uv", zsh = "uvx --generate-shell-completion zsh", bash = 
 ```
 
 `provided_by` is a one-hop link and is supported only on explicit entries.
-Normal sync and `--new-only` include the child when its provider is installed.
-`misecompsync uvx` syncs only `uvx`; `misecompsync uv` does not expand children.
+By default, explicitly named tools are parent-only: `misecompsync uv`
+syncs only `uv`. Use `misecompsync --children uv` to add direct companion
+binaries provided by `uv`. Expansion is downward and one hop only.
+With multiple explicit tools, misecompsync syncs the sorted, deduplicated
+union of those tools and their direct children.
+Automatic sync and `--new-only` are unchanged: they include a child when
+its provider is installed.
