@@ -64,6 +64,13 @@ enum Commands {
     },
 }
 
+fn format_list_entry(tool: &str, provided_by: Option<&str>) -> String {
+    match provided_by {
+        Some(provider) => format!("{tool} (provided by {provider})"),
+        None => tool.to_string(),
+    }
+}
+
 fn main() {
     if let Err(e) = run() {
         eprintln!("error: {e}");
@@ -80,8 +87,11 @@ fn run() -> Result<(), sync::Error> {
         Some(Commands::List) => {
             let registry = registry::load_registry()?;
             println!("Tools with completion support:");
-            for tool in registry.tools.keys() {
-                println!("  {tool}");
+            for (tool, entry) in &registry.tools {
+                println!(
+                    "  {}",
+                    format_list_entry(tool, entry.provided_by.as_deref())
+                );
             }
             Ok(())
         }
@@ -119,6 +129,16 @@ mod tests {
 
     fn parse(args: &[&str]) -> Result<Cli, clap::Error> {
         Cli::try_parse_from(args)
+    }
+
+    #[test]
+    fn test_list_formatting_keeps_ordinary_entry_unchanged() {
+        assert_eq!(format_list_entry("kubectl", None), "kubectl");
+    }
+
+    #[test]
+    fn test_list_formatting_annotates_companion_entry_with_provider() {
+        assert_eq!(format_list_entry("uvx", Some("uv")), "uvx (provided by uv)");
     }
 
     #[test]
