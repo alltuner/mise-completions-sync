@@ -161,6 +161,7 @@ prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util gene
 # them. The per-shell value is the filename to look for, not a command.
 hyperfine = { bundled = true, zsh = "_hyperfine", bash = "hyperfine.bash", fish = "hyperfine.fish" }
 killport = { bundled = true, zsh = "_killport", bash = "killport.bash", fish = "killport.fish" }
+tealdeer = { completion_name = "tldr", bundled = true, zsh = "zsh_tealdeer", bash = "bash_tealdeer", fish = "fish_tealdeer" }
 
 # Unique command patterns
 task = { zsh = "task --completion zsh", bash = "task --completion bash", fish = "task --completion fish" }
@@ -201,4 +202,3 @@ pkl = { zsh = "pkl shell-completion zsh", bash = "pkl shell-completion bash", fi
 
 # television provides the `tv` binary and requires init <shell>
 television = { zsh = "tv init zsh", bash = "tv init bash", fish = "tv init fish" }
-

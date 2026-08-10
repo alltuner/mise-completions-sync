@@ -137,6 +137,17 @@ def main():
     )
     print("```")
     print()
+    print("If the shell command name differs from the mise tool name, set")
+    print("`completion_name` so the written file uses the command users actually")
+    print("type. `tealdeer`, for example, installs the `tldr` command:")
+    print()
+    print("```toml")
+    print(
+        'tealdeer = { completion_name = "tldr", bundled = true, '
+        'zsh = "zsh_tealdeer", bash = "bash_tealdeer", fish = "fish_tealdeer" }'
+    )
+    print("```")
+    print()
     print("The file is searched for by name beneath `mise where <tool>`, because the")
     print("directory holding it encodes the version and platform")
     print("(`hyperfine-v1.20.0-x86_64-apple-darwin/autocomplete`) and cannot be")

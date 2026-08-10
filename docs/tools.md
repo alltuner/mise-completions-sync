@@ -105,6 +105,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [syft](https://github.com/anchore/syft) | CLI tool and library for generating a Software ... | ✓ | ✓ | ✓ |
 | [talosctl](https://github.com/siderolabs/talos) | Talos is a modern OS for Kubernetes. talosctl i... | ✓ | ✓ | ✓ |
 | [task](https://github.com/go-task/task) | A task runner / simpler Make alternative writte... | ✓ | ✓ | ✓ |
+| [tealdeer](https://github.com/tealdeer-rs/tealdeer) | A very fast implementation of tldr in Rust. | ✓ | ✓ | ✓ |
 | [television](https://github.com/alexpasmantier/television) | The revolution will (not) be televised | ✓ | ✓ | ✓ |
 | [tilt](https://github.com/tilt-dev/tilt) | Define your dev environment as code. For micros... | ✓ | ✓ | ✓ |
 | [tree-sitter](https://github.com/tree-sitter/tree-sitter) | An incremental parsing system for programming t... | ✓ | ✓ | ✓ |
@@ -120,7 +121,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 115 tools**
+**Total: 116 tools**
 
 ## Shell Support Legend
 
@@ -157,6 +158,14 @@ and give each shell the *filename* to look for instead of a command:
 
 ```toml
 hyperfine = { bundled = true, zsh = "_hyperfine", bash = "hyperfine.bash", fish = "hyperfine.fish" }
+```
+
+If the shell command name differs from the mise tool name, set
+`completion_name` so the written file uses the command users actually
+type. `tealdeer`, for example, installs the `tldr` command:
+
+```toml
+tealdeer = { completion_name = "tldr", bundled = true, zsh = "zsh_tealdeer", bash = "bash_tealdeer", fish = "fish_tealdeer" }
 ```
 
 The file is searched for by name beneath `mise where <tool>`, because the
