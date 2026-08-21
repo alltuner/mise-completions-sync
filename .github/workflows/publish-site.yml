@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: astral-sh/setup-uv@v9.0.0
+      - uses: astral-sh/setup-uv@v10.0.1
 
       # mkdocs.yml expects it there; the docs build fails without it.
       - name: Copy CHANGELOG to docs
