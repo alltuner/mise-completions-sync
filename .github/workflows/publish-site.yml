@@ -1,0 +1,51 @@
+# ABOUTME: Builds the mkdocs site and attaches it to the release as site.tar.gz.
+# ABOUTME: The fleet's site publisher places it; nothing here touches storage.
+name: publish-site
+
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-site
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v9.0.0
+
+      - name: Build documentation
+        run: uvx --with mkdocs-material mkdocs build
+
+      - name: Package the site
+        run: tar -czf site.tar.gz -C site .
+
+      # sites.yaml in alltuner/infrastructure decides which bucket this lands
+      # in, and the publisher there polls for this asset. Nothing here holds a
+      # storage credential and no self-hosted runner is involved.
+      #
+      # It attaches to whichever release is current, so a repo that versions
+      # itself carries the site with its version. A repo with no releases gets
+      # one rolling `site` release whose asset is replaced in place.
+      - name: Attach it to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="$(gh release view --json tagName -q .tagName 2>/dev/null || true)"
+          if [ -z "$tag" ]; then
+            gh release create site \
+              --title "Site" \
+              --notes "Rolling release carrying the current build of the site." >/dev/null
+            tag=site
+          fi
+          gh release upload "$tag" site.tar.gz --clobber
