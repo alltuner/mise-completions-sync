@@ -43,6 +43,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [helm](https://github.com/helm/helm) | The Kubernetes Package Manager | ✓ | ✓ | ✓ |
 | hishtory | Your shell history: synced, queryable, and in c... | ✓ | ✓ | ✓ |
 | [hk](https://github.com/jdx/hk) | git hook and pre-commit lint manager | ✓ | ✓ | ✓ |
+| hubble |  | ✓ | ✓ | ✓ |
 | [hugo](https://github.com/gohugoio/hugo) | The world’s fastest framework for building webs... | ✓ | ✓ | ✓ |
 | [hyperfine](https://github.com/sharkdp/hyperfine) | A command-line benchmarking tool | ✓ | ✓ | ✓ |
 | ipython |  | ✓ | ✓ | ✓ |
@@ -120,7 +121,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 115 tools**
+**Total: 116 tools**
 
 ## Shell Support Legend
 
