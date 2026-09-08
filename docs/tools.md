@@ -31,6 +31,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [flux2](https://github.com/fluxcd/flux2) | Open and extensible continuous delivery solutio... | ✓ | ✓ | ✓ |
 | [flyctl](https://github.com/superfly/flyctl) | Command line tools for fly.io services | ✓ | ✓ | ✓ |
 | fnox | Fort Knox for your secrets | ✓ | ✓ | ✓ |
+| forgejo-cli |  | ✓ | ✓ | ✓ |
 | [fx](https://github.com/antonmedv/fx) | Command-line tool and terminal JSON viewer | ✓ | ✓ | ✓ |
 | [gh](https://github.com/cli/cli) | GitHub’s official command line tool | ✓ | ✓ | ✓ |
 | [ghorg](https://github.com/gabrie30/ghorg) | Quickly clone an entire org/users repositories ... | ✓ | ✓ | ✓ |
@@ -130,7 +131,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 125 tools**
+**Total: 126 tools**
 
 ## Shell Support Legend
 
