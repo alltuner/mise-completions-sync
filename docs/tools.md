@@ -12,6 +12,7 @@ The following tools have shell completion support in mise-completions-sync.
 | bun | Bun is a fast JavaScript all-in-one toolkit | ✓ | ✓ | ✓ |
 | cargo |  | ✓ | ✓ | ✓ |
 | [chezmoi](https://github.com/twpayne/chezmoi) | Manage your dotfiles across multiple diverse ma... | ✓ | ✓ | ✓ |
+| [cilium-hubble](https://github.com/cilium/hubble) | Hubble - Network, Service & Security Observabil... | ✓ | ✓ | ✓ |
 | [clusterctl](https://github.com/kubernetes-sigs/cluster-api) | Home for Cluster API, a subproject of sig-clust... | ✓ | ✓ | ✓ |
 | [cmctl](https://github.com/cert-manager/cmctl) | the command line utility that makes cert-manage... | ✓ | ✓ | ✓ |
 | [cosign](https://github.com/sigstore/cosign) | Code signing and transparency for containers an... | ✓ | ✓ | ✓ |
@@ -43,6 +44,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [helm](https://github.com/helm/helm) | The Kubernetes Package Manager | ✓ | ✓ | ✓ |
 | hishtory | Your shell history: synced, queryable, and in c... | ✓ | ✓ | ✓ |
 | [hk](https://github.com/jdx/hk) | git hook and pre-commit lint manager | ✓ | ✓ | ✓ |
+| hubble |  | ✓ | ✓ | ✓ |
 | [hugo](https://github.com/gohugoio/hugo) | The world’s fastest framework for building webs... | ✓ | ✓ | ✓ |
 | [hyperfine](https://github.com/sharkdp/hyperfine) | A command-line benchmarking tool | ✓ | ✓ | ✓ |
 | ipython |  | ✓ | ✓ | ✓ |
@@ -69,6 +71,7 @@ The following tools have shell completion support in mise-completions-sync.
 | mise-completions-sync |  | ✓ | ✓ | ✓ |
 | [nerdctl](https://github.com/containerd/nerdctl) | contaiNERD CTL - Docker-compatible CLI for cont... | ✓ | ✓ | ✓ |
 | nix |  | ✓ | ✓ | ✓ |
+| [nova](https://github.com/FairwindsOps/nova) | Find outdated or deprecated Helm charts running... | ✓ | ✓ | ✓ |
 | [npm](https://github.com/npm/cli) | the package manager for JavaScript | ✓ | ✓ |  |
 | oc | OpenShift Client CLI (oc) | ✓ | ✓ | ✓ |
 | oci | Oracle Cloud Infrastructure CLI | ✓ | ✓ | ✓ |
@@ -105,8 +108,14 @@ The following tools have shell completion support in mise-completions-sync.
 | [syft](https://github.com/anchore/syft) | CLI tool and library for generating a Software ... | ✓ | ✓ | ✓ |
 | [talosctl](https://github.com/siderolabs/talos) | Talos is a modern OS for Kubernetes. talosctl i... | ✓ | ✓ | ✓ |
 | [task](https://github.com/go-task/task) | A task runner / simpler Make alternative writte... | ✓ | ✓ | ✓ |
+| [tealdeer](https://github.com/tealdeer-rs/tealdeer) | A very fast implementation of tldr in Rust. | ✓ | ✓ | ✓ |
 | [television](https://github.com/alexpasmantier/television) | The revolution will (not) be televised | ✓ | ✓ | ✓ |
 | [tilt](https://github.com/tilt-dev/tilt) | Define your dev environment as code. For micros... | ✓ | ✓ | ✓ |
+| [trash](https://github.com/andreafrancia/trash-cli) | Put files in trash | ✓ | ✓ |  |
+| [trash-empty](https://github.com/andreafrancia/trash-cli) | Empty trash | ✓ | ✓ |  |
+| [trash-list](https://github.com/andreafrancia/trash-cli) | List trashed files | ✓ | ✓ |  |
+| [trash-put](https://github.com/andreafrancia/trash-cli) | Put files in trash | ✓ | ✓ |  |
+| [trash-restore](https://github.com/andreafrancia/trash-cli) | Restore trashed file | ✓ | ✓ |  |
 | [tree-sitter](https://github.com/tree-sitter/tree-sitter) | An incremental parsing system for programming t... | ✓ | ✓ | ✓ |
 | [trivy](https://github.com/aquasecurity/trivy) | Find vulnerabilities, misconfigurations, secret... | ✓ | ✓ | ✓ |
 | [ty](https://github.com/astral-sh/ty) | An extremely fast Python type checker and langu... | ✓ | ✓ | ✓ |
@@ -117,10 +126,12 @@ The following tools have shell completion support in mise-completions-sync.
 | [watchexec](https://github.com/watchexec/watchexec) | Executes commands in response to file modificat... | ✓ | ✓ | ✓ |
 | whosthere |  | ✓ | ✓ | ✓ |
 | [xh](https://github.com/ducaale/xh) | Friendly and fast tool for sending HTTP requests | ✓ | ✓ | ✓ |
+| ya |  | ✓ | ✓ | ✓ |
+| [yazi](https://github.com/sxyazi/yazi) | Blazing fast terminal file manager written in R... | ✓ | ✓ | ✓ |
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 115 tools**
+**Total: 126 tools**
 
 ## Shell Support Legend
 
@@ -157,6 +168,14 @@ and give each shell the *filename* to look for instead of a command:
 
 ```toml
 hyperfine = { bundled = true, zsh = "_hyperfine", bash = "hyperfine.bash", fish = "hyperfine.fish" }
+```
+
+If the shell command name differs from the mise tool name, set
+`completion_name` so the written file uses the command users actually
+type. `tealdeer`, for example, installs the `tldr` command:
+
+```toml
+tealdeer = { completion_name = "tldr", bundled = true, zsh = "zsh_tealdeer", bash = "bash_tealdeer", fish = "fish_tealdeer" }
 ```
 
 The file is searched for by name beneath `mise where <tool>`, because the

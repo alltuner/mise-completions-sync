@@ -321,6 +321,14 @@ fn validate_completion_output(tool_name: &str, stdout: &[u8]) -> Result<(), Erro
     Ok(())
 }
 
+fn completion_output_name<'a>(tool_name: &'a str, entry: &'a registry::ToolEntry) -> &'a str {
+    entry
+        .completions
+        .completion_name
+        .as_deref()
+        .unwrap_or(tool_name)
+}
+
 #[derive(Debug, PartialEq, Eq)]
 struct SyncTarget {
     tool_name: String,
@@ -432,6 +440,7 @@ fn tool_install_dir(tool_id: &str) -> Result<PathBuf, Error> {
 fn install_bundled_completion(
     tool_id: &str,
     tool_name: &str,
+    entry: &registry::ToolEntry,
     filename: &str,
     shell: &str,
     output_dir: &PathBuf,
@@ -457,7 +466,7 @@ fn install_bundled_completion(
         ));
     }
 
-    let target = shells::completion_filename(shell, tool_name);
+    let target = shells::completion_filename(shell, completion_output_name(tool_name, entry));
     let filepath = output_dir.join(&target);
     std::fs::write(&filepath, &contents).map_err(|e| Error::WriteFile(filepath.clone(), e))?;
 
@@ -468,6 +477,7 @@ fn install_bundled_completion(
 fn generate_completion(
     tool_id: &str,   // Original ID with backend prefix (for mise x)
     tool_name: &str, // Stripped name (for filename)
+    entry: &registry::ToolEntry,
     command: &str,
     requires: Option<&str>,
     shell: &str,
@@ -494,8 +504,8 @@ fn generate_completion(
     // A zero exit code is not enough: a wrong command can exit 0 with no output.
     validate_completion_output(tool_name, &output.stdout)?;
 
-    // Write the completion file using the stripped name (not the original ID)
-    let filename = shells::completion_filename(shell, tool_name);
+    // Write the completion file using the registry name unless an override is set.
+    let filename = shells::completion_filename(shell, completion_output_name(tool_name, entry));
     let filepath = output_dir.join(&filename);
 
     std::fs::write(&filepath, &output.stdout).map_err(|e| Error::WriteFile(filepath.clone(), e))?;
@@ -556,6 +566,7 @@ pub fn sync_completions(
                         install_bundled_completion(
                             &target.tool_id,
                             &target.tool_name,
+                            entry,
                             value,
                             shell,
                             &output_dir,
@@ -564,6 +575,7 @@ pub fn sync_completions(
                         generate_completion(
                             &target.tool_id,
                             &target.tool_name,
+                            entry,
                             value,
                             entry.completions.requires.as_deref(),
                             shell,
@@ -688,6 +700,7 @@ mod tests {
             zsh: Some("completion zsh".to_string()),
             bash: None,
             fish: None,
+            completion_name: None,
             requires: None,
             bundled: None,
         };
