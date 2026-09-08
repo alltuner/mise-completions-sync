@@ -132,7 +132,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 126 tools**
+**Total: 127 tools**
 
 ## Shell Support Legend
 
@@ -171,18 +171,31 @@ and give each shell the *filename* to look for instead of a command:
 hyperfine = { bundled = true, zsh = "_hyperfine", bash = "hyperfine.bash", fish = "hyperfine.fish" }
 ```
 
-If the shell command name differs from the mise tool name, set
-`completion_name` so the written file uses the command users actually
-type. `tealdeer`, for example, installs the `tldr` command:
+The file is searched for by name beneath `mise where <tool>`, because the
+directory holding it encodes the version and platform
+(`hyperfine-v1.20.0-x86_64-apple-darwin/autocomplete`) and cannot be
+written down in advance. The shallowest match wins.
+
+### Tools whose binary has a different name
+
+A completion file is only loaded when it is named after the command the
+user types, so an entry keyed on a mise tool name that differs from its
+binary has to say so with `completion_name`. `television` installs `tv`:
+
+```toml
+television = { completion_name = "tv", zsh = "tv init zsh", bash = "tv init bash", fish = "tv init fish" }
+```
+
+Bundled entries need it too — `tealdeer` installs the `tldr` command:
 
 ```toml
 tealdeer = { completion_name = "tldr", bundled = true, zsh = "zsh_tealdeer", bash = "bash_tealdeer", fish = "fish_tealdeer" }
 ```
 
-The file is searched for by name beneath `mise where <tool>`, because the
-directory holding it encodes the version and platform
-(`hyperfine-v1.20.0-x86_64-apple-darwin/autocomplete`) and cannot be
-written down in advance. The shallowest match wins.
+Two entries may share one `completion_name` when the same binary is
+reachable under two mise tool names, as `rg` and `ripgrep` are. They write
+the same file, and `clean` keeps it while either one is installed.
+
 ### Companion binaries
 
 Some mise tools install additional binaries that generate their own completions.

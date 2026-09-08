@@ -110,7 +110,7 @@ grafanactl = "standard"
 # work (asdf:asdf-community/asdf-hishtory) strips to a different short name, so
 # both keys are listed -- same idea as rg/ripgrep below.
 hishtory = "standard"
-asdf-hishtory = { zsh = "hishtory completion zsh", bash = "hishtory completion bash", fish = "hishtory completion fish" }
+asdf-hishtory = { completion_name = "hishtory", zsh = "hishtory completion zsh", bash = "hishtory completion bash", fish = "hishtory completion fish" }
 hugo = "standard"
 jules = "standard"
 lazygit = "standard"
@@ -134,7 +134,7 @@ whosthere = "standard"
 
 # mise installs this tool as github:alltuner/mise-completions-sync (stripped to "mise-completions-sync"),
 # but the binary it provides is named misecompsync.
-mise-completions-sync = { zsh = "misecompsync completion zsh", bash = "misecompsync completion bash", fish = "misecompsync completion fish" }
+mise-completions-sync = { completion_name = "misecompsync", zsh = "misecompsync completion zsh", bash = "misecompsync completion bash", fish = "misecompsync completion fish" }
 
 # not in mise's registry; install as cargo:forgejo-cli. The binary is named fj.
 forgejo-cli = { completion_name = "fj", zsh = "fj completion zsh", bash = "fj completion bash", fish = "fj completion fish" }
@@ -142,7 +142,7 @@ forgejo-cli = { completion_name = "fj", zsh = "fj completion zsh", bash = "fj co
 bun = { zsh = "bun completions", bash = "bun completions", fish = "bun completions" }
 
 # mise installs this tool as flux2, but the binary it provides is named flux.
-flux2 = { zsh = "flux completion zsh", bash = "flux completion bash", fish = "flux completion fish" }
+flux2 = { completion_name = "flux", zsh = "flux completion zsh", bash = "flux completion bash", fish = "flux completion fish" }
 
 # Partial shell support (zsh + bash)
 npm = { zsh = "npm completion", bash = "npm completion" }
@@ -180,11 +180,11 @@ bat = { zsh = "bat --completion zsh", bash = "bat --completion bash", fish = "ba
 fd = { zsh = "fd --gen-completions zsh", bash = "fd --gen-completions bash", fish = "fd --gen-completions fish" }
 delta = { zsh = "delta --generate-completion zsh", bash = "delta --generate-completion bash", fish = "delta --generate-completion fish" }
 zellij = { zsh = "zellij setup --generate-completion zsh", bash = "zellij setup --generate-completion bash", fish = "zellij setup --generate-completion fish" }
-scaleway-cli = { zsh = "scw autocomplete script shell=zsh", bash = "scw autocomplete script shell=bash", fish = "scw autocomplete script shell=fish" }
+scaleway-cli = { completion_name = "scw", zsh = "scw autocomplete script shell=zsh", bash = "scw autocomplete script shell=bash", fish = "scw autocomplete script shell=fish" }
 
 # rg has unique --generate complete-{shell} pattern
 rg = { zsh = "rg --generate complete-zsh", bash = "rg --generate complete-bash", fish = "rg --generate complete-fish" }
-ripgrep = { zsh = "rg --generate complete-zsh", bash = "rg --generate complete-bash", fish = "rg --generate complete-fish" }
+ripgrep = { completion_name = "rg", zsh = "rg --generate complete-zsh", bash = "rg --generate complete-bash", fish = "rg --generate complete-fish" }
 
 # nix needs extra experimental features flag
 nix = { zsh = "nix --extra-experimental-features 'nix-command' completion zsh 2>/dev/null || true", bash = "nix --extra-experimental-features 'nix-command' completion bash 2>/dev/null || true", fish = "nix --extra-experimental-features 'nix-command' completion fish 2>/dev/null || true" }
@@ -212,7 +212,7 @@ fx = { zsh = "fx --comp zsh", bash = "fx --comp bash", fish = "fx --comp fish" }
 pkl = { zsh = "pkl shell-completion zsh", bash = "pkl shell-completion bash", fish = "pkl shell-completion fish" }
 
 # television provides the `tv` binary and requires init <shell>
-television = { zsh = "tv init zsh", bash = "tv init bash", fish = "tv init fish" }
+television = { completion_name = "tv", zsh = "tv init zsh", bash = "tv init bash", fish = "tv init fish" }
 
 # trash-cli requires --print-completion
 trash = { provided_by = "trash-cli", zsh = "trash --print-completion zsh", bash = "trash --print-completion bash" }

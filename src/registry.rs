@@ -331,6 +331,37 @@ mod tests {
     }
 
     #[test]
+    fn test_entries_whose_binary_differs_declare_a_completion_name() {
+        // A completion file is only loaded when it is named after the command the
+        // user types, so any entry keyed on a mise tool name that differs from its
+        // binary has to say so.
+        let expected = [
+            ("asdf-hishtory", "hishtory"),
+            ("cilium-hubble", "hubble"),
+            ("flux2", "flux"),
+            ("forgejo-cli", "fj"),
+            ("mise-completions-sync", "misecompsync"),
+            ("ripgrep", "rg"),
+            ("scaleway-cli", "scw"),
+            ("tealdeer", "tldr"),
+            ("television", "tv"),
+        ];
+
+        let registry = load_registry().expect("Failed to load registry");
+        for (tool, binary) in expected {
+            let entry = registry
+                .tools
+                .get(tool)
+                .unwrap_or_else(|| panic!("{tool} should be in registry"));
+            assert_eq!(
+                entry.completions.completion_name.as_deref(),
+                Some(binary),
+                "{tool} writes its completions for the {binary} command"
+            );
+        }
+    }
+
+    #[test]
     fn test_command_entries_are_not_bundled() {
         let registry = load_registry().expect("Failed to load registry");
         assert!(!registry.tools["yq"].completions.is_bundled());
