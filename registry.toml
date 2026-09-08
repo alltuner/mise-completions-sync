@@ -162,6 +162,9 @@ prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util gene
 # them. The per-shell value is the filename to look for, not a command.
 hyperfine = { bundled = true, zsh = "_hyperfine", bash = "hyperfine.bash", fish = "hyperfine.fish" }
 killport = { bundled = true, zsh = "_killport", bash = "killport.bash", fish = "killport.fish" }
+tealdeer = { completion_name = "tldr", bundled = true, zsh = "zsh_tealdeer", bash = "bash_tealdeer", fish = "fish_tealdeer" }
+yazi = { bundled = true, zsh = "_yazi", bash = "yazi.bash", fish = "yazi.fish" }
+ya = { provided_by = "yazi", bundled = true, zsh = "_ya", bash = "ya.bash", fish = "ya.fish" }
 
 # Unique command patterns
 task = { zsh = "task --completion zsh", bash = "task --completion bash", fish = "task --completion fish" }
@@ -202,3 +205,10 @@ pkl = { zsh = "pkl shell-completion zsh", bash = "pkl shell-completion bash", fi
 
 # television provides the `tv` binary and requires init <shell>
 television = { zsh = "tv init zsh", bash = "tv init bash", fish = "tv init fish" }
+
+# trash-cli requires --print-completion
+trash = { provided_by = "trash-cli", zsh = "trash --print-completion zsh", bash = "trash --print-completion bash" }
+trash-empty = { provided_by = "trash-cli", zsh = "trash-empty --print-completion zsh", bash = "trash-empty --print-completion bash" }
+trash-list = { provided_by = "trash-cli", zsh = "trash-list --print-completion zsh", bash = "trash-list --print-completion bash" }
+trash-restore = { provided_by = "trash-cli", zsh = "trash-restore --print-completion zsh", bash = "trash-restore --print-completion bash" }
+trash-put = { provided_by = "trash-cli", zsh = "trash-put --print-completion zsh", bash = "trash-put --print-completion bash" }

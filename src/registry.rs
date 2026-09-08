@@ -52,6 +52,10 @@ pub struct ToolCompletions {
     pub zsh: Option<String>,
     pub bash: Option<String>,
     pub fish: Option<String>,
+    /// Override the shell command name used for the written completion file.
+    /// This is useful when the mise tool name and the user-facing command name
+    /// differ, such as tealdeer installing the `tldr` command.
+    pub completion_name: Option<String>,
     /// Another mise tool that must be on PATH for the command to work, because
     /// the tool shells out to it to render completions (e.g. fnox needs `usage`).
     pub requires: Option<String>,
@@ -80,6 +84,7 @@ impl ToolCompletions {
             zsh: self.zsh.as_ref().map(|s| s.replace("{}", tool_name)),
             bash: self.bash.as_ref().map(|s| s.replace("{}", tool_name)),
             fish: self.fish.as_ref().map(|s| s.replace("{}", tool_name)),
+            completion_name: self.completion_name.clone(),
             requires: self.requires.clone(),
             bundled: self.bundled,
         }
@@ -304,6 +309,25 @@ mod tests {
             hyperfine.completions.fish.as_deref(),
             Some("hyperfine.fish")
         );
+    }
+
+    #[test]
+    fn test_tealdeer_uses_tldr_completion_name() {
+        // tealdeer installs the `tldr` command, so the completion files need to
+        // land under `_tldr` even though mise knows the package as `tealdeer`.
+        let registry = load_registry().expect("Failed to load registry");
+        let tealdeer = registry
+            .tools
+            .get("tealdeer")
+            .expect("tealdeer should be in registry");
+        assert!(tealdeer.completions.is_bundled());
+        assert_eq!(
+            tealdeer.completions.completion_name.as_deref(),
+            Some("tldr")
+        );
+        assert_eq!(tealdeer.completions.zsh.as_deref(), Some("zsh_tealdeer"));
+        assert_eq!(tealdeer.completions.bash.as_deref(), Some("bash_tealdeer"));
+        assert_eq!(tealdeer.completions.fish.as_deref(), Some("fish_tealdeer"));
     }
 
     #[test]
