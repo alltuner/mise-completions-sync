@@ -1,7 +1,7 @@
 // ABOUTME: Core sync logic for generating shell completions.
 // ABOUTME: Gets installed tools from mise and generates completion files.
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::path::PathBuf;
 use std::process::Command;
 
@@ -90,6 +90,44 @@ impl CompletionsDirs {
     }
 }
 
+/// Pass-through scope flags for `mise ls`.
+///
+/// These mirror the corresponding `mise ls` options and narrow which installed
+/// tools are discovered. `--global` and `--local` are mutually exclusive (enforced
+/// at the CLI layer); `--current` combines freely with either. With no flags set,
+/// behavior is unchanged: `mise ls --installed --json`.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct MiseLsFlags {
+    global: bool,
+    local: bool,
+    current: bool,
+}
+
+impl MiseLsFlags {
+    pub fn new(global: bool, local: bool, current: bool) -> Self {
+        Self {
+            global,
+            local,
+            current,
+        }
+    }
+
+    /// Build the full `mise ls` argument list, including any scope flags.
+    fn args(&self) -> Vec<&'static str> {
+        let mut args = vec!["ls", "--installed", "--json"];
+        if self.global {
+            args.push("--global");
+        }
+        if self.local {
+            args.push("--local");
+        }
+        if self.current {
+            args.push("--current");
+        }
+        args
+    }
+}
+
 /// Check if a string looks like a version identifier
 fn is_version_component(s: &str) -> bool {
     // Common version patterns:
@@ -170,9 +208,11 @@ fn resolve_tool_binary(tool_map: &mut std::collections::HashMap<String, String>,
 /// Get list of installed tools from mise
 /// Returns a map of stripped tool names to their original IDs (with backend prefixes)
 /// This allows registry matching on short names while preserving the original ID for mise x
-fn get_installed_tools() -> Result<std::collections::HashMap<String, String>, Error> {
+fn get_installed_tools(
+    flags: MiseLsFlags,
+) -> Result<std::collections::HashMap<String, String>, Error> {
     let output = Command::new("mise")
-        .args(["ls", "--installed", "--json"])
+        .args(flags.args())
         .output()
         .map_err(|e| Error::MiseList(e.to_string()))?;
 
@@ -236,11 +276,210 @@ fn parse_installed_tools_json(
     Ok(tool_map)
 }
 
+/// Build the `mise x` invocation for a completion command.
+///
+/// A tool listing `requires` needs a second binary on PATH to render its
+/// completions. Naming it here puts both tools in the same environment.
+fn wrap_command(tool_id: &str, requires: Option<&str>, command: &str) -> String {
+    match requires {
+        Some(required) => format!("mise x {tool_id} {required} -- {command}"),
+        None => format!("mise x {tool_id} -- {command}"),
+    }
+}
+
+/// Lines to report for a command that succeeded but still wrote to stderr.
+///
+/// mise installs a missing `requires` tool on demand and reports it here, so
+/// discarding stderr on success hides software being installed.
+fn diagnostics(tool_name: &str, stderr: &[u8]) -> Vec<String> {
+    let stderr = String::from_utf8_lossy(stderr);
+    if stderr.trim().is_empty() {
+        return Vec::new();
+    }
+    stderr
+        .trim_end()
+        .lines()
+        .map(|line| format!("  {tool_name}: {line}"))
+        .collect()
+}
+
+/// Reject completion output that is empty or whitespace-only.
+///
+/// `generate_completion` trusts the command's exit status, but some tools — or a
+/// wrong registry guess — exit 0 while emitting nothing useful (e.g. the old `xh
+/// completion zsh`, which parsed its args as a URL). Without this guard we would
+/// silently write an empty completion file. Fail loudly instead.
+fn validate_completion_output(tool_name: &str, stdout: &[u8]) -> Result<(), Error> {
+    if stdout.iter().all(u8::is_ascii_whitespace) {
+        return Err(Error::Generate(
+            tool_name.to_string(),
+            "completion command produced no output (empty or whitespace-only); \
+             the registry command for this tool is likely wrong"
+                .to_string(),
+        ));
+    }
+    Ok(())
+}
+
+fn completion_output_name<'a>(tool_name: &'a str, entry: &'a registry::ToolEntry) -> &'a str {
+    entry
+        .completions
+        .completion_name
+        .as_deref()
+        .unwrap_or(tool_name)
+}
+
+#[derive(Debug, PartialEq, Eq)]
+struct SyncTarget {
+    tool_name: String,
+    tool_id: String,
+}
+
+fn installed_sync_targets(
+    registry: &registry::Registry,
+    installed_tools: &HashMap<String, String>,
+) -> Vec<SyncTarget> {
+    let mut targets: Vec<_> = registry
+        .tools
+        .iter()
+        .filter_map(|(tool_name, entry)| {
+            let runtime_tool = entry.provided_by.as_deref().unwrap_or(tool_name);
+            installed_tools.get(runtime_tool).map(|tool_id| SyncTarget {
+                tool_name: tool_name.clone(),
+                tool_id: tool_id.clone(),
+            })
+        })
+        .collect();
+    targets.sort_by(|a, b| a.tool_name.cmp(&b.tool_name));
+    targets
+}
+
+fn specific_sync_targets(
+    registry: &registry::Registry,
+    specific_tools: &[String],
+) -> Vec<SyncTarget> {
+    let mut targets: Vec<_> = specific_tools
+        .iter()
+        .filter_map(|tool_name| {
+            registry.tools.get(tool_name).map(|entry| SyncTarget {
+                tool_name: tool_name.clone(),
+                tool_id: entry
+                    .provided_by
+                    .as_deref()
+                    .unwrap_or(tool_name)
+                    .to_string(),
+            })
+        })
+        .collect();
+    targets.sort_by(|a, b| a.tool_name.cmp(&b.tool_name));
+    targets.dedup_by(|a, b| a.tool_name == b.tool_name);
+    targets
+}
+
+fn is_tool_installed(
+    tool_name: &str,
+    entry: &registry::ToolEntry,
+    installed_tools: &HashMap<String, String>,
+) -> bool {
+    let runtime_tool = entry.provided_by.as_deref().unwrap_or(tool_name);
+    installed_tools.contains_key(runtime_tool)
+}
+
 /// Generate completion for a single tool and shell
+/// Locate a bundled completion file somewhere beneath a tool's install directory.
+///
+/// The directory between the root and the file encodes the version and platform
+/// (`hyperfine-v1.20.0-x86_64-apple-darwin/autocomplete`), and not consistently,
+/// so the file is found by name rather than by path. Breadth-first, so the
+/// shallowest match wins over a copy vendored deeper in the tree.
+fn find_bundled(root: &std::path::Path, filename: &str) -> Option<PathBuf> {
+    let mut queue = std::collections::VecDeque::from([root.to_path_buf()]);
+
+    while let Some(dir) = queue.pop_front() {
+        let Ok(entries) = std::fs::read_dir(&dir) else {
+            continue;
+        };
+
+        let mut subdirs = Vec::new();
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if path.is_dir() {
+                subdirs.push(path);
+            } else if entry.file_name() == filename {
+                return Some(path);
+            }
+        }
+        subdirs.sort();
+        queue.extend(subdirs);
+    }
+
+    None
+}
+
+/// Where mise installed a tool.
+fn tool_install_dir(tool_id: &str) -> Result<PathBuf, Error> {
+    let output = Command::new("mise")
+        .args(["where", tool_id])
+        .output()
+        .map_err(|e| Error::Generate(tool_id.to_string(), e.to_string()))?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(Error::Generate(
+            tool_id.to_string(),
+            stderr.trim().to_string(),
+        ));
+    }
+
+    Ok(PathBuf::from(
+        String::from_utf8_lossy(&output.stdout).trim(),
+    ))
+}
+
+/// Copy a completion file that ships inside the tool's own download.
+fn install_bundled_completion(
+    tool_id: &str,
+    tool_name: &str,
+    entry: &registry::ToolEntry,
+    filename: &str,
+    shell: &str,
+    output_dir: &PathBuf,
+) -> Result<(), Error> {
+    std::fs::create_dir_all(output_dir).map_err(|e| Error::CreateDir(output_dir.clone(), e))?;
+
+    let root = tool_install_dir(tool_id)?;
+    let source = find_bundled(&root, filename).ok_or_else(|| {
+        Error::Generate(
+            tool_name.to_string(),
+            format!(
+                "bundled completion '{filename}' not found under {}",
+                root.display()
+            ),
+        )
+    })?;
+
+    let contents = std::fs::read(&source).map_err(|e| Error::RegistryRead(source.clone(), e))?;
+    if contents.iter().all(u8::is_ascii_whitespace) {
+        return Err(Error::Generate(
+            tool_name.to_string(),
+            format!("bundled completion {} is empty", source.display()),
+        ));
+    }
+
+    let target = shells::completion_filename(shell, completion_output_name(tool_name, entry));
+    let filepath = output_dir.join(&target);
+    std::fs::write(&filepath, &contents).map_err(|e| Error::WriteFile(filepath.clone(), e))?;
+
+    println!("  {tool_name} -> {target}");
+    Ok(())
+}
+
 fn generate_completion(
     tool_id: &str,   // Original ID with backend prefix (for mise x)
     tool_name: &str, // Stripped name (for filename)
+    entry: &registry::ToolEntry,
     command: &str,
+    requires: Option<&str>,
     shell: &str,
     output_dir: &PathBuf,
 ) -> Result<(), Error> {
@@ -248,7 +487,7 @@ fn generate_completion(
     std::fs::create_dir_all(output_dir).map_err(|e| Error::CreateDir(output_dir.clone(), e))?;
 
     // Run the completion command wrapped with mise to ensure the tool is available
-    let wrapped_command = format!("mise x {tool_id} -- {command}");
+    let wrapped_command = wrap_command(tool_id, requires, command);
     let output = Command::new("sh")
         .args(["-c", &wrapped_command])
         .output()
@@ -259,8 +498,14 @@ fn generate_completion(
         return Err(Error::Generate(tool_name.to_string(), stderr.to_string()));
     }
 
-    // Write the completion file using the stripped name (not the original ID)
-    let filename = shells::completion_filename(shell, tool_name);
+    for line in diagnostics(tool_name, &output.stderr) {
+        eprintln!("{line}");
+    }
+    // A zero exit code is not enough: a wrong command can exit 0 with no output.
+    validate_completion_output(tool_name, &output.stdout)?;
+
+    // Write the completion file using the registry name unless an override is set.
+    let filename = shells::completion_filename(shell, completion_output_name(tool_name, entry));
     let filepath = output_dir.join(&filename);
 
     std::fs::write(&filepath, &output.stdout).map_err(|e| Error::WriteFile(filepath.clone(), e))?;
@@ -274,36 +519,24 @@ pub fn sync_completions(
     dirs: &CompletionsDirs,
     shells: &[String],
     specific_tools: &[String],
+    flags: MiseLsFlags,
     new_only: bool,
 ) -> Result<(), Error> {
     let registry = registry::load_registry()?;
 
     // Determine which tools to sync
-    let tools_map: std::collections::HashMap<String, String> = if specific_tools.is_empty() {
-        if new_only {
+    let tools_in_registry = if specific_tools.is_empty() {
+        let tools_map = if new_only {
             // Only sync newly installed tools from MISE_INSTALLED_TOOLS env var
             get_newly_installed_tools()?
         } else {
             // Get all installed tools from mise (maps short name -> original ID)
-            get_installed_tools()?
-        }
+            get_installed_tools(flags)?
+        };
+        installed_sync_targets(&registry, &tools_map)
     } else {
-        // For specific tools, short name equals original ID
-        specific_tools
-            .iter()
-            .cloned()
-            .map(|t| (t.clone(), t))
-            .collect()
+        specific_sync_targets(&registry, specific_tools)
     };
-
-    // Filter to only tools in our registry (match on short names)
-    let mut tools_in_registry: Vec<(&String, &String)> = tools_map
-        .iter()
-        .filter(|(short_name, _)| registry.tools.contains_key(*short_name))
-        .collect();
-
-    // Sort alphabetically by short name for consistent output
-    tools_in_registry.sort_by(|a, b| a.0.cmp(b.0));
 
     if tools_in_registry.is_empty() {
         if new_only {
@@ -323,15 +556,34 @@ pub fn sync_completions(
         let output_dir = dirs.get_dir(shell)?;
         println!("\n[{shell}] -> {}", output_dir.display());
 
-        for (short_name, original_id) in &tools_in_registry {
-            if let Some(completions) = registry.tools.get(*short_name) {
-                if let Some(cmd) = completions.get(shell) {
-                    // Use the original tool ID (with backend prefix) for mise x
-                    // and the stripped name for the filename
-                    if let Err(e) =
-                        generate_completion(original_id, short_name, cmd, shell, &output_dir)
-                    {
-                        eprintln!("  {short_name}: {e}");
+        for target in &tools_in_registry {
+            if let Some(entry) = registry.tools.get(&target.tool_name) {
+                if let Some(value) = entry.completions.get(shell) {
+                    // Use the provider's original tool ID (with backend prefix) for mise x
+                    // and the registry entry name for the filename. For a bundled
+                    // entry the value is a filename to copy, not a command to run.
+                    let result = if entry.completions.is_bundled() {
+                        install_bundled_completion(
+                            &target.tool_id,
+                            &target.tool_name,
+                            entry,
+                            value,
+                            shell,
+                            &output_dir,
+                        )
+                    } else {
+                        generate_completion(
+                            &target.tool_id,
+                            &target.tool_name,
+                            entry,
+                            value,
+                            entry.completions.requires.as_deref(),
+                            shell,
+                            &output_dir,
+                        )
+                    };
+                    if let Err(e) = result {
+                        eprintln!("  {}: {e}", target.tool_name);
                     }
                 }
             }
@@ -343,10 +595,9 @@ pub fn sync_completions(
 }
 
 /// Remove completions for tools that are no longer installed
-pub fn clean_stale_completions(dirs: &CompletionsDirs) -> Result<(), Error> {
+pub fn clean_stale_completions(dirs: &CompletionsDirs, flags: MiseLsFlags) -> Result<(), Error> {
     let registry = registry::load_registry()?;
-    let installed_map = get_installed_tools()?;
-    let installed_set: HashSet<_> = installed_map.keys().collect();
+    let installed_map = get_installed_tools(flags)?;
 
     let shells = ["zsh", "bash", "fish"];
     let mut removed = 0;
@@ -365,8 +616,10 @@ pub fn clean_stale_completions(dirs: &CompletionsDirs) -> Result<(), Error> {
                 // Extract tool name from filename
                 let tool = shells::tool_from_filename(shell, filename);
                 if let Some(tool) = tool {
-                    if registry.tools.contains_key(&tool)
-                        && !installed_set.contains(&tool)
+                    if registry
+                        .tools
+                        .get(&tool)
+                        .is_some_and(|entry| !is_tool_installed(&tool, entry, &installed_map))
                         && std::fs::remove_file(&path).is_ok()
                     {
                         println!("Removed: {}", path.display());
@@ -385,11 +638,159 @@ pub fn clean_stale_completions(dirs: &CompletionsDirs) -> Result<(), Error> {
 mod tests {
     use super::*;
 
+    /// Build a throwaway directory tree; returns the root, caller removes it.
+    fn scratch_tree(name: &str, files: &[&str]) -> PathBuf {
+        let root = std::env::temp_dir().join(format!("misecompsync-{name}-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        for file in files {
+            let path = root.join(file);
+            std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+            std::fs::write(&path, "contents").unwrap();
+        }
+        root
+    }
+
+    #[test]
+    fn test_find_bundled_locates_a_nested_file() {
+        // The directory between the root and the file carries the version and
+        // platform, so it can't be named up front -- only the file can.
+        let root = scratch_tree(
+            "nested",
+            &["hyperfine-v1.20.0-x86_64-apple-darwin/autocomplete/_hyperfine"],
+        );
+
+        let found = find_bundled(&root, "_hyperfine").expect("should find the file");
+        assert!(found.ends_with("autocomplete/_hyperfine"));
+
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn test_find_bundled_returns_none_when_absent() {
+        let root = scratch_tree("absent", &["bin/hyperfine"]);
+        assert!(find_bundled(&root, "_hyperfine").is_none());
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn test_find_bundled_prefers_the_shallowest_match() {
+        let root = scratch_tree(
+            "shallow",
+            &["completions/_tool", "vendor/copy/deep/completions/_tool"],
+        );
+
+        let found = find_bundled(&root, "_tool").expect("should find a file");
+        assert!(
+            found.ends_with("completions/_tool") && !found.to_string_lossy().contains("vendor"),
+            "expected the shallowest match, got {found:?}"
+        );
+
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+
     fn dirs_with_base(base: &str) -> CompletionsDirs {
         CompletionsDirs {
             base_dir: PathBuf::from(base),
             shell_overrides: HashMap::new(),
         }
+    }
+
+    fn registry_with_provider() -> registry::Registry {
+        let completions = || registry::ToolCompletions {
+            zsh: Some("completion zsh".to_string()),
+            bash: None,
+            fish: None,
+            completion_name: None,
+            requires: None,
+            bundled: None,
+        };
+
+        registry::Registry {
+            tools: HashMap::from([
+                (
+                    "uv".to_string(),
+                    registry::ToolEntry {
+                        completions: completions(),
+                        provided_by: None,
+                    },
+                ),
+                (
+                    "uvx".to_string(),
+                    registry::ToolEntry {
+                        completions: completions(),
+                        provided_by: Some("uv".to_string()),
+                    },
+                ),
+            ]),
+        }
+    }
+
+    #[test]
+    fn test_diagnostics_empty_when_nothing_written() {
+        assert!(diagnostics("fnox", b"").is_empty());
+        assert!(diagnostics("fnox", b"  \n\t \n").is_empty());
+    }
+
+    #[test]
+    fn test_diagnostics_attribute_each_line_to_the_tool() {
+        assert_eq!(
+            diagnostics(
+                "fnox",
+                b"mise usage@4.0.0 install\nmise usage@4.0.0 download\n"
+            ),
+            vec![
+                "  fnox: mise usage@4.0.0 install",
+                "  fnox: mise usage@4.0.0 download",
+            ]
+        );
+    }
+
+    #[test]
+    fn test_diagnostics_handle_invalid_utf8() {
+        assert_eq!(
+            diagnostics("fnox", b"warn: \xff\xfe"),
+            vec!["  fnox: warn: ��"]
+        );
+    }
+
+    #[test]
+    fn test_wrap_command_without_requires() {
+        assert_eq!(
+            wrap_command("yq", None, "yq completion zsh"),
+            "mise x yq -- yq completion zsh"
+        );
+    }
+
+    #[test]
+    fn test_wrap_command_with_requires() {
+        // The helper tool joins the same `mise x` invocation, so it lands on PATH
+        // for the command without a nested `mise x`.
+        assert_eq!(
+            wrap_command("fnox", Some("usage"), "fnox completion zsh"),
+            "mise x fnox usage -- fnox completion zsh"
+        );
+    }
+
+    #[test]
+    fn test_wrap_command_preserves_backend_prefix() {
+        assert_eq!(
+            wrap_command("pipx:ipython", Some("pipx:argcomplete"), "ipython x"),
+            "mise x pipx:ipython pipx:argcomplete -- ipython x"
+        );
+    }
+
+    #[test]
+    fn test_validate_completion_output_rejects_empty() {
+        // Regression: a wrong registry command can exit 0 with no output (the old
+        // `xh completion zsh` did exactly this). We must fail loudly, not write an
+        // empty completion file.
+        assert!(validate_completion_output("xh", b"").is_err());
+        assert!(validate_completion_output("xh", b"   \n\t  ").is_err());
+    }
+
+    #[test]
+    fn test_validate_completion_output_accepts_real_script() {
+        assert!(validate_completion_output("xh", b"#compdef xh\n...").is_ok());
     }
 
     #[test]
@@ -466,6 +867,47 @@ mod tests {
     fn test_get_dir_unsupported_shell() {
         let dirs = dirs_with_base("/any");
         assert!(dirs.get_dir("tcsh").is_err());
+    }
+
+    #[test]
+    fn test_mise_ls_flags_default() {
+        // No scope flags -> unchanged behavior.
+        let flags = MiseLsFlags::default();
+        assert_eq!(flags.args(), vec!["ls", "--installed", "--json"]);
+    }
+
+    #[test]
+    fn test_mise_ls_flags_global() {
+        let flags = MiseLsFlags::new(true, false, false);
+        assert_eq!(
+            flags.args(),
+            vec!["ls", "--installed", "--json", "--global"]
+        );
+    }
+
+    #[test]
+    fn test_mise_ls_flags_local() {
+        let flags = MiseLsFlags::new(false, true, false);
+        assert_eq!(flags.args(), vec!["ls", "--installed", "--json", "--local"]);
+    }
+
+    #[test]
+    fn test_mise_ls_flags_current() {
+        let flags = MiseLsFlags::new(false, false, true);
+        assert_eq!(
+            flags.args(),
+            vec!["ls", "--installed", "--json", "--current"]
+        );
+    }
+
+    #[test]
+    fn test_mise_ls_flags_global_and_current() {
+        // --current combines freely with --global.
+        let flags = MiseLsFlags::new(true, false, true);
+        assert_eq!(
+            flags.args(),
+            vec!["ls", "--installed", "--json", "--global", "--current"]
+        );
     }
 
     #[test]
@@ -602,5 +1044,65 @@ mod tests {
             .unwrap_err()
             .to_string()
             .contains("failed to parse MISE_INSTALLED_TOOLS"));
+    }
+
+    #[test]
+    fn test_installed_sync_targets_include_provider_children() {
+        let registry = registry_with_provider();
+        let installed = HashMap::from([("uv".to_string(), "aqua:astral-sh/uv".to_string())]);
+
+        assert_eq!(
+            installed_sync_targets(&registry, &installed),
+            vec![
+                SyncTarget {
+                    tool_name: "uv".to_string(),
+                    tool_id: "aqua:astral-sh/uv".to_string(),
+                },
+                SyncTarget {
+                    tool_name: "uvx".to_string(),
+                    tool_id: "aqua:astral-sh/uv".to_string(),
+                },
+            ]
+        );
+    }
+
+    #[test]
+    fn test_installed_sync_targets_exclude_missing_provider() {
+        let registry = registry_with_provider();
+        let installed = HashMap::from([("node".to_string(), "node".to_string())]);
+
+        assert!(installed_sync_targets(&registry, &installed).is_empty());
+    }
+
+    #[test]
+    fn test_specific_sync_targets_do_not_expand_provider() {
+        let registry = registry_with_provider();
+
+        assert_eq!(
+            specific_sync_targets(&registry, &["uvx".to_string(), "uvx".to_string()]),
+            vec![SyncTarget {
+                tool_name: "uvx".to_string(),
+                tool_id: "uv".to_string(),
+            }]
+        );
+        assert_eq!(
+            specific_sync_targets(&registry, &["uv".to_string()]),
+            vec![SyncTarget {
+                tool_name: "uv".to_string(),
+                tool_id: "uv".to_string(),
+            }]
+        );
+    }
+
+    #[test]
+    fn test_provider_controls_installed_liveness() {
+        let registry = registry_with_provider();
+        let installed = HashMap::from([("uv".to_string(), "uv".to_string())]);
+        let uv = registry.tools.get("uv").unwrap();
+        let uvx = registry.tools.get("uvx").unwrap();
+
+        assert!(is_tool_installed("uv", uv, &installed));
+        assert!(is_tool_installed("uvx", uvx, &installed));
+        assert!(!is_tool_installed("uvx", uvx, &HashMap::new()));
     }
 }

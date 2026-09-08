@@ -91,6 +91,31 @@ export MISE_COMPLETIONS_SYNC_FISH_DIR="$XDG_DATA_HOME/fish/vendor_completions.d"
 
 Note: Target directories will be created if they don't already exist. Don't forget to update your shell setup above.
 
+## Custom Registry
+
+The supported tool list is built into the binary, but you can extend it without
+waiting for a release. Put a `registry.toml` at
+`$XDG_DATA_HOME/mise-completions-sync/registry.toml`, or next to the
+`misecompsync` executable, and it is laid on top of the built-in registry:
+
+```toml
+schema_version = 1
+
+[tools]
+# a tool the built-in registry doesn't cover
+graphite-cli = { zsh = "gt completion zsh", bash = "gt completion bash" }
+
+# built-in patterns are available to your own entries
+mytool = "standard"
+
+# override a built-in entry
+yq = { zsh = "yq shell-completion zsh" }
+```
+
+Entries are merged with the built-in ones rather than replacing them, so the
+tools you don't mention keep working. `schema_version` is required. See
+[How It Works](how-it-works.md) for the full registry format.
+
 ## Updating
 
 ### Homebrew
@@ -158,6 +183,26 @@ misecompsync dir zsh
 # Clean up completions for uninstalled tools
 misecompsync clean
 ```
+
+### Additional Flags
+
+By default, completions are synced for every installed tool. You can narrow the set with
+the following scope flags that `mise ls` accepts — they're passed straight through:
+
+```bash
+# Only tools in global mise config files
+misecompsync --global   # or -g
+
+# Only tools in local (project) mise config files
+misecompsync --local    # or -l
+
+# Only tools currently in mise config files (not just with `mise install`)
+misecompsync --current  # or -c
+```
+
+* `--global` and `--local` are mutually exclusive (same as `mise ls`)
+* Scope flags also apply to `clean` — **caution**: `misecompsync --global clean` would remove completions for tools _not_ in the global config, which may include locally-installed tools if they both use the same `MISE_COMPLETIONS_SYNC_HOME`.
+* Scope flags conflict with explicit tool args and `--new-only`
 
 ## License
 

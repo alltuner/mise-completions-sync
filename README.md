@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="https://alltuner.github.io/mise-completions-sync/">Docs</a> &middot;
+  <a href="https://mise-completions.alltuner.com/">Docs</a> &middot;
   <a href="https://alltuner.com/sponsor">Sponsor</a>
 </p>
 
@@ -74,6 +74,26 @@ misecompsync clean
 misecompsync completion zsh
 ```
 
+### Additional Flags
+
+By default, completions are synced for every installed tool. You can narrow the set with
+the following scope flags that `mise ls` accepts — they're passed straight through:
+
+```bash
+# Only tools in global mise config files
+misecompsync --global   # or -g
+
+# Only tools in local (project) mise config files
+misecompsync --local    # or -l
+
+# Only tools currently in mise config files (not just with `mise install`)
+misecompsync --current  # or -c
+```
+
+* `--global` and `--local` are mutually exclusive (same as `mise ls`)
+* Scope flags also apply to `clean` — **caution**: `misecompsync --global clean` would remove completions for tools _not_ in the global config, which may include locally-installed tools if they both use the same `MISE_COMPLETIONS_SYNC_HOME`.
+* Scope flags conflict with explicit tool args and `--new-only`
+
 ### Automatic sync
 
 Wire it into a mise post-install hook so new tool installs get completions automatically:
@@ -119,6 +139,34 @@ If you want to only generate completions for newly installed or updated tools, y
 postinstall = "misecompsync --new-only"
 ```
 
+## Custom Registry
+
+The list of supported tools is built into the binary, but you don't have to wait
+for a release (or send a PR) to add your own. Drop a `registry.toml` at
+`$XDG_DATA_HOME/mise-completions-sync/registry.toml`, or next to the
+`misecompsync` executable, and it is laid on top of the built-in registry:
+
+```toml
+schema_version = 1
+
+[tools]
+# a tool the built-in registry doesn't cover
+graphite-cli = { zsh = "gt completion zsh", bash = "gt completion bash" }
+
+# built-in patterns are available to your own entries
+mytool = "standard"
+
+# override a built-in entry
+yq = { zsh = "yq shell-completion zsh" }
+```
+
+Your entries are merged with the built-in ones rather than replacing them, so a
+short file like the above adds `graphite-cli` and `mytool` and changes `yq`,
+while every other tool keeps working. `schema_version` is required.
+
+If an entry turns out to be generally useful, [open a PR](https://github.com/alltuner/mise-completions-sync/blob/main/registry.toml)
+so everyone gets it.
+
 ## Updating
 
 ```bash
@@ -137,7 +185,7 @@ mise use -g github:alltuner/mise-completions-sync@0.5.1
 
 ## Documentation
 
-Full docs at [alltuner.github.io/mise-completions-sync](https://alltuner.github.io/mise-completions-sync/) — supported tools, completion details, and troubleshooting.
+Full docs at [mise-completions.alltuner.com](https://mise-completions.alltuner.com/) — supported tools, completion details, and troubleshooting.
 
 ## License
 
@@ -145,7 +193,7 @@ Full docs at [alltuner.github.io/mise-completions-sync](https://alltuner.github.
 
 ## Support the project
 
-mise-completions-sync is an open source project built by [David Poblador i Garcia](https://davidpoblador.com/) through [All Tuner Labs](https://www.alltuner.com/).
+mise-completions-sync is an open source project built by [David Poblador i Garcia](https://davidpoblador.com/) through [All Tuner Labs](https://alltuner.com/).
 
 If this project was useful to you, [consider supporting its development](https://alltuner.com/sponsor).
 

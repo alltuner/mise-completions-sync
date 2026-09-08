@@ -40,6 +40,14 @@ description = "Generate tools documentation from registry"
 run = "uv run scripts/generate-tools-status.py > TOOLS.md"
 description = "Generate TOOLS.md with supported and pending tools"
 
+[tasks.check-docs]
+run = "uv run scripts/check-docs-sync.py"
+description = "Check docs/tools.md lists the same tools as registry.toml"
+
+[tasks.audit-registry]
+run = "uv run scripts/validate-registry.py --install"
+description = "Install every registry tool and verify its completion command (slow)"
+
 [tasks.validate-registry]
 run = "uv run scripts/validate-registry.py --installed-only"
 description = "Validate registry entries against installed tools"

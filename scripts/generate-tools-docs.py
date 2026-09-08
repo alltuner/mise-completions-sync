@@ -110,6 +110,64 @@ def main():
     print("2. Add an entry to `registry.toml` using an existing pattern or explicit commands")
     print("3. Test with `uv run scripts/validate-registry.py --installed-only`")
     print("4. Submit a PR")
+    print()
+    print("### Tools that need another binary")
+    print()
+    print("Some tools shell out to a second binary to render completions, and fail")
+    print("when it is missing. `fnox`, for example, renders through `usage`. Name it")
+    print("with `requires` and it joins the same `mise x` invocation:")
+    print()
+    print("```toml")
+    print('fnox = { requires = "usage", zsh = "fnox completion zsh" }')
+    print("```")
+    print()
+    print("`requires` works on patterns too, when every tool sharing the pattern")
+    print("needs the same helper.")
+    print()
+    print("### Tools that ship completion files")
+    print()
+    print("Some tools have no completion command at all and instead ship the files")
+    print("in their download, like `hyperfine` and `killport`. Set `bundled = true`")
+    print("and give each shell the *filename* to look for instead of a command:")
+    print()
+    print("```toml")
+    print(
+        'hyperfine = { bundled = true, zsh = "_hyperfine", '
+        'bash = "hyperfine.bash", fish = "hyperfine.fish" }'
+    )
+    print("```")
+    print()
+    print("If the shell command name differs from the mise tool name, set")
+    print("`completion_name` so the written file uses the command users actually")
+    print("type. `tealdeer`, for example, installs the `tldr` command:")
+    print()
+    print("```toml")
+    print(
+        'tealdeer = { completion_name = "tldr", bundled = true, '
+        'zsh = "zsh_tealdeer", bash = "bash_tealdeer", fish = "fish_tealdeer" }'
+    )
+    print("```")
+    print()
+    print("The file is searched for by name beneath `mise where <tool>`, because the")
+    print("directory holding it encodes the version and platform")
+    print("(`hyperfine-v1.20.0-x86_64-apple-darwin/autocomplete`) and cannot be")
+    print("written down in advance. The shallowest match wins.")
+    print("### Companion binaries")
+    print()
+    print("Some mise tools install additional binaries that generate their own completions.")
+    print("Use an explicit entry with `provided_by` to link the binary to its mise tool:")
+    print()
+    print("```toml")
+    print(
+        'uvx = { provided_by = "uv", zsh = "uvx --generate-shell-completion zsh", '
+        'bash = "uvx --generate-shell-completion bash", '
+        'fish = "uvx --generate-shell-completion fish" }'
+    )
+    print("```")
+    print()
+    print("`provided_by` is a one-hop link and is supported only on explicit entries.")
+    print("Normal sync and `--new-only` include the child when its provider is installed.")
+    print("`misecompsync uvx` syncs only `uvx`; `misecompsync uv` does not expand children.")
 
 
 if __name__ == "__main__":

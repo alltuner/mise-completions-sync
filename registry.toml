@@ -11,6 +11,11 @@ gh_style = { zsh = "{} completion -s zsh", bash = "{} completion -s bash", fish 
 generate_shell = { zsh = "{} generate-shell-completion zsh", bash = "{} generate-shell-completion bash", fish = "{} generate-shell-completion fish" }
 gen_completions = { zsh = "{} gen-completions --shell zsh", bash = "{} gen-completions --shell bash", fish = "{} gen-completions --shell fish" }
 completions_flag = { zsh = "{} --completions zsh", bash = "{} --completions bash", fish = "{} --completions fish" }
+argcomplete = { requires = "pipx:argcomplete", zsh = "register-python-argcomplete -s zsh {}", bash = "register-python-argcomplete -s bash {}", fish = "register-python-argcomplete -s fish {}" }
+# clap_complete aot generator exposed via a `--generate` ValueEnum (e.g. xh).
+# Only works when the binary name equals the tool name; tools like ripgrep (binary
+# `rg`) whose binary differs need an explicit entry instead.
+generate_complete = { zsh = "{} --generate=complete-zsh", bash = "{} --generate=complete-bash", fish = "{} --generate=complete-fish" }
 
 [tools]
 # Core tools
@@ -22,17 +27,23 @@ gh = "gh_style"
 glab = "gh_style"
 
 # Kubernetes ecosystem
+clusterctl = "standard"
+cmctl = "standard"
+# mise's registry lists this as cilium-hubble, but installing the aqua backend
+# directly (aqua:cilium/hubble) strips to hubble, so both keys are listed --
+# same idea as rg/ripgrep below. The binary is named hubble either way.
+cilium-hubble = { completion_name = "hubble", zsh = "hubble completion zsh", bash = "hubble completion bash", fish = "hubble completion fish" }
+hubble = "standard"
 k9s = "standard"
 kind = "standard"
 kubectl-ai = "standard"
 minikube = "standard"
 kustomize = "standard"
 argocd = "standard"
-flux = "standard"
 istioctl = "standard"
 k3d = "standard"
 ko = "standard"
-kubeseal = "standard"
+kubeseal = { audit_skip = "needs a reachable cluster config even to print completions", zsh = "kubeseal completion zsh", bash = "kubeseal completion bash", fish = "kubeseal completion fish" }
 linkerd = "standard"
 skaffold = "standard"
 stern = "standard"
@@ -45,23 +56,26 @@ rustup = "completions"
 deno = "completions"
 starship = "completions"
 uv = "generate_shell"
+uvx = { provided_by = "uv", zsh = "uvx --generate-shell-completion zsh", bash = "uvx --generate-shell-completion bash", fish = "uvx --generate-shell-completion fish" }
 ruff = "generate_shell"
 ty = "generate_shell"
-mdbook = "generate_shell"
+mdbook = "completions"
 atuin = "gen_completions"
-gitu = "gen_completions"
-gitui = "gen_completions"
 just = "completions_flag"
 watchexec = "completions_flag"
 usage = "completions_flag"
 
 # Python tools
+ipython = "argcomplete"
+patool = "argcomplete"
+pipx = "argcomplete"
 poetry = "completions"
+ratarmount = "argcomplete"
+pdm = "standard"
 
 # Cloud CLIs
 flyctl = "standard"
 doctl = "standard"
-oci = "standard"
 
 # Container tools
 cosign = "standard"
@@ -77,27 +91,43 @@ syft = "standard"
 trivy = "standard"
 
 # Dev tools
+ast-grep = "completions"
 chezmoi = "standard"
 crush = "standard"
 cue = "standard"
 dagger = "standard"
 doggo = "completions"
 dyff = "standard"
-fnox = "standard"
+ghorg = "standard"
 gitleaks = "standard"
+glow = "standard"
 golangci-lint = "standard"
 goreleaser = "standard"
+# not in mise's registry; install as aqua:grafana/grafanactl
+grafanactl = "standard"
+# the default github: backend fails SLSA verification, and the backend that does
+# work (asdf:asdf-community/asdf-hishtory) strips to a different short name, so
+# both keys are listed -- same idea as rg/ripgrep below.
+hishtory = "standard"
+asdf-hishtory = { zsh = "hishtory completion zsh", bash = "hishtory completion bash", fish = "hishtory completion fish" }
 hugo = "standard"
+jules = "standard"
 lazygit = "standard"
 lefthook = "standard"
 oc = "standard"
-pitchfork = "standard"
+mermaid-ascii = "standard"
+opencode = "standard"
 pulumi = "standard"
 rumdl = "completions"
-saml2aws = "standard"
 step = "standard"
-xh = "standard"
+xh = "generate_complete"
 yq = "standard"
+
+# not in mise's registry; install as github:ramonvermeulen/whosthere
+whosthere = "standard"
+
+
+# Lefthook uses completions pattern
 
 # Tools with explicit commands (unique patterns or partial shell support)
 
@@ -110,19 +140,38 @@ forgejo-cli = { zsh = "fj completion zsh", bash = "fj completion bash", fish = "
 
 bun = { zsh = "bun completions", bash = "bun completions", fish = "bun completions" }
 
+# mise installs this tool as flux2, but the binary it provides is named flux.
+flux2 = { zsh = "flux completion zsh", bash = "flux completion bash", fish = "flux completion fish" }
+
 # Partial shell support (zsh + bash)
 npm = { zsh = "npm completion", bash = "npm completion" }
 pnpm = { zsh = "pnpm completion zsh", bash = "pnpm completion bash" }
-vercel = { zsh = "vercel completion zsh", bash = "vercel completion bash" }
 sops = { zsh = "sops completion zsh", bash = "sops completion bash" }
+# oci is click-based: completions come from an env var, not a subcommand.
+oci = { zsh = "env _OCI_COMPLETE=zsh_source oci", bash = "env _OCI_COMPLETE=bash_source oci", fish = "env _OCI_COMPLETE=fish_source oci" }
+
+# saml2aws is kingpin-based: completion comes from flags, and it has no fish support
+saml2aws = { zsh = "saml2aws --completion-script-zsh", bash = "saml2aws --completion-script-bash" }
 
 # Cargo uses rustup
 cargo = { zsh = "rustup completions zsh cargo", bash = "rustup completions bash cargo", fish = "rustup completions fish cargo" }
 
-# pipx uses argcomplete
-pipx = { zsh = "register-python-argcomplete --shell zsh pipx", bash = "register-python-argcomplete --shell bash pipx", fish = "register-python-argcomplete --shell fish pipx" }
+
+# fnox, hk and pitchfork render their completions with the `usage` CLI, which is not
+# on PATH inside `mise x <tool>` on its own.
+fnox = { requires = "usage", zsh = "fnox completion zsh", bash = "fnox completion bash", fish = "fnox completion fish" }
+hk = { requires = "usage", zsh = "hk completion zsh", bash = "hk completion bash", fish = "hk completion fish" }
+pitchfork = { requires = "usage", zsh = "pitchfork completion zsh", bash = "pitchfork completion bash", fish = "pitchfork completion fish" }
 
 prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util generate-shell-completion bash", fish = "prek util generate-shell-completion fish" }
+
+# Tools that ship completion files in their download rather than generating
+# them. The per-shell value is the filename to look for, not a command.
+hyperfine = { bundled = true, zsh = "_hyperfine", bash = "hyperfine.bash", fish = "hyperfine.fish" }
+killport = { bundled = true, zsh = "_killport", bash = "killport.bash", fish = "killport.fish" }
+tealdeer = { completion_name = "tldr", bundled = true, zsh = "zsh_tealdeer", bash = "bash_tealdeer", fish = "fish_tealdeer" }
+yazi = { bundled = true, zsh = "_yazi", bash = "yazi.bash", fish = "yazi.fish" }
+ya = { provided_by = "yazi", bundled = true, zsh = "_ya", bash = "ya.bash", fish = "ya.fish" }
 
 # Unique command patterns
 task = { zsh = "task --completion zsh", bash = "task --completion bash", fish = "task --completion fish" }
@@ -144,3 +193,29 @@ tree-sitter = { zsh = "tree-sitter complete --shell zsh", bash = "tree-sitter co
 
 # restic writes completions via `generate --{shell}-completion`; `-` sends them to stdout
 restic = { zsh = "restic generate --zsh-completion -", bash = "restic generate --bash-completion -", fish = "restic generate --fish-completion -" }
+# rclone requires - to output to stdout
+rclone = { zsh = "rclone completion zsh -", bash = "rclone completion bash -", fish = "rclone completion fish -" }
+
+# openspec requires completion generate <shell>
+# not in mise's registry; install as npm:@fission-ai/openspec
+# (bare npm:openspec is an unrelated placeholder package)
+openspec = { zsh = "openspec completion generate zsh", bash = "openspec completion generate bash", fish = "openspec completion generate fish" }
+
+# jj requires util completion <shell>
+jj = { zsh = "jj util completion zsh", bash = "jj util completion bash", fish = "jj util completion fish" }
+
+# fx requires --comp <shell>
+fx = { zsh = "fx --comp zsh", bash = "fx --comp bash", fish = "fx --comp fish" }
+
+# pkl requires shell-completion <shell>
+pkl = { zsh = "pkl shell-completion zsh", bash = "pkl shell-completion bash", fish = "pkl shell-completion fish" }
+
+# television provides the `tv` binary and requires init <shell>
+television = { zsh = "tv init zsh", bash = "tv init bash", fish = "tv init fish" }
+
+# trash-cli requires --print-completion
+trash = { provided_by = "trash-cli", zsh = "trash --print-completion zsh", bash = "trash --print-completion bash" }
+trash-empty = { provided_by = "trash-cli", zsh = "trash-empty --print-completion zsh", bash = "trash-empty --print-completion bash" }
+trash-list = { provided_by = "trash-cli", zsh = "trash-list --print-completion zsh", bash = "trash-list --print-completion bash" }
+trash-restore = { provided_by = "trash-cli", zsh = "trash-restore --print-completion zsh", bash = "trash-restore --print-completion bash" }
+trash-put = { provided_by = "trash-cli", zsh = "trash-put --print-completion zsh", bash = "trash-put --print-completion bash" }

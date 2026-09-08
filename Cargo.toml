@@ -1,6 +1,6 @@
 [package]
 name = "mise-completions-sync"
-version = "0.5.10"
+version = "0.5.15"
 edition = "2021"
 description = "Sync shell completions for tools managed by mise"
 license = "MIT"
@@ -14,7 +14,7 @@ clap = { version = "4", features = ["derive"] }
 clap_complete = "4"
 serde = { version = "1", features = ["derive"] }
 toml = "1.0"
-dirs = "6"
+dirs = "7"
 thiserror = "2"
 serde_json = "1"
 
