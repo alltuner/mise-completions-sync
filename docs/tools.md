@@ -108,6 +108,11 @@ The following tools have shell completion support in mise-completions-sync.
 | [tealdeer](https://github.com/tealdeer-rs/tealdeer) | A very fast implementation of tldr in Rust. | ✓ | ✓ | ✓ |
 | [television](https://github.com/alexpasmantier/television) | The revolution will (not) be televised | ✓ | ✓ | ✓ |
 | [tilt](https://github.com/tilt-dev/tilt) | Define your dev environment as code. For micros... | ✓ | ✓ | ✓ |
+| [trash](https://github.com/andreafrancia/trash-cli) | Put files in trash | ✓ | ✓ |  |
+| [trash-empty](https://github.com/andreafrancia/trash-cli) | Empty trash | ✓ | ✓ |  |
+| [trash-list](https://github.com/andreafrancia/trash-cli) | List trashed files | ✓ | ✓ |  |
+| [trash-put](https://github.com/andreafrancia/trash-cli) | Put files in trash | ✓ | ✓ |  |
+| [trash-restore](https://github.com/andreafrancia/trash-cli) | Restore trashed file | ✓ | ✓ |  |
 | [tree-sitter](https://github.com/tree-sitter/tree-sitter) | An incremental parsing system for programming t... | ✓ | ✓ | ✓ |
 | [trivy](https://github.com/aquasecurity/trivy) | Find vulnerabilities, misconfigurations, secret... | ✓ | ✓ | ✓ |
 | [ty](https://github.com/astral-sh/ty) | An extremely fast Python type checker and langu... | ✓ | ✓ | ✓ |
@@ -123,7 +128,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 118 tools**
+**Total: 123 tools**
 
 ## Shell Support Legend
 
