@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.5.16](https://github.com/alltuner/mise-completions-sync/compare/v0.5.15...v0.5.16) (2026-09-08)
+
+
+### Features
+
+* add nova completion ([#156](https://github.com/alltuner/mise-completions-sync/issues/156)) ([e92a7de](https://github.com/alltuner/mise-completions-sync/commit/e92a7debb42f8bc1850a62e613d33f366c8d3bf8))
+* add trash-cli ([#146](https://github.com/alltuner/mise-completions-sync/issues/146)) ([a44c74e](https://github.com/alltuner/mise-completions-sync/commit/a44c74e023fe2ce7e1fec461d0c9e0efbe762fdd))
+* **registry:** add forgejo-cli ([#118](https://github.com/alltuner/mise-completions-sync/issues/118)) ([fe4b967](https://github.com/alltuner/mise-completions-sync/commit/fe4b967264a5cc1581e831bd56a83f82c0b9c302))
+* **registry:** add hubble ([#153](https://github.com/alltuner/mise-completions-sync/issues/153)) ([a2773e2](https://github.com/alltuner/mise-completions-sync/commit/a2773e22a32cfc3bedcd1b73a90bb31ac1a29e9c))
+* **registry:** add yazi ([#147](https://github.com/alltuner/mise-completions-sync/issues/147)) ([9b2613b](https://github.com/alltuner/mise-completions-sync/commit/9b2613b0af88e36bbdd075d36326173d7dade11d))
+* **site:** publish through the fleet's registry instead of GitHub Pages ([#154](https://github.com/alltuner/mise-completions-sync/issues/154)) ([acc4a1f](https://github.com/alltuner/mise-completions-sync/commit/acc4a1fca34ea2bf79b43c2d864d8f1e18b6dab1))
+
+
+### Bug Fixes
+
+* **deps:** update rust crate dirs to v7 ([#157](https://github.com/alltuner/mise-completions-sync/issues/157)) ([44eb67f](https://github.com/alltuner/mise-completions-sync/commit/44eb67fd79e4ae42fd39ed8ecc476cf578c04239))
+* write completions under the command name, not the mise tool name ([#158](https://github.com/alltuner/mise-completions-sync/issues/158)) ([cfe8883](https://github.com/alltuner/mise-completions-sync/commit/cfe8883c959afe3c1d8026b74a2a6d9f2b605b1b))
+
+
+### Miscellaneous Chores
+
+* **deps:** update astral-sh/setup-uv action to v10 ([#152](https://github.com/alltuner/mise-completions-sync/issues/152)) ([d68ca2c](https://github.com/alltuner/mise-completions-sync/commit/d68ca2c156ef36fc090db98714d1d971589e8989))
+* **deps:** update rust dependencies ([#149](https://github.com/alltuner/mise-completions-sync/issues/149)) ([fb05a2d](https://github.com/alltuner/mise-completions-sync/commit/fb05a2de919e8107a82eec1326f4819e46de4171))
+* drop the GitHub Pages workflow ([#155](https://github.com/alltuner/mise-completions-sync/issues/155)) ([266b19c](https://github.com/alltuner/mise-completions-sync/commit/266b19c4a68a35a49e46e2a06f7ef4a396eb9ea4))
+
+
+### Documentation Updates
+
+* point at the canonical docs domain ([#143](https://github.com/alltuner/mise-completions-sync/issues/143)) ([f81c5c7](https://github.com/alltuner/mise-completions-sync/commit/f81c5c7870ff7d0e23a601c9331045f6dee90069))
+
 ## [0.5.15](https://github.com/alltuner/mise-completions-sync/compare/v0.5.14...v0.5.15) (2026-07-29)
 
 
