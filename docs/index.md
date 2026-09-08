@@ -174,6 +174,9 @@ misecompsync --shell zsh
 # Sync specific tool(s)
 misecompsync kubectl helm
 
+# Sync a tool and its direct companion binaries
+misecompsync --children uv
+
 # List tools with completion support
 misecompsync list
 
@@ -203,6 +206,17 @@ misecompsync --current  # or -c
 * `--global` and `--local` are mutually exclusive (same as `mise ls`)
 * Scope flags also apply to `clean` — **caution**: `misecompsync --global clean` would remove completions for tools _not_ in the global config, which may include locally-installed tools if they both use the same `MISE_COMPLETIONS_SYNC_HOME`.
 * Scope flags conflict with explicit tool args and `--new-only`
+
+### Companion binaries
+
+By default, explicitly named tools are parent-only: `misecompsync uv` syncs
+only `uv`. Use `misecompsync --children uv` to also sync direct companion
+binaries that the registry identifies as provided by `uv`. Expansion is
+downward and one hop only. With multiple explicit tools, misecompsync syncs
+the sorted, deduplicated union of those tools and their direct children.
+
+Automatic sync and `--new-only` are unchanged: they include a companion binary
+when its provider is installed.
 
 ## License
 

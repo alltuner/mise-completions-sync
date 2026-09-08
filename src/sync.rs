@@ -349,22 +349,26 @@ fn installed_sync_targets(
 fn specific_sync_targets(
     registry: &registry::Registry,
     specific_tools: &[String],
+    include_children: bool,
 ) -> Vec<SyncTarget> {
-    let mut targets: Vec<_> = specific_tools
+    let is_requested = |tool_name: &str| specific_tools.iter().any(|tool| tool == tool_name);
+    let mut targets: Vec<_> = registry
+        .tools
         .iter()
-        .filter_map(|tool_name| {
-            registry.tools.get(tool_name).map(|entry| SyncTarget {
-                tool_name: tool_name.clone(),
-                tool_id: entry
-                    .provided_by
-                    .as_deref()
-                    .unwrap_or(tool_name)
-                    .to_string(),
-            })
+        .filter(|(tool_name, entry)| {
+            is_requested(tool_name)
+                || (include_children && entry.provided_by.as_deref().is_some_and(is_requested))
+        })
+        .map(|(tool_name, entry)| SyncTarget {
+            tool_name: tool_name.clone(),
+            tool_id: entry
+                .provided_by
+                .as_deref()
+                .unwrap_or(tool_name)
+                .to_string(),
         })
         .collect();
     targets.sort_by(|a, b| a.tool_name.cmp(&b.tool_name));
-    targets.dedup_by(|a, b| a.tool_name == b.tool_name);
     targets
 }
 
@@ -511,6 +515,7 @@ pub fn sync_completions(
     specific_tools: &[String],
     flags: MiseLsFlags,
     new_only: bool,
+    include_children: bool,
 ) -> Result<(), Error> {
     let registry = registry::load_registry()?;
 
@@ -525,7 +530,7 @@ pub fn sync_completions(
         };
         installed_sync_targets(&registry, &tools_map)
     } else {
-        specific_sync_targets(&registry, specific_tools)
+        specific_sync_targets(&registry, specific_tools, include_children)
     };
 
     if tools_in_registry.is_empty() {
@@ -683,31 +688,34 @@ mod tests {
         }
     }
 
-    fn registry_with_provider() -> registry::Registry {
-        let completions = || registry::ToolCompletions {
-            zsh: Some("completion zsh".to_string()),
-            bash: None,
-            fish: None,
-            requires: None,
-            bundled: None,
-        };
+    fn test_tool_entry(provided_by: Option<&str>) -> registry::ToolEntry {
+        registry::ToolEntry {
+            completions: registry::ToolCompletions {
+                zsh: Some("completion zsh".to_string()),
+                bash: None,
+                fish: None,
+                requires: None,
+                bundled: None,
+            },
+            provided_by: provided_by.map(str::to_string),
+        }
+    }
 
+    fn expected_targets(targets: &[(&str, &str)]) -> Vec<SyncTarget> {
+        targets
+            .iter()
+            .map(|(tool_name, tool_id)| SyncTarget {
+                tool_name: (*tool_name).to_string(),
+                tool_id: (*tool_id).to_string(),
+            })
+            .collect()
+    }
+
+    fn registry_with_provider() -> registry::Registry {
         registry::Registry {
             tools: HashMap::from([
-                (
-                    "uv".to_string(),
-                    registry::ToolEntry {
-                        completions: completions(),
-                        provided_by: None,
-                    },
-                ),
-                (
-                    "uvx".to_string(),
-                    registry::ToolEntry {
-                        completions: completions(),
-                        provided_by: Some("uv".to_string()),
-                    },
-                ),
+                ("uv".to_string(), test_tool_entry(None)),
+                ("uvx".to_string(), test_tool_entry(Some("uv"))),
             ]),
         }
     }
@@ -1062,22 +1070,63 @@ mod tests {
     }
 
     #[test]
-    fn test_specific_sync_targets_do_not_expand_provider() {
+    fn test_specific_sync_targets_do_not_expand_provider_by_default() {
         let registry = registry_with_provider();
 
         assert_eq!(
-            specific_sync_targets(&registry, &["uvx".to_string(), "uvx".to_string()]),
-            vec![SyncTarget {
-                tool_name: "uvx".to_string(),
-                tool_id: "uv".to_string(),
-            }]
+            specific_sync_targets(&registry, &["uvx".to_string(), "uvx".to_string()], false,),
+            expected_targets(&[("uvx", "uv")])
         );
         assert_eq!(
-            specific_sync_targets(&registry, &["uv".to_string()]),
-            vec![SyncTarget {
-                tool_name: "uv".to_string(),
-                tool_id: "uv".to_string(),
-            }]
+            specific_sync_targets(&registry, &["uv".to_string()], false),
+            expected_targets(&[("uv", "uv")])
+        );
+    }
+
+    #[test]
+    fn test_specific_sync_targets_expand_only_direct_children() {
+        let mut registry = registry_with_provider();
+        registry
+            .tools
+            .insert("uv-tool".to_string(), test_tool_entry(Some("uvx")));
+
+        assert_eq!(
+            specific_sync_targets(&registry, &["uv".to_string()], true),
+            expected_targets(&[("uv", "uv"), ("uvx", "uv")])
+        );
+
+        assert_eq!(
+            specific_sync_targets(&registry, &["uvx".to_string()], true),
+            expected_targets(&[("uv-tool", "uvx"), ("uvx", "uv")])
+        );
+    }
+
+    #[test]
+    fn test_specific_sync_targets_expand_a_sorted_deduplicated_union() {
+        let mut registry = registry_with_provider();
+        registry
+            .tools
+            .insert("uv-tool".to_string(), test_tool_entry(Some("uvx")));
+
+        assert_eq!(
+            specific_sync_targets(
+                &registry,
+                &["uvx".to_string(), "uv".to_string(), "uv".to_string()],
+                true,
+            ),
+            expected_targets(&[("uv", "uv"), ("uv-tool", "uvx"), ("uvx", "uv")])
+        );
+    }
+
+    #[test]
+    fn test_specific_sync_targets_expand_children_of_unregistered_provider() {
+        let registry = registry::Registry {
+            tools: HashMap::from([("uvx".to_string(), test_tool_entry(Some("uv")))]),
+        };
+
+        assert_eq!(
+            specific_sync_targets(&registry, &["uv".to_string()], true),
+            expected_targets(&[("uvx", "uv")])
         );
     }
 

@@ -36,6 +36,10 @@ struct Cli {
     #[arg(value_name = "TOOL")]
     tools: Vec<String>,
 
+    /// Include registry children provided by explicitly named tools
+    #[arg(long, requires = "tools")]
+    children: bool,
+
     /// Only sync completions for newly installed/updated tools (reads MISE_INSTALLED_TOOLS env var)
     #[arg(long, conflicts_with_all = ["tools", "global", "local", "current"])]
     new_only: bool,
@@ -60,6 +64,13 @@ enum Commands {
     },
 }
 
+fn format_list_entry(tool: &str, provided_by: Option<&str>) -> String {
+    match provided_by {
+        Some(provider) => format!("{tool} (provided by {provider})"),
+        None => tool.to_string(),
+    }
+}
+
 fn main() {
     if let Err(e) = run() {
         eprintln!("error: {e}");
@@ -76,8 +87,11 @@ fn run() -> Result<(), sync::Error> {
         Some(Commands::List) => {
             let registry = registry::load_registry()?;
             println!("Tools with completion support:");
-            for tool in registry.tools.keys() {
-                println!("  {tool}");
+            for (tool, entry) in &registry.tools {
+                println!(
+                    "  {}",
+                    format_list_entry(tool, entry.provided_by.as_deref())
+                );
             }
             Ok(())
         }
@@ -97,7 +111,14 @@ fn run() -> Result<(), sync::Error> {
             let shells = cli
                 .shell
                 .unwrap_or_else(|| vec!["zsh".to_string(), "bash".to_string(), "fish".to_string()]);
-            sync::sync_completions(&dirs, &shells, &cli.tools, flags, cli.new_only)
+            sync::sync_completions(
+                &dirs,
+                &shells,
+                &cli.tools,
+                flags,
+                cli.new_only,
+                cli.children,
+            )
         }
     }
 }
@@ -108,6 +129,16 @@ mod tests {
 
     fn parse(args: &[&str]) -> Result<Cli, clap::Error> {
         Cli::try_parse_from(args)
+    }
+
+    #[test]
+    fn test_list_formatting_keeps_ordinary_entry_unchanged() {
+        assert_eq!(format_list_entry("kubectl", None), "kubectl");
+    }
+
+    #[test]
+    fn test_list_formatting_annotates_companion_entry_with_provider() {
+        assert_eq!(format_list_entry("uvx", Some("uv")), "uvx (provided by uv)");
     }
 
     #[test]
@@ -154,7 +185,17 @@ mod tests {
         assert!(!cli.global);
         assert!(!cli.local);
         assert!(!cli.current);
+        assert!(!cli.children);
         assert!(cli.tools.is_empty());
+    }
+
+    #[test]
+    fn test_children_requires_specific_tools() {
+        let cli = parse(&["misecompsync", "--children", "uv"]).unwrap();
+        assert!(cli.children);
+        assert_eq!(cli.tools, ["uv"]);
+
+        assert!(parse(&["misecompsync", "--children"]).is_err());
     }
 
     #[test]
