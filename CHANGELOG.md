@@ -6,6 +6,7 @@
 ### Features
 
 * add nova completion ([#156](https://github.com/alltuner/mise-completions-sync/issues/156)) ([e92a7de](https://github.com/alltuner/mise-completions-sync/commit/e92a7debb42f8bc1850a62e613d33f366c8d3bf8))
+* add tealdeer bundled completion support, and a `completion_name` override for tools whose binary differs from their mise name ([#151](https://github.com/alltuner/mise-completions-sync/issues/151)) ([99dfc54](https://github.com/alltuner/mise-completions-sync/commit/99dfc5496b084fbad8426a48157f965cc6f94c18))
 * add trash-cli ([#146](https://github.com/alltuner/mise-completions-sync/issues/146)) ([a44c74e](https://github.com/alltuner/mise-completions-sync/commit/a44c74e023fe2ce7e1fec461d0c9e0efbe762fdd))
 * **registry:** add forgejo-cli ([#118](https://github.com/alltuner/mise-completions-sync/issues/118)) ([fe4b967](https://github.com/alltuner/mise-completions-sync/commit/fe4b967264a5cc1581e831bd56a83f82c0b9c302))
 * **registry:** add hubble ([#153](https://github.com/alltuner/mise-completions-sync/issues/153)) ([a2773e2](https://github.com/alltuner/mise-completions-sync/commit/a2773e22a32cfc3bedcd1b73a90bb31ac1a29e9c))
