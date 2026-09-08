@@ -12,6 +12,7 @@ The following tools have shell completion support in mise-completions-sync.
 | bun | Bun is a fast JavaScript all-in-one toolkit | ✓ | ✓ | ✓ |
 | cargo |  | ✓ | ✓ | ✓ |
 | [chezmoi](https://github.com/twpayne/chezmoi) | Manage your dotfiles across multiple diverse ma... | ✓ | ✓ | ✓ |
+| [cilium-hubble](https://github.com/cilium/hubble) | Hubble - Network, Service & Security Observabil... | ✓ | ✓ | ✓ |
 | [clusterctl](https://github.com/kubernetes-sigs/cluster-api) | Home for Cluster API, a subproject of sig-clust... | ✓ | ✓ | ✓ |
 | [cmctl](https://github.com/cert-manager/cmctl) | the command line utility that makes cert-manage... | ✓ | ✓ | ✓ |
 | [cosign](https://github.com/sigstore/cosign) | Code signing and transparency for containers an... | ✓ | ✓ | ✓ |
@@ -129,7 +130,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 124 tools**
+**Total: 125 tools**
 
 ## Shell Support Legend
 

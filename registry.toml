@@ -29,6 +29,10 @@ glab = "gh_style"
 # Kubernetes ecosystem
 clusterctl = "standard"
 cmctl = "standard"
+# mise's registry lists this as cilium-hubble, but installing the aqua backend
+# directly (aqua:cilium/hubble) strips to hubble, so both keys are listed --
+# same idea as rg/ripgrep below. The binary is named hubble either way.
+cilium-hubble = { completion_name = "hubble", zsh = "hubble completion zsh", bash = "hubble completion bash", fish = "hubble completion fish" }
 hubble = "standard"
 k9s = "standard"
 kind = "standard"
