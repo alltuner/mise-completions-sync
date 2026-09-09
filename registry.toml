@@ -173,6 +173,8 @@ killport = { bundled = true, zsh = "_killport", bash = "killport.bash", fish = "
 tealdeer = { completion_name = "tldr", bundled = true, zsh = "zsh_tealdeer", bash = "bash_tealdeer", fish = "fish_tealdeer" }
 yazi = { bundled = true, zsh = "_yazi", bash = "yazi.bash", fish = "yazi.fish" }
 ya = { provided_by = "yazi", bundled = true, zsh = "_ya", bash = "ya.bash", fish = "ya.fish" }
+zoxide = { bundled = true, zsh = "_zoxide", bash = "zoxide.bash", fish = "zoxide.fish" }
+zshellcheck = { bundled = true, zsh = "_zshellcheck", bash = "zshellcheck-completion.bash" }
 
 # Unique command patterns
 task = { zsh = "task --completion zsh", bash = "task --completion bash", fish = "task --completion fish" }
