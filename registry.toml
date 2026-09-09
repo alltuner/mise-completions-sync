@@ -202,8 +202,8 @@ rclone = { zsh = "rclone completion zsh -", bash = "rclone completion bash -", f
 # (bare npm:openspec is an unrelated placeholder package)
 openspec = { zsh = "openspec completion generate zsh", bash = "openspec completion generate bash", fish = "openspec completion generate fish" }
 
-# jj requires util completion <shell>
-jj = { zsh = "jj util completion zsh", bash = "jj util completion bash", fish = "jj util completion fish" }
+# jj dynamic completions come from an env var, not a subcommand
+jj = { zsh = "env COMPLETE=zsh jj", bash = "env COMPLETE=bash jj", fish = "env COMPLETE=fish jj" }
 
 # fx requires --comp <shell>
 fx = { zsh = "fx --comp zsh", bash = "fx --comp bash", fish = "fx --comp fish" }
