@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.5.17](https://github.com/alltuner/mise-completions-sync/compare/v0.5.16...v0.5.17) (2026-09-28)
+
+
+### Features
+
+* **jj:** use dynamic completions ([#161](https://github.com/alltuner/mise-completions-sync/issues/161)) ([3955d91](https://github.com/alltuner/mise-completions-sync/commit/3955d914c780d117be29586ceb826b8576b1ef23))
+* **registry:** add zoxide, zshellcheck ([#160](https://github.com/alltuner/mise-completions-sync/issues/160)) ([c539d70](https://github.com/alltuner/mise-completions-sync/commit/c539d7046ccf56009baeab273a23865a5fa5197f))
+* sync companion commands when their provider is named ([#150](https://github.com/alltuner/mise-completions-sync/issues/150)) ([78b5ded](https://github.com/alltuner/mise-completions-sync/commit/78b5dedf98567d2b339c6354a14d6312b2936fd6))
+
+
+### Bug Fixes
+
+* read the custom registry from the same data directory on macOS ([#168](https://github.com/alltuner/mise-completions-sync/issues/168)) ([c407b75](https://github.com/alltuner/mise-completions-sync/commit/c407b7510771ab5d7937e7a5bcc5e75ad415a2f3)), closes [#165](https://github.com/alltuner/mise-completions-sync/issues/165)
+* **registry:** drop tealdeer, whose completions are never installed ([#166](https://github.com/alltuner/mise-completions-sync/issues/166)) ([9eb3b0c](https://github.com/alltuner/mise-completions-sync/commit/9eb3b0ccc6d589b5fabac59c650126fed9035ddd))
+
+
+### Miscellaneous Chores
+
+* **deps:** update astral-sh/setup-uv action to v10.2.0 ([#163](https://github.com/alltuner/mise-completions-sync/issues/163)) ([5ddf62d](https://github.com/alltuner/mise-completions-sync/commit/5ddf62d0e28b87af3fb3e6e23b18157945c5599b))
+* **deps:** update rust dependencies ([#162](https://github.com/alltuner/mise-completions-sync/issues/162)) ([6c42167](https://github.com/alltuner/mise-completions-sync/commit/6c421674306eaacfb9d0c7f60e14074e54f64a02))
+
+
+### CI/CD Changes
+
+* **audit:** install tools mise only knows under a backend prefix ([#169](https://github.com/alltuner/mise-completions-sync/issues/169)) ([62ce33b](https://github.com/alltuner/mise-completions-sync/commit/62ce33bc373b0e4ffba53fc4c47b7ddcd0818576))
+
 ## [0.5.16](https://github.com/alltuner/mise-completions-sync/compare/v0.5.15...v0.5.16) (2026-09-08)
 
 
