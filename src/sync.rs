@@ -51,15 +51,7 @@ impl CompletionsDirs {
         let base_dir = if let Ok(home) = std::env::var("MISE_COMPLETIONS_SYNC_HOME") {
             PathBuf::from(home)
         } else {
-            std::env::var("XDG_DATA_HOME")
-                .map(PathBuf::from)
-                .unwrap_or_else(|_| {
-                    dirs::home_dir()
-                        .unwrap_or_default()
-                        .join(".local")
-                        .join("share")
-                })
-                .join("mise-completions")
+            crate::paths::data_home().join("mise-completions")
         };
 
         let mut shell_overrides = HashMap::new();

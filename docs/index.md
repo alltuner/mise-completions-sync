@@ -95,7 +95,7 @@ Note: Target directories will be created if they don't already exist. Don't forg
 
 The supported tool list is built into the binary, but you can extend it without
 waiting for a release. Put a `registry.toml` at
-`$XDG_DATA_HOME/mise-completions-sync/registry.toml`, or next to the
+`${XDG_DATA_HOME:-$HOME/.local/share}/mise-completions-sync/registry.toml`, or next to the
 `misecompsync` executable, and it is laid on top of the built-in registry:
 
 ```toml

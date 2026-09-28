@@ -1,6 +1,7 @@
 // ABOUTME: CLI entry point for mise-completions-sync.
 // ABOUTME: Syncs shell completions for tools managed by mise.
 
+mod paths;
 mod registry;
 mod shells;
 mod sync;

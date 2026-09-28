@@ -91,21 +91,28 @@ impl ToolCompletions {
     }
 }
 
-/// Find a user-provided registry to lay over the built-in one, if there is one.
-///
-/// The executable's own directory wins over the XDG one; only a single user
-/// registry applies.
-fn user_registry_content() -> Result<Option<(String, PathBuf)>, Error> {
+/// Where a user registry may live, in order of precedence.
+fn user_registry_candidates() -> Vec<PathBuf> {
     let mut candidates = Vec::new();
 
     if let Ok(exe_path) = std::env::current_exe() {
         candidates.push(exe_path.parent().unwrap().join("registry.toml"));
     }
-    if let Some(data_dir) = dirs::data_dir() {
-        candidates.push(data_dir.join("mise-completions-sync").join("registry.toml"));
-    }
+    candidates.push(
+        crate::paths::data_home()
+            .join("mise-completions-sync")
+            .join("registry.toml"),
+    );
 
-    for path in candidates {
+    candidates
+}
+
+/// Find a user-provided registry to lay over the built-in one, if there is one.
+///
+/// The executable's own directory wins over the data home; only a single user
+/// registry applies.
+fn user_registry_content() -> Result<Option<(String, PathBuf)>, Error> {
+    for path in user_registry_candidates() {
         if path.exists() {
             let content =
                 std::fs::read_to_string(&path).map_err(|e| Error::RegistryRead(path.clone(), e))?;
@@ -188,6 +195,14 @@ fn expand(raw: RawRegistry) -> Result<Registry, Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_user_registry_is_looked_up_under_the_data_home() {
+        let expected = crate::paths::data_home()
+            .join("mise-completions-sync")
+            .join("registry.toml");
+        assert!(user_registry_candidates().contains(&expected));
+    }
 
     #[test]
     fn test_prek_in_registry() {

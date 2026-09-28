@@ -62,7 +62,7 @@ nothing — its file is copied straight out of the install directory.
 
 The built-in registry is embedded in the binary, but you can extend it. If a
 `registry.toml` exists next to the executable, or at
-`$XDG_DATA_HOME/mise-completions-sync/registry.toml`, it is laid **on top of**
+`${XDG_DATA_HOME:-$HOME/.local/share}/mise-completions-sync/registry.toml`, it is laid **on top of**
 the built-in one rather than replacing it.
 
 ```toml

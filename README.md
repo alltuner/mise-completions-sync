@@ -143,7 +143,7 @@ postinstall = "misecompsync --new-only"
 
 The list of supported tools is built into the binary, but you don't have to wait
 for a release (or send a PR) to add your own. Drop a `registry.toml` at
-`$XDG_DATA_HOME/mise-completions-sync/registry.toml`, or next to the
+`${XDG_DATA_HOME:-$HOME/.local/share}/mise-completions-sync/registry.toml`, or next to the
 `misecompsync` executable, and it is laid on top of the built-in registry:
 
 ```toml
