@@ -155,15 +155,6 @@ def main():
     )
     print("```")
     print()
-    print("Bundled entries need it too — `tealdeer` installs the `tldr` command:")
-    print()
-    print("```toml")
-    print(
-        'tealdeer = { completion_name = "tldr", bundled = true, '
-        'zsh = "zsh_tealdeer", bash = "bash_tealdeer", fish = "fish_tealdeer" }'
-    )
-    print("```")
-    print()
     print("Two entries may share one `completion_name` when the same binary is")
     print("reachable under two mise tool names, as `rg` and `ripgrep` are. They write")
     print("the same file, and `clean` keeps it while either one is installed.")

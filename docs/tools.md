@@ -109,7 +109,6 @@ The following tools have shell completion support in mise-completions-sync.
 | [syft](https://github.com/anchore/syft) | CLI tool and library for generating a Software ... | ✓ | ✓ | ✓ |
 | [talosctl](https://github.com/siderolabs/talos) | Talos is a modern OS for Kubernetes. talosctl i... | ✓ | ✓ | ✓ |
 | [task](https://github.com/go-task/task) | A task runner / simpler Make alternative writte... | ✓ | ✓ | ✓ |
-| [tealdeer](https://github.com/tealdeer-rs/tealdeer) | A very fast implementation of tldr in Rust. | ✓ | ✓ | ✓ |
 | [television](https://github.com/alexpasmantier/television) | The revolution will (not) be televised | ✓ | ✓ | ✓ |
 | [tilt](https://github.com/tilt-dev/tilt) | Define your dev environment as code. For micros... | ✓ | ✓ | ✓ |
 | [trash](https://github.com/andreafrancia/trash-cli) | Put files in trash | ✓ | ✓ |  |
@@ -132,7 +131,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [yq](https://github.com/mikefarah/yq) | yq is a portable command-line YAML processor | ✓ | ✓ | ✓ |
 | [zellij](https://github.com/zellij-org/zellij) | A terminal workspace with batteries included | ✓ | ✓ | ✓ |
 
-**Total: 127 tools**
+**Total: 126 tools**
 
 ## Shell Support Legend
 
@@ -184,12 +183,6 @@ binary has to say so with `completion_name`. `television` installs `tv`:
 
 ```toml
 television = { completion_name = "tv", zsh = "tv init zsh", bash = "tv init bash", fish = "tv init fish" }
-```
-
-Bundled entries need it too — `tealdeer` installs the `tldr` command:
-
-```toml
-tealdeer = { completion_name = "tldr", bundled = true, zsh = "zsh_tealdeer", bash = "bash_tealdeer", fish = "fish_tealdeer" }
 ```
 
 Two entries may share one `completion_name` when the same binary is
