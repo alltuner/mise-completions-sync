@@ -219,3 +219,21 @@ trash-empty = { provided_by = "trash-cli", zsh = "trash-empty --print-completion
 trash-list = { provided_by = "trash-cli", zsh = "trash-list --print-completion zsh", bash = "trash-list --print-completion bash" }
 trash-restore = { provided_by = "trash-cli", zsh = "trash-restore --print-completion zsh", bash = "trash-restore --print-completion bash" }
 trash-put = { provided_by = "trash-cli", zsh = "trash-put --print-completion zsh", bash = "trash-put --print-completion bash" }
+
+# How to install tools that mise can't find under their bare name, keyed on the
+# mise tool name. Only the registry audit reads this; sync finds these tools
+# under whatever name they were installed with.
+[audit_install]
+asdf-hishtory = "asdf:asdf-community/asdf-hishtory"
+dockerfmt = "aqua:reteps/dockerfmt"
+forgejo-cli = "cargo:forgejo-cli"
+grafanactl = "aqua:grafana/grafanactl"
+hubble = "aqua:cilium/hubble"
+ipython = "pipx:ipython"
+kubectl-ai = "github:GoogleCloudPlatform/kubectl-ai"
+mise-completions-sync = "github:alltuner/mise-completions-sync"
+openspec = "npm:@fission-ai/openspec"
+patool = "pipx:patool"
+ratarmount = "pipx:ratarmount"
+trash-cli = "pipx:trash-cli"
+whosthere = "github:ramonvermeulen/whosthere"

@@ -77,6 +77,19 @@ whether the entry is correct.
 Run it locally with `mise run audit-registry`. It installs every tool in the
 registry, so expect it to be slow and to leave a lot behind.
 
+The audit installs each tool by its registry name, which fails for tools that
+mise only knows under a backend prefix. List those in the `[audit_install]`
+table at the end of `registry.toml`, keyed on the mise tool name, and the audit
+installs and runs them through that spec instead:
+
+```toml
+[audit_install]
+grafanactl = "aqua:grafana/grafanactl"
+```
+
+Sync never reads this table. It already finds such tools under whatever name
+they were installed with.
+
 A few tools need a working environment — not just an install — before they will
 print a completion script, so the audit can't judge them. `kubeseal` wants a
 reachable cluster config even to emit a static file. Those entries carry

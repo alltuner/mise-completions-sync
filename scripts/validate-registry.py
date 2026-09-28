@@ -38,8 +38,11 @@ def get_installed_tools() -> set[str]:
         return set()
 
 
-def load_registry() -> dict[str, tuple[str, dict[str, str]]]:
-    """Load registry.toml and expand patterns to get tool completions."""
+def load_registry() -> tuple[dict[str, tuple[str, dict[str, str]]], dict[str, str]]:
+    """Load registry.toml, expanding patterns to get tool completions.
+
+    Also returns the install spec for each tool mise can't find by bare name.
+    """
     registry_path = Path(__file__).parent.parent / "registry.toml"
     with open(registry_path, "rb") as f:
         raw = tomllib.load(f)
@@ -82,7 +85,7 @@ def load_registry() -> dict[str, tuple[str, dict[str, str]]]:
                 completions["audit_skip"] = entry["audit_skip"]
             expanded[tool_name] = (provider, completions)
 
-    return expanded
+    return expanded, raw.get("audit_install", {})
 
 
 def find_bundled(provider: str, filename: str) -> tuple[bool, str]:
@@ -146,7 +149,7 @@ def main():
     install = "--install" in sys.argv
     only = [a for a in sys.argv[1:] if not a.startswith("--")]
 
-    registry = load_registry()
+    registry, install_specs = load_registry()
     installed = get_installed_tools() if installed_only else set()
 
     results: dict[str, dict[str, tuple[bool, str]]] = {}
@@ -160,7 +163,10 @@ def main():
 
     for i, tool in enumerate(tools, 1):
         provider, completions = registry[tool]
-        if installed_only and provider not in installed:
+        # Some tools are only reachable under a backend-prefixed name, and mise
+        # needs that same name to install, locate and run them.
+        target = install_specs.get(provider, provider)
+        if installed_only and target not in installed:
             continue
 
         print(f"[{i}/{total}] {tool}...", end=" ", flush=True)
@@ -172,7 +178,7 @@ def main():
             continue
 
         if install:
-            ok, reason = install_tool(provider)
+            ok, reason = install_tool(target)
             if not ok:
                 # Not installable here, so the entry is untested rather than wrong.
                 unavailable[tool] = reason
@@ -190,9 +196,9 @@ def main():
             command = completions[shell]
             try:
                 if completions.get("bundled"):
-                    ok, err = find_bundled(provider, command)
+                    ok, err = find_bundled(target, command)
                 else:
-                    ok, err = test_completion(provider, shell, command, requires)
+                    ok, err = test_completion(target, shell, command, requires)
                 results[tool][shell] = (ok, err)
                 if not ok:
                     tool_ok = False
