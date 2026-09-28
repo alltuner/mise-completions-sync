@@ -117,6 +117,11 @@ def test_completion(
     )
 
     if result.returncode == 0 and result.stdout.strip():
+        # zsh ignores a #compdef that isn't on the first line, and anything
+        # printed ahead of it gets run as a command when the file is sourced.
+        first_line = result.stdout.lstrip().splitlines()[0]
+        if shell == "zsh" and not first_line.startswith("#compdef"):
+            return False, f"output does not start with #compdef: {first_line!r}"
         return True, ""
 
     error = result.stderr.strip() or result.stdout.strip() or "empty output"
