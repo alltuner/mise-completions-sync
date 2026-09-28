@@ -64,6 +64,9 @@ misecompsync --shell zsh
 # Sync specific tools
 misecompsync kubectl helm
 
+# Sync a tool and the companion commands it installs (uv and uvx)
+misecompsync uv
+
 # List supported tools
 misecompsync list
 
@@ -93,6 +96,17 @@ misecompsync --current  # or -c
 * `--global` and `--local` are mutually exclusive (same as `mise ls`)
 * Scope flags also apply to `clean` — **caution**: `misecompsync --global clean` would remove completions for tools _not_ in the global config, which may include locally-installed tools if they both use the same `MISE_COMPLETIONS_SYNC_HOME`.
 * Scope flags conflict with explicit tool args and `--new-only`
+
+### Companion binaries
+
+Some mise tools install more than one command. Naming the tool syncs every
+command it provides: `misecompsync uv` syncs `uv` and `uvx`, and
+`misecompsync trash-cli` syncs `trash`, `trash-put` and the rest. Naming a
+companion command syncs only that command, so `misecompsync uvx` leaves `uv`
+alone.
+
+Automatic sync and `--new-only` work the same way: a companion command is
+included whenever the tool that provides it is installed.
 
 ### Automatic sync
 

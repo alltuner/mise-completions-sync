@@ -173,8 +173,9 @@ def main():
     print("```")
     print()
     print("`provided_by` is a one-hop link and is supported only on explicit entries.")
-    print("Normal sync and `--new-only` include the child when its provider is installed.")
-    print("`misecompsync uvx` syncs only `uvx`; `misecompsync uv` does not expand children.")
+    print("Every sync includes a child whenever its provider is installed, and")
+    print("`misecompsync uv` syncs both `uv` and `uvx`. `misecompsync uvx` syncs only")
+    print("`uvx`.")
 
 
 if __name__ == "__main__":
