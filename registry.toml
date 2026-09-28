@@ -136,7 +136,8 @@ whosthere = "standard"
 # but the binary it provides is named misecompsync.
 mise-completions-sync = { completion_name = "misecompsync", zsh = "misecompsync completion zsh", bash = "misecompsync completion bash", fish = "misecompsync completion fish" }
 
-# not in mise's registry; install as cargo:forgejo-cli. The binary is named fj.
+# not in mise's registry; install as forgejo:forgejo-contrib/forgejo-cli (prebuilt,
+# Linux only) or cargo:forgejo-cli. The binary is named fj.
 forgejo-cli = { completion_name = "fj", zsh = "fj completion zsh", bash = "fj completion bash", fish = "fj completion fish" }
 
 bun = { zsh = "bun completions", bash = "bun completions", fish = "bun completions" }
@@ -228,7 +229,7 @@ trash-put = { provided_by = "trash-cli", zsh = "trash-put --print-completion zsh
 [audit_install]
 asdf-hishtory = "asdf:asdf-community/asdf-hishtory"
 dockerfmt = "aqua:reteps/dockerfmt"
-forgejo-cli = "cargo:forgejo-cli"
+forgejo-cli = "forgejo:forgejo-contrib/forgejo-cli"
 grafanactl = "aqua:grafana/grafanactl"
 hubble = "aqua:cilium/hubble"
 ipython = "pipx:ipython"
