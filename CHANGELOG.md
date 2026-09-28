@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.18](https://github.com/alltuner/mise-completions-sync/compare/v0.5.17...v0.5.18) (2026-09-28)
+
+
+### CI/CD Changes
+
+* **audit:** verify forgejo-cli and require zsh output to start with #compdef ([#170](https://github.com/alltuner/mise-completions-sync/issues/170)) ([947afa1](https://github.com/alltuner/mise-completions-sync/commit/947afa15b0a7cf121f68db30504a3cb493dc69af))
+
 ## [0.5.17](https://github.com/alltuner/mise-completions-sync/compare/v0.5.16...v0.5.17) (2026-09-28)
 
 
