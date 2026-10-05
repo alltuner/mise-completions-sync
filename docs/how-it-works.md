@@ -26,7 +26,7 @@ shell means the tool doesn't support it:
 
 ```toml
 [tools]
-npm = { zsh = "npm completion", bash = "npm completion" }
+pnpm = { zsh = "pnpm completion zsh", bash = "pnpm completion bash" }
 ```
 
 Three optional fields cover tools that need more than a command:

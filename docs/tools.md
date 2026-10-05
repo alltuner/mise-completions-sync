@@ -10,7 +10,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [atuin](https://github.com/atuinsh/atuin) | ✨ Magical shell history | ✓ | ✓ | ✓ |
 | [bat](https://github.com/sharkdp/bat) | A cat(1) clone with wings | ✓ | ✓ | ✓ |
 | bun | Bun is a fast JavaScript all-in-one toolkit | ✓ | ✓ | ✓ |
-| cargo |  | ✓ | ✓ | ✓ |
+| cargo |  | ✓ | ✓ |  |
 | [chezmoi](https://github.com/twpayne/chezmoi) | Manage your dotfiles across multiple diverse ma... | ✓ | ✓ | ✓ |
 | [cilium-hubble](https://github.com/cilium/hubble) | Hubble - Network, Service & Security Observabil... | ✓ | ✓ | ✓ |
 | [clusterctl](https://github.com/kubernetes-sigs/cluster-api) | Home for Cluster API, a subproject of sig-clust... | ✓ | ✓ | ✓ |
@@ -73,7 +73,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [nerdctl](https://github.com/containerd/nerdctl) | contaiNERD CTL - Docker-compatible CLI for cont... | ✓ | ✓ | ✓ |
 | nix |  | ✓ | ✓ | ✓ |
 | [nova](https://github.com/FairwindsOps/nova) | Find outdated or deprecated Helm charts running... | ✓ | ✓ | ✓ |
-| [npm](https://github.com/npm/cli) | the package manager for JavaScript | ✓ | ✓ |  |
+| [npm](https://github.com/npm/cli) | the package manager for JavaScript |  | ✓ |  |
 | oc | OpenShift Client CLI (oc) | ✓ | ✓ | ✓ |
 | oci | Oracle Cloud Infrastructure CLI | ✓ | ✓ | ✓ |
 | [opencode](https://github.com/anomalyco/opencode) | AI coding agent, built for the terminal | ✓ | ✓ | ✓ |
@@ -83,7 +83,7 @@ The following tools have shell completion support in mise-completions-sync.
 | pdm | A modern Python package and dependency manager ... | ✓ | ✓ | ✓ |
 | [pipx](https://github.com/pypa/pipx) | Install and Run Python Applications in Isolated... | ✓ | ✓ | ✓ |
 | [pitchfork](https://github.com/jdx/pitchfork) | Daemons with DX | ✓ | ✓ | ✓ |
-| [pkl](https://github.com/apple/pkl) | A configuration as code language with rich vali... | ✓ | ✓ | ✓ |
+| [pkl](https://github.com/apple/pkl) | A configuration as code language with rich vali... |  | ✓ | ✓ |
 | [pluto](https://github.com/FairwindsOps/pluto) | A cli tool to help discover deprecated apiVersi... | ✓ | ✓ | ✓ |
 | [pnpm](https://github.com/pnpm/pnpm) | Fast, disk space efficient package manager | ✓ | ✓ |  |
 | podman | Podman: A tool for managing OCI containers and ... | ✓ | ✓ | ✓ |
@@ -100,7 +100,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [rumdl](https://github.com/rvben/rumdl) | Markdown Linter and Formatter written in Rust | ✓ | ✓ | ✓ |
 | rustup |  | ✓ | ✓ | ✓ |
 | [saml2aws](https://github.com/Versent/saml2aws) | CLI tool which enables you to login and retriev... | ✓ | ✓ |  |
-| [scaleway-cli](https://github.com/scaleway/scaleway-cli) | Command Line Interface for Scaleway | ✓ | ✓ | ✓ |
+| [scaleway-cli](https://github.com/scaleway/scaleway-cli) | Command Line Interface for Scaleway |  | ✓ | ✓ |
 | [skaffold](https://github.com/GoogleContainerTools/skaffold) | Easy and Repeatable Kubernetes Development | ✓ | ✓ | ✓ |
 | [sops](https://github.com/getsops/sops) | Simple and flexible tool for managing secrets | ✓ | ✓ |  |
 | [starship](https://github.com/starship/starship) | The minimal, blazing-fast, and infinitely custo... | ✓ | ✓ | ✓ |
