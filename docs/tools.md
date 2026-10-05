@@ -11,6 +11,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [bat](https://github.com/sharkdp/bat) | A cat(1) clone with wings | ✓ | ✓ | ✓ |
 | bun | Bun is a fast JavaScript all-in-one toolkit | ✓ | ✓ | ✓ |
 | cargo |  | ✓ | ✓ |  |
+| [cf](https://github.com/cloudflare/cf) | Cloudflare's command line client | ✓ | ✓ | ✓ |
 | [chezmoi](https://github.com/twpayne/chezmoi) | Manage your dotfiles across multiple diverse ma... | ✓ | ✓ | ✓ |
 | [cilium-hubble](https://github.com/cilium/hubble) | Hubble - Network, Service & Security Observabil... | ✓ | ✓ | ✓ |
 | [clusterctl](https://github.com/kubernetes-sigs/cluster-api) | Home for Cluster API, a subproject of sig-clust... | ✓ | ✓ | ✓ |
@@ -133,7 +134,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | A smarter cd command. Supports all major shells | ✓ | ✓ | ✓ |
 | zshellcheck |  | ✓ | ✓ |  |
 
-**Total: 128 tools**
+**Total: 129 tools**
 
 ## Shell Support Legend
 

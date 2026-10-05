@@ -209,6 +209,11 @@ rclone = { zsh = "rclone completion zsh -", bash = "rclone completion bash -", f
 # (bare npm:openspec is an unrelated placeholder package)
 openspec = { zsh = "openspec completion generate zsh", bash = "openspec completion generate bash", fish = "openspec completion generate fish" }
 
+# Cloudflare's cf requires complete <shell>
+# install as npm:cf; mise's bare cf is the Cloud Foundry CLI, which has no
+# complete command, so sync reports an error for it instead of writing a file
+cf = { zsh = "cf complete zsh", bash = "cf complete bash", fish = "cf complete fish" }
+
 # jj dynamic completions come from an env var, not a subcommand
 jj = { zsh = "env COMPLETE=zsh jj", bash = "env COMPLETE=bash jj", fish = "env COMPLETE=fish jj" }
 
@@ -235,6 +240,7 @@ trash-put = { provided_by = "trash-cli", zsh = "trash-put --print-completion zsh
 # under whatever name they were installed with.
 [audit_install]
 asdf-hishtory = "asdf:asdf-community/asdf-hishtory"
+cf = "npm:cf"
 dockerfmt = "aqua:reteps/dockerfmt"
 forgejo-cli = "forgejo:forgejo-contrib/forgejo-cli"
 grafanactl = "aqua:grafana/grafanactl"
