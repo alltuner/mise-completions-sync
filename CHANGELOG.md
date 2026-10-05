@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.5.18](https://github.com/alltuner/mise-completions-sync/compare/v0.5.17...v0.5.18) (2026-10-05)
+
+
+### Features
+
+* **registry:** add cf (Cloudflare CLI) ([#176](https://github.com/alltuner/mise-completions-sync/issues/176)) ([14ac5ab](https://github.com/alltuner/mise-completions-sync/commit/14ac5abe1d0834f80e8fba596da2d2472d1b4a50)), closes [#175](https://github.com/alltuner/mise-completions-sync/issues/175)
+
+
+### Bug Fixes
+
+* **registry:** repair the entries the zsh #compdef audit flagged ([#177](https://github.com/alltuner/mise-completions-sync/issues/177)) ([fc56e8a](https://github.com/alltuner/mise-completions-sync/commit/fc56e8a6e05c9d7e8e9701a1e394d5917d03adea)), closes [#172](https://github.com/alltuner/mise-completions-sync/issues/172)
+
+
+### Miscellaneous Chores
+
+* **deps:** update jdx/mise-action action to v5 ([#173](https://github.com/alltuner/mise-completions-sync/issues/173)) ([deb3381](https://github.com/alltuner/mise-completions-sync/commit/deb338130cd24943147d41429b596c1a4e3deba7))
+
+
+### CI/CD Changes
+
+* **audit:** verify forgejo-cli and require zsh output to start with #compdef ([#170](https://github.com/alltuner/mise-completions-sync/issues/170)) ([947afa1](https://github.com/alltuner/mise-completions-sync/commit/947afa15b0a7cf121f68db30504a3cb493dc69af))
+
 ## [0.5.17](https://github.com/alltuner/mise-completions-sync/compare/v0.5.16...v0.5.17) (2026-09-28)
 
 
