@@ -53,7 +53,8 @@ tilt = "standard"
 velero = "standard"
 
 # Rust ecosystem
-rustup = "completions"
+# mise installs rustup and cargo as part of its rust tool
+rustup = { provided_by = "rust", zsh = "rustup completions zsh", bash = "rustup completions bash", fish = "rustup completions fish" }
 deno = "completions"
 starship = "completions"
 uv = "generate_shell"
@@ -72,7 +73,8 @@ patool = "argcomplete"
 pipx = "argcomplete"
 poetry = "completions"
 ratarmount = "argcomplete"
-pdm = "standard"
+# pdm puts a comment above #compdef, which stops zsh loading it from fpath
+pdm = { zsh = "pdm completion zsh | sed -n '/^#compdef/,$p'", bash = "pdm completion bash", fish = "pdm completion fish" }
 
 # Cloud CLIs
 flyctl = "standard"
@@ -140,13 +142,15 @@ mise-completions-sync = { completion_name = "misecompsync", zsh = "misecompsync 
 # Linux only) or cargo:forgejo-cli. The binary is named fj.
 forgejo-cli = { completion_name = "fj", zsh = "fj completion zsh", bash = "fj completion bash", fish = "fj completion fish" }
 
-bun = { zsh = "bun completions", bash = "bun completions", fish = "bun completions" }
+# bun picks the script from $SHELL, so pin it per shell
+bun = { zsh = "env SHELL=zsh bun completions", bash = "env SHELL=bash bun completions", fish = "env SHELL=fish bun completions" }
 
 # mise installs this tool as flux2, but the binary it provides is named flux.
 flux2 = { completion_name = "flux", zsh = "flux completion zsh", bash = "flux completion bash", fish = "flux completion fish" }
 
 # Partial shell support (zsh + bash)
-npm = { zsh = "npm completion", bash = "npm completion" }
+# npm's script is meant to be sourced and has no #compdef line, so zsh never loads it from fpath
+npm = { bash = "npm completion" }
 pnpm = { zsh = "pnpm completion zsh", bash = "pnpm completion bash" }
 sops = { zsh = "sops completion zsh", bash = "sops completion bash" }
 # oci is click-based: completions come from an env var, not a subcommand.
@@ -155,8 +159,8 @@ oci = { zsh = "env _OCI_COMPLETE=zsh_source oci", bash = "env _OCI_COMPLETE=bash
 # saml2aws is kingpin-based: completion comes from flags, and it has no fish support
 saml2aws = { zsh = "saml2aws --completion-script-zsh", bash = "saml2aws --completion-script-bash" }
 
-# Cargo uses rustup
-cargo = { zsh = "rustup completions zsh cargo", bash = "rustup completions bash cargo", fish = "rustup completions fish cargo" }
+# Cargo uses rustup, which has no fish completions for it
+cargo = { provided_by = "rust", zsh = "rustup completions zsh cargo", bash = "rustup completions bash cargo" }
 
 
 # fnox, hk and pitchfork render their completions with the `usage` CLI, which is not
@@ -182,7 +186,8 @@ bat = { zsh = "bat --completion zsh", bash = "bat --completion bash", fish = "ba
 fd = { zsh = "fd --gen-completions zsh", bash = "fd --gen-completions bash", fish = "fd --gen-completions fish" }
 delta = { zsh = "delta --generate-completion zsh", bash = "delta --generate-completion bash", fish = "delta --generate-completion fish" }
 zellij = { zsh = "zellij setup --generate-completion zsh", bash = "zellij setup --generate-completion bash", fish = "zellij setup --generate-completion fish" }
-scaleway-cli = { completion_name = "scw", zsh = "scw autocomplete script shell=zsh", bash = "scw autocomplete script shell=bash", fish = "scw autocomplete script shell=fish" }
+# scw's zsh script runs compinit and has no #compdef line, so zsh never loads it from fpath
+scaleway-cli = { completion_name = "scw", bash = "scw autocomplete script shell=bash", fish = "scw autocomplete script shell=fish" }
 
 # rg has unique --generate complete-{shell} pattern
 rg = { zsh = "rg --generate complete-zsh", bash = "rg --generate complete-bash", fish = "rg --generate complete-fish" }
@@ -215,13 +220,15 @@ jj = { zsh = "env COMPLETE=zsh jj", bash = "env COMPLETE=bash jj", fish = "env C
 # fx requires --comp <shell>
 fx = { zsh = "fx --comp zsh", bash = "fx --comp bash", fish = "fx --comp fish" }
 
-# pkl requires shell-completion <shell>
-pkl = { zsh = "pkl shell-completion zsh", bash = "pkl shell-completion bash", fish = "pkl shell-completion fish" }
+# pkl requires shell-completion <shell>; its zsh script runs compinit and
+# registers through bashcompinit, so zsh never loads it from fpath
+pkl = { bash = "pkl shell-completion bash", fish = "pkl shell-completion fish" }
 
 # television provides the `tv` binary and requires init <shell>
 television = { completion_name = "tv", zsh = "tv init zsh", bash = "tv init bash", fish = "tv init fish" }
 
-# trash-cli requires --print-completion
+# trash-cli requires --print-completion, and prints completions only when
+# installed with its completion extra: pipx:trash-cli[extras=completion]
 trash = { provided_by = "trash-cli", zsh = "trash --print-completion zsh", bash = "trash --print-completion bash" }
 trash-empty = { provided_by = "trash-cli", zsh = "trash-empty --print-completion zsh", bash = "trash-empty --print-completion bash" }
 trash-list = { provided_by = "trash-cli", zsh = "trash-list --print-completion zsh", bash = "trash-list --print-completion bash" }
@@ -240,9 +247,11 @@ grafanactl = "aqua:grafana/grafanactl"
 hubble = "aqua:cilium/hubble"
 ipython = "pipx:ipython"
 kubectl-ai = "github:GoogleCloudPlatform/kubectl-ai"
+mise = "github:jdx/mise"
 mise-completions-sync = "github:alltuner/mise-completions-sync"
 openspec = "npm:@fission-ai/openspec"
 patool = "pipx:patool"
 ratarmount = "pipx:ratarmount"
-trash-cli = "pipx:trash-cli"
+trash-cli = "pipx:trash-cli[extras=completion]"
 whosthere = "github:ramonvermeulen/whosthere"
+zshellcheck = "github:afadesigns/zshellcheck"

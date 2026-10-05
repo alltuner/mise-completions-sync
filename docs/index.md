@@ -218,6 +218,9 @@ alone.
 Automatic sync and `--new-only` work the same way: a companion command is
 included whenever the tool that provides it is installed.
 
+trash-cli prints completions only when installed with its `completion` extra:
+`mise use -g "pipx:trash-cli[extras=completion]"`.
+
 ## License
 
 MIT
