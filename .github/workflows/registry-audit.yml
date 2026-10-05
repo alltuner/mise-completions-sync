@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: jdx/mise-action@v4
+      - uses: jdx/mise-action@v5
         with:
           # Only uv is needed to run the script; the audit installs the rest
           # itself, and caching those would both bloat the cache and let a stale
@@ -30,6 +30,10 @@ jobs:
 
       - name: Audit registry
         id: audit
+        env:
+          # mise-action keeps its token to itself, and the audit's installs
+          # would hit GitHub's unauthenticated rate limit without one.
+          MISE_GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -o pipefail
           uv run scripts/validate-registry.py --install 2>&1 | tee audit.log
