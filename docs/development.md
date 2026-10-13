@@ -39,7 +39,8 @@ If a tool you use isn't in the registry:
 1. Check if the tool supports completions (usually `tool completion --help`)
 2. Add an entry to `registry.toml`
 3. Run `mise run validate-registry` to verify it works
-4. Submit a PR
+4. Run `mise run docs-tools` to update tools documentation
+5. Submit a PR
 
 ### Registry Entry Format
 
