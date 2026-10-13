@@ -110,6 +110,9 @@ mytool = "standard"
 
 # override a built-in entry
 yq = { zsh = "yq shell-completion zsh" }
+
+# switch a built-in entry off
+usage = false
 ```
 
 Entries are merged with the built-in ones rather than replacing them, so the

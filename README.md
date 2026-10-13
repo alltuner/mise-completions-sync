@@ -175,11 +175,15 @@ mytool = "standard"
 
 # override a built-in entry
 yq = { zsh = "yq shell-completion zsh" }
+
+# switch a built-in entry off, e.g. when another source already completes it
+usage = false
 ```
 
 Your entries are merged with the built-in ones rather than replacing them, so a
-short file like the above adds `graphite-cli` and `mytool` and changes `yq`,
-while every other tool keeps working. `schema_version` is required.
+short file like the above adds `graphite-cli` and `mytool`, changes `yq` and
+skips `usage`, while every other tool keeps working. `schema_version` is
+required. `misecompsync clean` removes files left over from an entry you switched off.
 
 If an entry turns out to be generally useful, [open a PR](https://github.com/alltuner/mise-completions-sync/blob/main/registry.toml)
 so everyone gets it.

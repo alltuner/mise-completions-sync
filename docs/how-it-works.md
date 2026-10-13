@@ -77,12 +77,20 @@ mytool = "standard"
 
 # and you can override a built-in entry
 yq = { zsh = "yq shell-completion zsh" }
+
+# or switch one off, e.g. when another source already completes the tool
+usage = false
 ```
 
 Merging happens before patterns are resolved, so your entries can use the
 built-in patterns, and redefining a pattern reaches every tool that references
-it. `schema_version` is required. Entries can be added or overridden; there is
-no way to remove a built-in entry.
+it. `schema_version` is required.
+
+An entry set to `false` is skipped by sync, and `misecompsync clean` removes the
+files it wrote earlier, even while the tool stays installed. Only `false` is
+accepted; `true` is an error, since there is nothing for it to switch on.
+Switching off a tool doesn't switch off its companions: `uv = false` leaves
+`uvx` syncing while `uv` is installed.
 
 The executable's directory takes precedence over the XDG location, and only one
 user registry applies.
