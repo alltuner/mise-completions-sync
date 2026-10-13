@@ -410,6 +410,7 @@ mod tests {
             ("ripgrep", "rg"),
             ("scaleway-cli", "scw"),
             ("television", "tv"),
+            ("tlrc", "tldr"),
         ];
 
         let registry = load_registry().expect("Failed to load registry");

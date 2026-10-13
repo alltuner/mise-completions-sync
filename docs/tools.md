@@ -111,6 +111,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [task](https://github.com/go-task/task) | A task runner / simpler Make alternative writte... | ✓ | ✓ | ✓ |
 | [television](https://github.com/alexpasmantier/television) | The revolution will (not) be televised | ✓ | ✓ | ✓ |
 | [tilt](https://github.com/tilt-dev/tilt) | Define your dev environment as code. For micros... | ✓ | ✓ | ✓ |
+| [tlrc](https://github.com/tldr-pages/tlrc) | A tldr client written in Rust | ✓ | ✓ | ✓ |
 | [trash](https://github.com/andreafrancia/trash-cli) | Put files in trash | ✓ | ✓ |  |
 | [trash-empty](https://github.com/andreafrancia/trash-cli) | Empty trash | ✓ | ✓ |  |
 | [trash-list](https://github.com/andreafrancia/trash-cli) | List trashed files | ✓ | ✓ |  |
@@ -133,7 +134,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | A smarter cd command. Supports all major shells | ✓ | ✓ | ✓ |
 | zshellcheck |  | ✓ | ✓ |  |
 
-**Total: 128 tools**
+**Total: 129 tools**
 
 ## Shell Support Legend
 
