@@ -34,6 +34,9 @@ pub enum Error {
     #[error("unknown pattern '{1}' for tool '{0}'")]
     UnknownPattern(String, String),
 
+    #[error("registry at {0} sets '{1}' to true; only `{1} = false` is supported, to switch a built-in entry off")]
+    ToolSetToTrue(PathBuf, String),
+
     #[error("registry schema version {found} is not supported (expected {expected})")]
     IncompatibleSchema { found: u32, expected: u32 },
 
@@ -605,11 +608,31 @@ fn entries_by_completion_name(
     by_name
 }
 
-/// Remove completions for tools that are no longer installed
+/// Whether the completion file for `completion_name` should be removed.
+///
+/// The file belongs to every enabled entry that would write it, so it is stale
+/// once none of them is installed. A file only switched-off entries write is
+/// always stale; files the registry knows nothing about are never touched.
+fn is_stale(
+    registry: &registry::Registry,
+    completion_name: &str,
+    installed_tools: &HashMap<String, String>,
+) -> bool {
+    match entries_by_completion_name(registry).get(completion_name) {
+        Some(writers) => writers
+            .iter()
+            .all(|(name, entry)| !is_tool_installed(name, entry, installed_tools)),
+        None => registry
+            .disabled
+            .iter()
+            .any(|(name, entry)| completion_output_name(name, entry) == completion_name),
+    }
+}
+
+/// Remove completions for tools that are no longer installed or were switched off
 pub fn clean_stale_completions(dirs: &CompletionsDirs, flags: MiseLsFlags) -> Result<(), Error> {
     let registry = registry::load_registry()?;
     let installed_map = get_installed_tools(flags)?;
-    let writers = entries_by_completion_name(&registry);
 
     let shells = ["zsh", "bash", "fish"];
     let mut removed = 0;
@@ -628,13 +651,8 @@ pub fn clean_stale_completions(dirs: &CompletionsDirs, flags: MiseLsFlags) -> Re
                 // Extract tool name from filename
                 let tool = shells::tool_from_filename(shell, filename);
                 if let Some(tool) = tool {
-                    // The file belongs to every entry that would write it, so it
-                    // is stale only once none of them is installed.
-                    if writers.get(tool.as_str()).is_some_and(|entries| {
-                        entries
-                            .iter()
-                            .all(|(name, entry)| !is_tool_installed(name, entry, &installed_map))
-                    }) && std::fs::remove_file(&path).is_ok()
+                    if is_stale(&registry, &tool, &installed_map)
+                        && std::fs::remove_file(&path).is_ok()
                     {
                         println!("Removed: {}", path.display());
                         removed += 1;
@@ -739,6 +757,7 @@ mod tests {
                 ("uv".to_string(), test_tool_entry(None)),
                 ("uvx".to_string(), test_tool_entry(Some("uv"))),
             ]),
+            disabled: HashMap::new(),
         }
     }
 
@@ -1149,6 +1168,7 @@ mod tests {
     fn test_specific_sync_targets_expand_children_of_unregistered_provider() {
         let registry = registry::Registry {
             tools: HashMap::from([("uvx".to_string(), test_tool_entry(Some("uv")))]),
+            disabled: HashMap::new(),
         };
 
         assert_eq!(
@@ -1187,6 +1207,7 @@ mod tests {
     fn test_completion_name_decides_where_an_entry_is_grouped() {
         let registry = registry::Registry {
             tools: HashMap::from([("television".to_string(), entry_named(Some("tv")))]),
+            disabled: HashMap::new(),
         };
 
         let by_name = entries_by_completion_name(&registry);
@@ -1202,6 +1223,7 @@ mod tests {
                 ("rg".to_string(), entry_named(None)),
                 ("ripgrep".to_string(), entry_named(Some("rg"))),
             ]),
+            disabled: HashMap::new(),
         };
 
         let by_name = entries_by_completion_name(&registry);
@@ -1220,16 +1242,45 @@ mod tests {
                 ("rg".to_string(), entry_named(None)),
                 ("ripgrep".to_string(), entry_named(Some("rg"))),
             ]),
-        };
-        let by_name = entries_by_completion_name(&registry);
-        let stale = |installed: &HashMap<String, String>| {
-            by_name["rg"]
-                .iter()
-                .all(|(name, entry)| !is_tool_installed(name, entry, installed))
+            disabled: HashMap::new(),
         };
 
         let via_ripgrep = HashMap::from([("ripgrep".to_string(), "ripgrep".to_string())]);
-        assert!(!stale(&via_ripgrep));
-        assert!(stale(&HashMap::new()));
+        assert!(!is_stale(&registry, "rg", &via_ripgrep));
+        assert!(is_stale(&registry, "rg", &HashMap::new()));
+    }
+
+    #[test]
+    fn test_a_file_outside_the_registry_is_never_stale() {
+        let registry = registry::Registry {
+            tools: HashMap::new(),
+            disabled: HashMap::new(),
+        };
+
+        assert!(!is_stale(&registry, "handwritten", &HashMap::new()));
+    }
+
+    #[test]
+    fn test_a_disabled_entry_file_is_stale_even_while_installed() {
+        // The user switched the entry off to get rid of its file, e.g. because
+        // another source already provides completions for the tool.
+        let registry = registry::Registry {
+            tools: HashMap::new(),
+            disabled: HashMap::from([("television".to_string(), entry_named(Some("tv")))]),
+        };
+        let installed = HashMap::from([("television".to_string(), "television".to_string())]);
+
+        assert!(is_stale(&registry, "tv", &installed));
+    }
+
+    #[test]
+    fn test_a_disabled_entry_file_stays_while_an_enabled_writer_is_installed() {
+        let registry = registry::Registry {
+            tools: HashMap::from([("ripgrep".to_string(), entry_named(Some("rg")))]),
+            disabled: HashMap::from([("rg".to_string(), entry_named(None))]),
+        };
+        let installed = HashMap::from([("ripgrep".to_string(), "ripgrep".to_string())]);
+
+        assert!(!is_stale(&registry, "rg", &installed));
     }
 }
