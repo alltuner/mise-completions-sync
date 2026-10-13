@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.5.19](https://github.com/alltuner/mise-completions-sync/compare/v0.5.18...v0.5.19) (2026-10-13)
+
+
+### Features
+
+* **registry:** add tlrc ([#182](https://github.com/alltuner/mise-completions-sync/issues/182)) ([203709e](https://github.com/alltuner/mise-completions-sync/commit/203709e959ff20a30b3abca55c5b3a7b03345a53))
+* **registry:** switch off a built-in entry with `tool = false` in the user registry ([#186](https://github.com/alltuner/mise-completions-sync/issues/186)) ([c02aee5](https://github.com/alltuner/mise-completions-sync/commit/c02aee59e8eeab5f3f9742690fdf963a166b5dc8))
+
+
+### Bug Fixes
+
+* **docs:** keep hand-curated cf and trash-cli metadata when regenerating tools.md ([#184](https://github.com/alltuner/mise-completions-sync/issues/184)) ([3926c12](https://github.com/alltuner/mise-completions-sync/commit/3926c127810c84781b5581da1cd89d9c3054ec7e))
+* **registry:** repair opencode and docker, drop nix ([#185](https://github.com/alltuner/mise-completions-sync/issues/185)) ([fa5ce14](https://github.com/alltuner/mise-completions-sync/commit/fa5ce14cf227de022b2aca0252612e3bda4c8daa)), closes [#181](https://github.com/alltuner/mise-completions-sync/issues/181)
+
+
+### Miscellaneous Chores
+
+* **deps:** update astral-sh/setup-uv action to v10.3.0 ([#180](https://github.com/alltuner/mise-completions-sync/issues/180)) ([a383c3b](https://github.com/alltuner/mise-completions-sync/commit/a383c3b210398773f4e3a4a360513dbe6262f6ac))
+* **deps:** update rust dependencies ([#179](https://github.com/alltuner/mise-completions-sync/issues/179)) ([0a167b7](https://github.com/alltuner/mise-completions-sync/commit/0a167b735475ef9d660361d43f00217e8191796a))
+
+
+### Documentation Updates
+
+* add docs-tools step ([#183](https://github.com/alltuner/mise-completions-sync/issues/183)) ([fc01c41](https://github.com/alltuner/mise-completions-sync/commit/fc01c41ee3a39c91ba982b50017b44c073a34979))
+
 ## [0.5.18](https://github.com/alltuner/mise-completions-sync/compare/v0.5.17...v0.5.18) (2026-10-05)
 
 
