@@ -23,7 +23,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [delta](https://github.com/dandavison/delta) | A syntax-highlighting pager for git, diff, and ... | ✓ | ✓ | ✓ |
 | deno | A modern runtime for JavaScript and TypeScript ... | ✓ | ✓ | ✓ |
 | [dive](https://github.com/wagoodman/dive) | A tool for exploring each layer in a docker image | ✓ | ✓ | ✓ |
-| docker |  | ✓ | ✓ | ✓ |
+| [docker-cli](https://github.com/docker/cli) | Docker CE CLI | ✓ | ✓ | ✓ |
 | dockerfmt |  | ✓ | ✓ | ✓ |
 | [doctl](https://github.com/digitalocean/doctl) | The official command line interface for the Dig... | ✓ | ✓ | ✓ |
 | [doggo](https://github.com/mr-karan/doggo) | :dog: Command-line DNS Client for Humans. Writt... | ✓ | ✓ | ✓ |
@@ -61,7 +61,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [ko](https://github.com/ko-build/ko) | Build and deploy Go applications on Kubernetes | ✓ | ✓ | ✓ |
 | [kubectl](https://github.com/kubernetes/kubernetes) | kubectl cli | ✓ | ✓ | ✓ |
 | kubectl-ai |  | ✓ | ✓ | ✓ |
-| [kubeseal](https://github.com/bitnami-labs/sealed-secrets) | A Kubernetes controller and tool for one-way en... | ✓ | ✓ | ✓ |
+| [kubeseal](https://github.com/bitnami/sealed-secrets) | A Kubernetes controller and tool for one-way en... | ✓ | ✓ | ✓ |
 | [kustomize](https://github.com/kubernetes-sigs/kustomize) | Customization of kubernetes YAML configurations | ✓ | ✓ | ✓ |
 | [lazygit](https://github.com/jesseduffield/lazygit) | simple terminal UI for git commands | ✓ | ✓ | ✓ |
 | [lefthook](https://github.com/evilmartians/lefthook) | Fast and powerful Git hooks manager for any typ... | ✓ | ✓ | ✓ |
@@ -72,12 +72,11 @@ The following tools have shell completion support in mise-completions-sync.
 | mise |  | ✓ | ✓ | ✓ |
 | mise-completions-sync |  | ✓ | ✓ | ✓ |
 | [nerdctl](https://github.com/containerd/nerdctl) | contaiNERD CTL - Docker-compatible CLI for cont... | ✓ | ✓ | ✓ |
-| nix |  | ✓ | ✓ | ✓ |
 | [nova](https://github.com/FairwindsOps/nova) | Find outdated or deprecated Helm charts running... | ✓ | ✓ | ✓ |
 | [npm](https://github.com/npm/cli) | the package manager for JavaScript |  | ✓ |  |
 | oc | OpenShift Client CLI (oc) | ✓ | ✓ | ✓ |
 | oci | Oracle Cloud Infrastructure CLI | ✓ | ✓ | ✓ |
-| [opencode](https://github.com/anomalyco/opencode) | AI coding agent, built for the terminal | ✓ | ✓ | ✓ |
+| [opencode](https://github.com/anomalyco/opencode) | AI coding agent, built for the terminal | ✓ | ✓ |  |
 | openspec |  | ✓ | ✓ | ✓ |
 | [oras](https://github.com/oras-project/oras) | ORAS CLI | ✓ | ✓ | ✓ |
 | patool |  | ✓ | ✓ | ✓ |
@@ -123,7 +122,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [usage](https://github.com/jdx/usage) | A specification for CLIs | ✓ | ✓ | ✓ |
 | [uv](https://github.com/astral-sh/uv) | An extremely fast Python package installer and ... | ✓ | ✓ | ✓ |
 | uvx |  | ✓ | ✓ | ✓ |
-| [velero](https://github.com/vmware-tanzu/velero) | Backup and migrate Kubernetes applications and ... | ✓ | ✓ | ✓ |
+| [velero](https://github.com/velero-io/velero) | Backup and migrate Kubernetes applications and ... | ✓ | ✓ | ✓ |
 | [watchexec](https://github.com/watchexec/watchexec) | Executes commands in response to file modificat... | ✓ | ✓ | ✓ |
 | whosthere |  | ✓ | ✓ | ✓ |
 | [xh](https://github.com/ducaale/xh) | Friendly and fast tool for sending HTTP requests | ✓ | ✓ | ✓ |
@@ -134,7 +133,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | A smarter cd command. Supports all major shells | ✓ | ✓ | ✓ |
 | zshellcheck |  | ✓ | ✓ |  |
 
-**Total: 129 tools**
+**Total: 128 tools**
 
 ## Shell Support Legend
 

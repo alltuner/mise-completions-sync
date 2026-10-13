@@ -306,6 +306,42 @@ mod tests {
     }
 
     #[test]
+    fn test_nix_removed() {
+        // mise cannot install nix, and sync only acts on tools mise lists.
+        let registry = load_registry().expect("Failed to load registry");
+        assert!(!registry.tools.contains_key("nix"));
+    }
+
+    #[test]
+    fn test_opencode_pins_shell_per_command() {
+        // Regression: opencode's yargs completion ignores its argument and picks
+        // the script from $SHELL, so a zsh user got the zsh script in every shell.
+        // yargs has no fish script at all.
+        let registry = load_registry().expect("Failed to load registry");
+        let opencode = &registry.tools["opencode"].completions;
+        assert_eq!(
+            opencode.zsh.as_deref(),
+            Some("env SHELL=zsh opencode completion")
+        );
+        assert_eq!(
+            opencode.bash.as_deref(),
+            Some("env SHELL=bash opencode completion")
+        );
+        assert_eq!(opencode.fish, None);
+    }
+
+    #[test]
+    fn test_docker_is_keyed_on_docker_cli() {
+        // mise has no bare `docker` tool; its docker CLI is `docker-cli`.
+        let registry = load_registry().expect("Failed to load registry");
+        assert!(!registry.tools.contains_key("docker"));
+        assert_eq!(
+            registry.tools["docker-cli"].completions.zsh.as_deref(),
+            Some("docker completion zsh")
+        );
+    }
+
+    #[test]
     fn test_hyperfine_is_bundled() {
         // hyperfine ships completion files in its download rather than having a
         // command, so the per-shell values are filenames to find, not commands.
@@ -334,6 +370,7 @@ mod tests {
         let expected = [
             ("asdf-hishtory", "hishtory"),
             ("cilium-hubble", "hubble"),
+            ("docker-cli", "docker"),
             ("flux2", "flux"),
             ("forgejo-cli", "fj"),
             ("mise-completions-sync", "misecompsync"),
