@@ -61,7 +61,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [ko](https://github.com/ko-build/ko) | Build and deploy Go applications on Kubernetes | ✓ | ✓ | ✓ |
 | [kubectl](https://github.com/kubernetes/kubernetes) | kubectl cli | ✓ | ✓ | ✓ |
 | kubectl-ai |  | ✓ | ✓ | ✓ |
-| [kubeseal](https://github.com/bitnami-labs/sealed-secrets) | A Kubernetes controller and tool for one-way en... | ✓ | ✓ | ✓ |
+| [kubeseal](https://github.com/bitnami/sealed-secrets) | A Kubernetes controller and tool for one-way en... | ✓ | ✓ | ✓ |
 | [kustomize](https://github.com/kubernetes-sigs/kustomize) | Customization of kubernetes YAML configurations | ✓ | ✓ | ✓ |
 | [lazygit](https://github.com/jesseduffield/lazygit) | simple terminal UI for git commands | ✓ | ✓ | ✓ |
 | [lefthook](https://github.com/evilmartians/lefthook) | Fast and powerful Git hooks manager for any typ... | ✓ | ✓ | ✓ |
@@ -123,7 +123,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [usage](https://github.com/jdx/usage) | A specification for CLIs | ✓ | ✓ | ✓ |
 | [uv](https://github.com/astral-sh/uv) | An extremely fast Python package installer and ... | ✓ | ✓ | ✓ |
 | uvx |  | ✓ | ✓ | ✓ |
-| [velero](https://github.com/vmware-tanzu/velero) | Backup and migrate Kubernetes applications and ... | ✓ | ✓ | ✓ |
+| [velero](https://github.com/velero-io/velero) | Backup and migrate Kubernetes applications and ... | ✓ | ✓ | ✓ |
 | [watchexec](https://github.com/watchexec/watchexec) | Executes commands in response to file modificat... | ✓ | ✓ | ✓ |
 | whosthere |  | ✓ | ✓ | ✓ |
 | [xh](https://github.com/ducaale/xh) | Friendly and fast tool for sending HTTP requests | ✓ | ✓ | ✓ |
