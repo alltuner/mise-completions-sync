@@ -16,6 +16,19 @@ import subprocess
 import tomllib
 from pathlib import Path
 
+TRASH_CLI_URL = "https://github.com/andreafrancia/trash-cli"
+
+# (GitHub URL, description) for tools mise's registry describes wrongly or not
+# at all: its bare `cf` is Cloud Foundry, and it has no trash-cli entry.
+METADATA_OVERRIDES: dict[str, tuple[str, str]] = {
+    "cf": ("https://github.com/cloudflare/cf", "Cloudflare's command line client"),
+    "trash": (TRASH_CLI_URL, "Put files in trash"),
+    "trash-empty": (TRASH_CLI_URL, "Empty trash"),
+    "trash-list": (TRASH_CLI_URL, "List trashed files"),
+    "trash-put": (TRASH_CLI_URL, "Put files in trash"),
+    "trash-restore": (TRASH_CLI_URL, "Restore trashed file"),
+}
+
 
 def get_mise_registry() -> dict[str, dict]:
     """Fetch tool metadata from mise's registry."""
@@ -78,15 +91,18 @@ def main():
             bash = "✓" if config.get("bash") else ""
             fish = "✓" if config.get("fish") else ""
 
-        # Get metadata from mise registry
-        meta = mise_registry.get(tool, {})
-        description = meta.get("description", "")
+        if tool in METADATA_OVERRIDES:
+            github_url, description = METADATA_OVERRIDES[tool]
+        else:
+            meta = mise_registry.get(tool, {})
+            description = meta.get("description", "")
+            github_url = get_github_url(meta.get("backends", []))
+
         # Truncate long descriptions
         if len(description) > 50:
             description = description[:47] + "..."
 
         # Try to create a linked tool name
-        github_url = get_github_url(meta.get("backends", []))
         if github_url:
             tool_display = f"[{tool}]({github_url})"
         else:

@@ -110,6 +110,9 @@ mytool = "standard"
 
 # override a built-in entry
 yq = { zsh = "yq shell-completion zsh" }
+
+# switch a built-in entry off
+usage = false
 ```
 
 Entries are merged with the built-in ones rather than replacing them, so the
@@ -183,7 +186,7 @@ misecompsync list
 # Show completion directory for a shell
 misecompsync dir zsh
 
-# Clean up completions for uninstalled tools
+# Clean up completions for uninstalled or switched-off tools
 misecompsync clean
 ```
 

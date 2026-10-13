@@ -11,7 +11,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [bat](https://github.com/sharkdp/bat) | A cat(1) clone with wings | ✓ | ✓ | ✓ |
 | bun | Bun is a fast JavaScript all-in-one toolkit | ✓ | ✓ | ✓ |
 | cargo |  | ✓ | ✓ |  |
-| cf | The official command line client for Cloud Foundry | ✓ | ✓ | ✓ |
+| [cf](https://github.com/cloudflare/cf) | Cloudflare's command line client | ✓ | ✓ | ✓ |
 | [chezmoi](https://github.com/twpayne/chezmoi) | Manage your dotfiles across multiple diverse ma... | ✓ | ✓ | ✓ |
 | [cilium-hubble](https://github.com/cilium/hubble) | Hubble - Network, Service & Security Observabil... | ✓ | ✓ | ✓ |
 | [clusterctl](https://github.com/kubernetes-sigs/cluster-api) | Home for Cluster API, a subproject of sig-clust... | ✓ | ✓ | ✓ |
@@ -23,7 +23,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [delta](https://github.com/dandavison/delta) | A syntax-highlighting pager for git, diff, and ... | ✓ | ✓ | ✓ |
 | deno | A modern runtime for JavaScript and TypeScript ... | ✓ | ✓ | ✓ |
 | [dive](https://github.com/wagoodman/dive) | A tool for exploring each layer in a docker image | ✓ | ✓ | ✓ |
-| docker |  | ✓ | ✓ | ✓ |
+| [docker-cli](https://github.com/docker/cli) | Docker CE CLI | ✓ | ✓ | ✓ |
 | dockerfmt |  | ✓ | ✓ | ✓ |
 | [doctl](https://github.com/digitalocean/doctl) | The official command line interface for the Dig... | ✓ | ✓ | ✓ |
 | [doggo](https://github.com/mr-karan/doggo) | :dog: Command-line DNS Client for Humans. Writt... | ✓ | ✓ | ✓ |
@@ -72,12 +72,11 @@ The following tools have shell completion support in mise-completions-sync.
 | mise |  | ✓ | ✓ | ✓ |
 | mise-completions-sync |  | ✓ | ✓ | ✓ |
 | [nerdctl](https://github.com/containerd/nerdctl) | contaiNERD CTL - Docker-compatible CLI for cont... | ✓ | ✓ | ✓ |
-| nix |  | ✓ | ✓ | ✓ |
 | [nova](https://github.com/FairwindsOps/nova) | Find outdated or deprecated Helm charts running... | ✓ | ✓ | ✓ |
 | [npm](https://github.com/npm/cli) | the package manager for JavaScript |  | ✓ |  |
 | oc | OpenShift Client CLI (oc) | ✓ | ✓ | ✓ |
 | oci | Oracle Cloud Infrastructure CLI | ✓ | ✓ | ✓ |
-| [opencode](https://github.com/anomalyco/opencode) | AI coding agent, built for the terminal | ✓ | ✓ | ✓ |
+| [opencode](https://github.com/anomalyco/opencode) | AI coding agent, built for the terminal | ✓ | ✓ |  |
 | openspec |  | ✓ | ✓ | ✓ |
 | [oras](https://github.com/oras-project/oras) | ORAS CLI | ✓ | ✓ | ✓ |
 | patool |  | ✓ | ✓ | ✓ |
@@ -113,11 +112,11 @@ The following tools have shell completion support in mise-completions-sync.
 | [television](https://github.com/alexpasmantier/television) | The revolution will (not) be televised | ✓ | ✓ | ✓ |
 | [tilt](https://github.com/tilt-dev/tilt) | Define your dev environment as code. For micros... | ✓ | ✓ | ✓ |
 | [tlrc](https://github.com/tldr-pages/tlrc) | A tldr client written in Rust | ✓ | ✓ | ✓ |
-| trash |  | ✓ | ✓ |  |
-| trash-empty |  | ✓ | ✓ |  |
-| trash-list |  | ✓ | ✓ |  |
-| trash-put |  | ✓ | ✓ |  |
-| trash-restore |  | ✓ | ✓ |  |
+| [trash](https://github.com/andreafrancia/trash-cli) | Put files in trash | ✓ | ✓ |  |
+| [trash-empty](https://github.com/andreafrancia/trash-cli) | Empty trash | ✓ | ✓ |  |
+| [trash-list](https://github.com/andreafrancia/trash-cli) | List trashed files | ✓ | ✓ |  |
+| [trash-put](https://github.com/andreafrancia/trash-cli) | Put files in trash | ✓ | ✓ |  |
+| [trash-restore](https://github.com/andreafrancia/trash-cli) | Restore trashed file | ✓ | ✓ |  |
 | [tree-sitter](https://github.com/tree-sitter/tree-sitter) | An incremental parsing system for programming t... | ✓ | ✓ | ✓ |
 | [trivy](https://github.com/aquasecurity/trivy) | Find vulnerabilities, misconfigurations, secret... | ✓ | ✓ | ✓ |
 | [ty](https://github.com/astral-sh/ty) | An extremely fast Python type checker and langu... | ✓ | ✓ | ✓ |
@@ -135,7 +134,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | A smarter cd command. Supports all major shells | ✓ | ✓ | ✓ |
 | zshellcheck |  | ✓ | ✓ |  |
 
-**Total: 130 tools**
+**Total: 129 tools**
 
 ## Shell Support Legend
 

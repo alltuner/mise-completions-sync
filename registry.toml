@@ -22,7 +22,8 @@ generate_complete = { zsh = "{} --generate=complete-zsh", bash = "{} --generate=
 mise = "standard"
 kubectl = "standard"
 helm = "standard"
-docker = "standard"
+# mise calls the docker CLI docker-cli
+docker-cli = { completion_name = "docker", zsh = "docker completion zsh", bash = "docker completion bash", fish = "docker completion fish" }
 gh = "gh_style"
 glab = "gh_style"
 
@@ -119,7 +120,6 @@ lazygit = "standard"
 lefthook = "standard"
 oc = "standard"
 mermaid-ascii = "standard"
-opencode = "standard"
 pulumi = "standard"
 rumdl = "completions"
 step = "standard"
@@ -144,6 +144,9 @@ forgejo-cli = { completion_name = "fj", zsh = "fj completion zsh", bash = "fj co
 
 # bun picks the script from $SHELL, so pin it per shell
 bun = { zsh = "env SHELL=zsh bun completions", bash = "env SHELL=bash bun completions", fish = "env SHELL=fish bun completions" }
+# opencode (yargs) ignores its argument and picks the script from $SHELL too;
+# yargs has no fish script
+opencode = { zsh = "env SHELL=zsh opencode completion", bash = "env SHELL=bash opencode completion" }
 
 # mise installs this tool as flux2, but the binary it provides is named flux.
 flux2 = { completion_name = "flux", zsh = "flux completion zsh", bash = "flux completion bash", fish = "flux completion fish" }
@@ -175,6 +178,8 @@ prek = { zsh = "prek util generate-shell-completion zsh", bash = "prek util gene
 # them. The per-shell value is the filename to look for, not a command.
 hyperfine = { bundled = true, zsh = "_hyperfine", bash = "hyperfine.bash", fish = "hyperfine.fish" }
 killport = { bundled = true, zsh = "_killport", bash = "killport.bash", fish = "killport.fish" }
+# tlrc installs `tldr`; only its release archive (aqua) ships these files, a
+# cargo:tlrc build has none
 tlrc = { completion_name = "tldr", bundled = true, zsh = "_tldr", bash = "tldr.bash", fish = "tldr.fish" }
 yazi = { bundled = true, zsh = "_yazi", bash = "yazi.bash", fish = "yazi.fish" }
 ya = { provided_by = "yazi", bundled = true, zsh = "_ya", bash = "ya.bash", fish = "ya.fish" }
@@ -193,9 +198,6 @@ scaleway-cli = { completion_name = "scw", bash = "scw autocomplete script shell=
 # rg has unique --generate complete-{shell} pattern
 rg = { zsh = "rg --generate complete-zsh", bash = "rg --generate complete-bash", fish = "rg --generate complete-fish" }
 ripgrep = { completion_name = "rg", zsh = "rg --generate complete-zsh", bash = "rg --generate complete-bash", fish = "rg --generate complete-fish" }
-
-# nix needs extra experimental features flag
-nix = { zsh = "nix --extra-experimental-features 'nix-command' completion zsh 2>/dev/null || true", bash = "nix --extra-experimental-features 'nix-command' completion bash 2>/dev/null || true", fish = "nix --extra-experimental-features 'nix-command' completion fish 2>/dev/null || true" }
 
 # tree-sitter has unique complete --shell {shell} pattern
 tree-sitter = { zsh = "tree-sitter complete --shell zsh", bash = "tree-sitter complete --shell bash", fish = "tree-sitter complete --shell fish" }

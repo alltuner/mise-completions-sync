@@ -20,11 +20,13 @@ struct RawRegistry {
     tools: HashMap<String, RawToolEntry>,
 }
 
-/// A tool entry: either a pattern name or explicit shell commands
+/// A tool entry: a pattern name, explicit shell commands, or `false` to switch
+/// off a built-in entry
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 enum RawToolEntry {
     Pattern(String),
+    Enabled(bool),
     Explicit(ExplicitToolEntry),
 }
 
@@ -39,6 +41,9 @@ struct ExplicitToolEntry {
 #[derive(Debug)]
 pub struct Registry {
     pub tools: HashMap<String, ToolEntry>,
+    /// Built-in entries the user registry switched off, kept so `clean` can find
+    /// the files they wrote.
+    pub disabled: HashMap<String, ToolEntry>,
 }
 
 #[derive(Debug, Clone)]
@@ -148,6 +153,14 @@ fn parse_raw(content: &str, path_for_error: PathBuf) -> Result<RawRegistry, Erro
         Some(_) => {}
     }
 
+    if let Some((tool, _)) = raw
+        .tools
+        .iter()
+        .find(|(_, entry)| matches!(entry, RawToolEntry::Enabled(true)))
+    {
+        return Err(Error::ToolSetToTrue(path_for_error, tool.clone()));
+    }
+
     Ok(raw)
 }
 
@@ -155,16 +168,32 @@ fn parse_raw(content: &str, path_for_error: PathBuf) -> Result<RawRegistry, Erro
 ///
 /// Merging happens before patterns are resolved, so a user entry can reference
 /// a built-in pattern, and redefining a pattern reaches the tools that use it.
+/// A user entry set to `false` moves the built-in entry to `disabled`.
 fn build_registry(embedded: &str, user: Option<(&str, PathBuf)>) -> Result<Registry, Error> {
     let mut raw = parse_raw(embedded, PathBuf::from("<embedded>"))?;
+    let mut switched_off = Vec::new();
 
     if let Some((content, path)) = user {
         let overlay = parse_raw(content, path)?;
         raw.patterns.extend(overlay.patterns);
-        raw.tools.extend(overlay.tools);
+        for (tool_name, entry) in overlay.tools {
+            match entry {
+                RawToolEntry::Enabled(_) => switched_off.push(tool_name),
+                entry => {
+                    raw.tools.insert(tool_name, entry);
+                }
+            }
+        }
     }
 
-    expand(raw)
+    let mut registry = expand(raw)?;
+    for tool_name in switched_off {
+        if let Some(entry) = registry.tools.remove(&tool_name) {
+            registry.disabled.insert(tool_name, entry);
+        }
+    }
+
+    Ok(registry)
 }
 
 fn expand(raw: RawRegistry) -> Result<Registry, Error> {
@@ -172,6 +201,7 @@ fn expand(raw: RawRegistry) -> Result<Registry, Error> {
 
     for (tool_name, entry) in raw.tools {
         let entry = match entry {
+            RawToolEntry::Enabled(_) => continue,
             RawToolEntry::Pattern(pattern_name) => {
                 let pattern = raw.patterns.get(&pattern_name).ok_or_else(|| {
                     Error::UnknownPattern(tool_name.clone(), pattern_name.clone())
@@ -189,7 +219,10 @@ fn expand(raw: RawRegistry) -> Result<Registry, Error> {
         tools.insert(tool_name, entry);
     }
 
-    Ok(Registry { tools })
+    Ok(Registry {
+        tools,
+        disabled: HashMap::new(),
+    })
 }
 
 #[cfg(test)]
@@ -306,6 +339,42 @@ mod tests {
     }
 
     #[test]
+    fn test_nix_removed() {
+        // mise cannot install nix, and sync only acts on tools mise lists.
+        let registry = load_registry().expect("Failed to load registry");
+        assert!(!registry.tools.contains_key("nix"));
+    }
+
+    #[test]
+    fn test_opencode_pins_shell_per_command() {
+        // Regression: opencode's yargs completion ignores its argument and picks
+        // the script from $SHELL, so a zsh user got the zsh script in every shell.
+        // yargs has no fish script at all.
+        let registry = load_registry().expect("Failed to load registry");
+        let opencode = &registry.tools["opencode"].completions;
+        assert_eq!(
+            opencode.zsh.as_deref(),
+            Some("env SHELL=zsh opencode completion")
+        );
+        assert_eq!(
+            opencode.bash.as_deref(),
+            Some("env SHELL=bash opencode completion")
+        );
+        assert_eq!(opencode.fish, None);
+    }
+
+    #[test]
+    fn test_docker_is_keyed_on_docker_cli() {
+        // mise has no bare `docker` tool; its docker CLI is `docker-cli`.
+        let registry = load_registry().expect("Failed to load registry");
+        assert!(!registry.tools.contains_key("docker"));
+        assert_eq!(
+            registry.tools["docker-cli"].completions.zsh.as_deref(),
+            Some("docker completion zsh")
+        );
+    }
+
+    #[test]
     fn test_hyperfine_is_bundled() {
         // hyperfine ships completion files in its download rather than having a
         // command, so the per-shell values are filenames to find, not commands.
@@ -334,12 +403,14 @@ mod tests {
         let expected = [
             ("asdf-hishtory", "hishtory"),
             ("cilium-hubble", "hubble"),
+            ("docker-cli", "docker"),
             ("flux2", "flux"),
             ("forgejo-cli", "fj"),
             ("mise-completions-sync", "misecompsync"),
             ("ripgrep", "rg"),
             ("scaleway-cli", "scw"),
             ("television", "tv"),
+            ("tlrc", "tldr"),
         ];
 
         let registry = load_registry().expect("Failed to load registry");
@@ -502,6 +573,71 @@ standard = { zsh = "{} --fixed-completions zsh" }
             registry.tools["builtin"].completions.zsh.as_deref(),
             Some("builtin --fixed-completions zsh")
         );
+    }
+
+    #[test]
+    fn test_user_entry_set_to_false_disables_a_builtin() {
+        let registry = overlaid(
+            r#"
+schema_version = 1
+
+[tools]
+override_me = false
+"#,
+        );
+
+        assert!(!registry.tools.contains_key("override_me"));
+        assert!(registry.tools.contains_key("builtin"));
+    }
+
+    #[test]
+    fn test_disabled_builtin_keeps_its_resolved_entry() {
+        // clean needs the built-in entry, completion_name included, to find the
+        // file it wrote before the user switched it off.
+        let registry = overlaid(
+            r#"
+schema_version = 1
+
+[tools]
+builtin = false
+"#,
+        );
+
+        assert_eq!(
+            registry.disabled["builtin"].completions.zsh.as_deref(),
+            Some("builtin completion zsh")
+        );
+    }
+
+    #[test]
+    fn test_disabling_an_unknown_tool_is_harmless() {
+        let registry = overlaid(
+            r#"
+schema_version = 1
+
+[tools]
+not_a_builtin = false
+"#,
+        );
+
+        assert!(!registry.tools.contains_key("not_a_builtin"));
+        assert!(!registry.disabled.contains_key("not_a_builtin"));
+        assert_eq!(registry.tools.len(), 2);
+    }
+
+    #[test]
+    fn test_user_entry_set_to_true_is_rejected() {
+        // `true` has nothing to switch on; accepting it would hide a typo.
+        let err = build_registry(
+            BASE,
+            Some((
+                "schema_version = 1\n[tools]\nbuiltin = true\n",
+                PathBuf::from("<user>"),
+            )),
+        )
+        .expect_err("a tool set to true should be rejected");
+
+        assert!(matches!(err, Error::ToolSetToTrue(_, ref tool) if tool == "builtin"));
     }
 
     #[test]
