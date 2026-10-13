@@ -186,7 +186,7 @@ misecompsync list
 # Show completion directory for a shell
 misecompsync dir zsh
 
-# Clean up completions for uninstalled tools
+# Clean up completions for uninstalled or switched-off tools
 misecompsync clean
 ```
 

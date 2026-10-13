@@ -70,7 +70,7 @@ misecompsync uv
 # List supported tools
 misecompsync list
 
-# Clean up completions for uninstalled tools
+# Clean up completions for uninstalled or switched-off tools
 misecompsync clean
 
 # Print misecompsync's own completions to stdout
