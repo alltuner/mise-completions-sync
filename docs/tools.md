@@ -23,7 +23,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [delta](https://github.com/dandavison/delta) | A syntax-highlighting pager for git, diff, and ... | ✓ | ✓ | ✓ |
 | deno | A modern runtime for JavaScript and TypeScript ... | ✓ | ✓ | ✓ |
 | [dive](https://github.com/wagoodman/dive) | A tool for exploring each layer in a docker image | ✓ | ✓ | ✓ |
-| docker |  | ✓ | ✓ | ✓ |
+| [docker-cli](https://github.com/docker/cli) | Docker CE CLI | ✓ | ✓ | ✓ |
 | dockerfmt |  | ✓ | ✓ | ✓ |
 | [doctl](https://github.com/digitalocean/doctl) | The official command line interface for the Dig... | ✓ | ✓ | ✓ |
 | [doggo](https://github.com/mr-karan/doggo) | :dog: Command-line DNS Client for Humans. Writt... | ✓ | ✓ | ✓ |
@@ -72,12 +72,11 @@ The following tools have shell completion support in mise-completions-sync.
 | mise |  | ✓ | ✓ | ✓ |
 | mise-completions-sync |  | ✓ | ✓ | ✓ |
 | [nerdctl](https://github.com/containerd/nerdctl) | contaiNERD CTL - Docker-compatible CLI for cont... | ✓ | ✓ | ✓ |
-| nix |  | ✓ | ✓ | ✓ |
 | [nova](https://github.com/FairwindsOps/nova) | Find outdated or deprecated Helm charts running... | ✓ | ✓ | ✓ |
 | [npm](https://github.com/npm/cli) | the package manager for JavaScript |  | ✓ |  |
 | oc | OpenShift Client CLI (oc) | ✓ | ✓ | ✓ |
 | oci | Oracle Cloud Infrastructure CLI | ✓ | ✓ | ✓ |
-| [opencode](https://github.com/anomalyco/opencode) | AI coding agent, built for the terminal | ✓ | ✓ | ✓ |
+| [opencode](https://github.com/anomalyco/opencode) | AI coding agent, built for the terminal | ✓ | ✓ |  |
 | openspec |  | ✓ | ✓ | ✓ |
 | [oras](https://github.com/oras-project/oras) | ORAS CLI | ✓ | ✓ | ✓ |
 | patool |  | ✓ | ✓ | ✓ |
@@ -134,7 +133,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | A smarter cd command. Supports all major shells | ✓ | ✓ | ✓ |
 | zshellcheck |  | ✓ | ✓ |  |
 
-**Total: 129 tools**
+**Total: 128 tools**
 
 ## Shell Support Legend
 
