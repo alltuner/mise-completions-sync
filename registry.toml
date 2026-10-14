@@ -114,6 +114,7 @@ grafanactl = "standard"
 # both keys are listed -- same idea as rg/ripgrep below.
 hishtory = "standard"
 asdf-hishtory = { completion_name = "hishtory", zsh = "hishtory completion zsh", bash = "hishtory completion bash", fish = "hishtory completion fish" }
+herdr = "standard"
 hugo = "standard"
 jules = "standard"
 lazygit = "standard"
