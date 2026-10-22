@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.20](https://github.com/alltuner/mise-completions-sync/compare/v0.5.19...v0.5.20) (2026-10-22)
+
+
+### Documentation Updates
+
+* link the sponsor page by its trailing-slash URL ([#192](https://github.com/alltuner/mise-completions-sync/issues/192)) ([f38252a](https://github.com/alltuner/mise-completions-sync/commit/f38252afd3f2fb305a4fc89b30435b9a1fc50e9f))
+
 ## [0.5.19](https://github.com/alltuner/mise-completions-sync/compare/v0.5.18...v0.5.19) (2026-10-13)
 
 
