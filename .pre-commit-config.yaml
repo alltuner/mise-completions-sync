@@ -19,3 +19,10 @@ repos:
         language: system
         pass_filenames: false
         types: [rust]
+
+      - id: docs-tools
+        name: Update documentation
+        entry: mise run docs-tools
+        language: system
+        pass_filenames: false
+        files: ^registry\.toml$

@@ -61,6 +61,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [ko](https://github.com/ko-build/ko) | Build and deploy Go applications on Kubernetes | ✓ | ✓ | ✓ |
 | [kubectl](https://github.com/kubernetes/kubernetes) | kubectl cli | ✓ | ✓ | ✓ |
 | kubectl-ai |  | ✓ | ✓ | ✓ |
+| kubescape |  | ✓ | ✓ | ✓ |
 | [kubeseal](https://github.com/bitnami/sealed-secrets) | A Kubernetes controller and tool for one-way en... | ✓ | ✓ | ✓ |
 | [kustomize](https://github.com/kubernetes-sigs/kustomize) | Customization of kubernetes YAML configurations | ✓ | ✓ | ✓ |
 | [lazygit](https://github.com/jesseduffield/lazygit) | simple terminal UI for git commands | ✓ | ✓ | ✓ |
@@ -134,7 +135,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | A smarter cd command. Supports all major shells | ✓ | ✓ | ✓ |
 | zshellcheck |  | ✓ | ✓ |  |
 
-**Total: 129 tools**
+**Total: 130 tools**
 
 ## Shell Support Legend
 
