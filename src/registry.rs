@@ -346,21 +346,19 @@ mod tests {
     }
 
     #[test]
-    fn test_opencode_pins_shell_per_command() {
-        // Regression: opencode's yargs completion ignores its argument and picks
-        // the script from $SHELL, so a zsh user got the zsh script in every shell.
-        // yargs has no fish script at all.
+    fn test_opencode_uses_v2_completions_flag() {
+        // OpenCode v2 treats the old `completion` subcommand as a directory.
         let registry = load_registry().expect("Failed to load registry");
         let opencode = &registry.tools["opencode"].completions;
-        assert_eq!(
-            opencode.zsh.as_deref(),
-            Some("env SHELL=zsh opencode completion")
-        );
+        assert_eq!(opencode.zsh.as_deref(), Some("opencode --completions zsh"));
         assert_eq!(
             opencode.bash.as_deref(),
-            Some("env SHELL=bash opencode completion")
+            Some("opencode --completions bash")
         );
-        assert_eq!(opencode.fish, None);
+        assert_eq!(
+            opencode.fish.as_deref(),
+            Some("opencode --completions fish")
+        );
     }
 
     #[test]
