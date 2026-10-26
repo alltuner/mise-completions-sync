@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.21](https://github.com/alltuner/mise-completions-sync/compare/v0.5.20...v0.5.21) (2026-10-26)
+
+
+### CI/CD Changes
+
+* build the docs with just site and deploy with Wrangler ([#195](https://github.com/alltuner/mise-completions-sync/issues/195)) ([f5d4ee5](https://github.com/alltuner/mise-completions-sync/commit/f5d4ee52212cd58da6667e2f3a112c5b32f5f188))
+
 ## [0.5.20](https://github.com/alltuner/mise-completions-sync/compare/v0.5.19...v0.5.20) (2026-10-26)
 
 
