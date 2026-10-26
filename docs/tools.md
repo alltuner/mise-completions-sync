@@ -44,6 +44,7 @@ The following tools have shell completion support in mise-completions-sync.
 | grafanactl |  | ✓ | ✓ | ✓ |
 | [grype](https://github.com/anchore/grype) | A vulnerability scanner for container images an... | ✓ | ✓ | ✓ |
 | [helm](https://github.com/helm/helm) | The Kubernetes Package Manager | ✓ | ✓ | ✓ |
+| [herdr](https://github.com/herdrdev/herdr) | Agent multiplexer that lives in your terminal | ✓ | ✓ | ✓ |
 | hishtory | Your shell history: synced, queryable, and in c... | ✓ | ✓ | ✓ |
 | [hk](https://github.com/jdx/hk) | git hook and pre-commit lint manager | ✓ | ✓ | ✓ |
 | hubble |  | ✓ | ✓ | ✓ |
@@ -135,7 +136,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | A smarter cd command. Supports all major shells | ✓ | ✓ | ✓ |
 | zshellcheck |  | ✓ | ✓ |  |
 
-**Total: 130 tools**
+**Total: 131 tools**
 
 ## Shell Support Legend
 
