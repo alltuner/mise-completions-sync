@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.5.20](https://github.com/alltuner/mise-completions-sync/compare/v0.5.19...v0.5.20) (2026-10-26)
+
+
+### Features
+
+* add kubescape completions and pre-commit docs hook ([#190](https://github.com/alltuner/mise-completions-sync/issues/190)) ([646950c](https://github.com/alltuner/mise-completions-sync/commit/646950cee295b92a73143883261a9c940d290b07))
+* **registry:** add herdr ([#188](https://github.com/alltuner/mise-completions-sync/issues/188)) ([e3e8e8b](https://github.com/alltuner/mise-completions-sync/commit/e3e8e8bf5ad43f7a563fa4ce5bb053b83af08755))
+
+
+### Bug Fixes
+
+* use OpenCode v2 completion flag ([#194](https://github.com/alltuner/mise-completions-sync/issues/194)) ([e1af692](https://github.com/alltuner/mise-completions-sync/commit/e1af69269c9826185655f6aa8f1bfa22ceff4d28))
+
+
+### Miscellaneous Chores
+
+* **deps:** update astral-sh/setup-uv action to v10.3.2 ([#191](https://github.com/alltuner/mise-completions-sync/issues/191)) ([1330381](https://github.com/alltuner/mise-completions-sync/commit/13303813640a700a9b572676e1b66b238f62505d))
+
+
+### Documentation Updates
+
+* link the sponsor page by its trailing-slash URL ([#192](https://github.com/alltuner/mise-completions-sync/issues/192)) ([f38252a](https://github.com/alltuner/mise-completions-sync/commit/f38252afd3f2fb305a4fc89b30435b9a1fc50e9f))
+
 ## [0.5.19](https://github.com/alltuner/mise-completions-sync/compare/v0.5.18...v0.5.19) (2026-10-13)
 
 
