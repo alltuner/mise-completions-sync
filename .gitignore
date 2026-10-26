@@ -2,3 +2,5 @@
 worktrees/
 !worktrees/.placeholder
 site/
+
+.wrangler/
