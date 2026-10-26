@@ -110,6 +110,7 @@ golangci-lint = "standard"
 goreleaser = "standard"
 # not in mise's registry; install as aqua:grafana/grafanactl
 grafanactl = "standard"
+herdr = "standard"
 # the default github: backend fails SLSA verification, and the backend that does
 # work (asdf:asdf-community/asdf-hishtory) strips to a different short name, so
 # both keys are listed -- same idea as rg/ripgrep below.
