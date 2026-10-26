@@ -76,7 +76,7 @@ The following tools have shell completion support in mise-completions-sync.
 | [npm](https://github.com/npm/cli) | the package manager for JavaScript |  | ✓ |  |
 | oc | OpenShift Client CLI (oc) | ✓ | ✓ | ✓ |
 | oci | Oracle Cloud Infrastructure CLI | ✓ | ✓ | ✓ |
-| [opencode](https://github.com/anomalyco/opencode) | AI coding agent, built for the terminal | ✓ | ✓ |  |
+| [opencode](https://github.com/anomalyco/opencode) | AI coding agent, built for the terminal | ✓ | ✓ | ✓ |
 | openspec |  | ✓ | ✓ | ✓ |
 | [oras](https://github.com/oras-project/oras) | ORAS CLI | ✓ | ✓ | ✓ |
 | patool |  | ✓ | ✓ | ✓ |

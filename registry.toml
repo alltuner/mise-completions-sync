@@ -144,9 +144,8 @@ forgejo-cli = { completion_name = "fj", zsh = "fj completion zsh", bash = "fj co
 
 # bun picks the script from $SHELL, so pin it per shell
 bun = { zsh = "env SHELL=zsh bun completions", bash = "env SHELL=bash bun completions", fish = "env SHELL=fish bun completions" }
-# opencode (yargs) ignores its argument and picks the script from $SHELL too;
-# yargs has no fish script
-opencode = { zsh = "env SHELL=zsh opencode completion", bash = "env SHELL=bash opencode completion" }
+# OpenCode v2 selects the shell through --completions.
+opencode = { zsh = "opencode --completions zsh", bash = "opencode --completions bash", fish = "opencode --completions fish" }
 
 # mise installs this tool as flux2, but the binary it provides is named flux.
 flux2 = { completion_name = "flux", zsh = "flux completion zsh", bash = "flux completion bash", fish = "flux completion fish" }
