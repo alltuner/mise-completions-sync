@@ -9,7 +9,7 @@
 
 <p align="center">
   <a href="https://mise-completions.alltuner.com/">Docs</a> &middot;
-  <a href="https://alltuner.com/sponsor">Sponsor</a>
+  <a href="https://alltuner.com/sponsor/">Sponsor</a>
 </p>
 
 <p align="center">
@@ -216,7 +216,7 @@ Full docs at [mise-completions.alltuner.com](https://mise-completions.alltuner.c
 
 mise-completions-sync is an open source project built by [David Poblador i Garcia](https://davidpoblador.com/) through [All Tuner Labs](https://alltuner.com/).
 
-If this project was useful to you, [consider supporting its development](https://alltuner.com/sponsor).
+If this project was useful to you, [consider supporting its development](https://alltuner.com/sponsor/).
 
 ---
 
