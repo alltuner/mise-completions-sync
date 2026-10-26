@@ -1,0 +1,12 @@
+{
+  "name": "mise-completions-alltuner-com",
+  "compatibility_date": "2026-10-26",
+  "assets": {
+    "directory": "./site",
+    "not_found_handling": "404-page"
+  },
+  "routes": [{ "pattern": "mise-completions.alltuner.com", "custom_domain": true }],
+  "workers_dev": true,
+  "preview_urls": true,
+  "previews": {}
+}
