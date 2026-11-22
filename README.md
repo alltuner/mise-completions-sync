@@ -73,6 +73,9 @@ misecompsync list
 # Clean up completions for uninstalled or switched-off tools
 misecompsync clean
 
+# Sync or clean without progress output (warnings and errors still print)
+misecompsync --quiet
+
 # Print misecompsync's own completions to stdout
 misecompsync completion zsh
 ```
@@ -122,6 +125,9 @@ mkdir -p ~/.config/mise && cat >> ~/.config/mise/config.toml << 'EOF'
 postinstall = "misecompsync"
 EOF
 ```
+
+The sync prints a line for every completion file it writes. To see only warnings and
+errors from the hook, add `--quiet` (or `-q`): `postinstall = "misecompsync --quiet"`.
 
 ## Custom Output Dirs
 
