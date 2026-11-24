@@ -434,6 +434,7 @@ fn tool_install_dir(tool_id: &str) -> Result<PathBuf, Error> {
 }
 
 /// Copy a completion file that ships inside the tool's own download.
+/// Returns the name of the file written.
 fn install_bundled_completion(
     tool_id: &str,
     tool_name: &str,
@@ -441,7 +442,7 @@ fn install_bundled_completion(
     filename: &str,
     shell: &str,
     output_dir: &PathBuf,
-) -> Result<(), Error> {
+) -> Result<String, Error> {
     std::fs::create_dir_all(output_dir).map_err(|e| Error::CreateDir(output_dir.clone(), e))?;
 
     let root = tool_install_dir(tool_id)?;
@@ -467,10 +468,11 @@ fn install_bundled_completion(
     let filepath = output_dir.join(&target);
     std::fs::write(&filepath, &contents).map_err(|e| Error::WriteFile(filepath.clone(), e))?;
 
-    println!("  {tool_name} -> {target}");
-    Ok(())
+    Ok(target)
 }
 
+/// Run a tool's completion command and write its output.
+/// Returns the name of the file written.
 fn generate_completion(
     tool_id: &str,   // Original ID with backend prefix (for mise x)
     tool_name: &str, // Stripped name (for filename)
@@ -479,7 +481,7 @@ fn generate_completion(
     requires: Option<&str>,
     shell: &str,
     output_dir: &PathBuf,
-) -> Result<(), Error> {
+) -> Result<String, Error> {
     // Create output directory if needed
     std::fs::create_dir_all(output_dir).map_err(|e| Error::CreateDir(output_dir.clone(), e))?;
 
@@ -507,8 +509,7 @@ fn generate_completion(
 
     std::fs::write(&filepath, &output.stdout).map_err(|e| Error::WriteFile(filepath.clone(), e))?;
 
-    println!("  {tool_name} -> {filename}");
-    Ok(())
+    Ok(filename)
 }
 
 /// Sync completions for the given shells and tools
@@ -518,6 +519,7 @@ pub fn sync_completions(
     specific_tools: &[String],
     flags: MiseLsFlags,
     new_only: bool,
+    quiet: bool,
 ) -> Result<(), Error> {
     let registry = registry::load_registry()?;
 
@@ -536,22 +538,28 @@ pub fn sync_completions(
     };
 
     if tools_in_registry.is_empty() {
-        if new_only {
-            println!("No newly-installed tools have completion support in registry.");
-        } else {
-            println!("No installed tools have completion support in registry.");
+        if !quiet {
+            if new_only {
+                println!("No newly-installed tools have completion support in registry.");
+            } else {
+                println!("No installed tools have completion support in registry.");
+            }
         }
         return Ok(());
     }
 
-    println!(
-        "Syncing completions for {} tools...",
-        tools_in_registry.len()
-    );
+    if !quiet {
+        println!(
+            "Syncing completions for {} tools...",
+            tools_in_registry.len()
+        );
+    }
 
     for shell in shells {
         let output_dir = dirs.get_dir(shell)?;
-        println!("\n[{shell}] -> {}", output_dir.display());
+        if !quiet {
+            println!("\n[{shell}] -> {}", output_dir.display());
+        }
 
         for target in &tools_in_registry {
             if let Some(entry) = registry.tools.get(&target.tool_name) {
@@ -579,15 +587,21 @@ pub fn sync_completions(
                             &output_dir,
                         )
                     };
-                    if let Err(e) = result {
-                        eprintln!("  {}: {e}", target.tool_name);
+                    match result {
+                        Ok(filename) if !quiet => {
+                            println!("  {} -> {filename}", target.tool_name);
+                        }
+                        Ok(_) => {}
+                        Err(e) => eprintln!("  {}: {e}", target.tool_name),
                     }
                 }
             }
         }
     }
 
-    println!("\nDone!");
+    if !quiet {
+        println!("\nDone!");
+    }
     Ok(())
 }
 
@@ -630,7 +644,11 @@ fn is_stale(
 }
 
 /// Remove completions for tools that are no longer installed or were switched off
-pub fn clean_stale_completions(dirs: &CompletionsDirs, flags: MiseLsFlags) -> Result<(), Error> {
+pub fn clean_stale_completions(
+    dirs: &CompletionsDirs,
+    flags: MiseLsFlags,
+    quiet: bool,
+) -> Result<(), Error> {
     let registry = registry::load_registry()?;
     let installed_map = get_installed_tools(flags)?;
 
@@ -654,7 +672,9 @@ pub fn clean_stale_completions(dirs: &CompletionsDirs, flags: MiseLsFlags) -> Re
                     if is_stale(&registry, &tool, &installed_map)
                         && std::fs::remove_file(&path).is_ok()
                     {
-                        println!("Removed: {}", path.display());
+                        if !quiet {
+                            println!("Removed: {}", path.display());
+                        }
                         removed += 1;
                     }
                 }
@@ -662,7 +682,9 @@ pub fn clean_stale_completions(dirs: &CompletionsDirs, flags: MiseLsFlags) -> Re
         }
     }
 
-    println!("Cleaned {removed} stale completion files.");
+    if !quiet {
+        println!("Cleaned {removed} stale completion files.");
+    }
     Ok(())
 }
 

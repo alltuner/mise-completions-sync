@@ -40,6 +40,10 @@ struct Cli {
     /// Only sync completions for newly installed/updated tools (reads MISE_INSTALLED_TOOLS env var)
     #[arg(long, conflicts_with_all = ["tools", "global", "local", "current"])]
     new_only: bool,
+
+    /// Hide progress output from sync and clean; warnings and errors still go to stderr
+    #[arg(long, short, global = true)]
+    quiet: bool,
 }
 
 #[derive(Subcommand)]
@@ -97,7 +101,7 @@ fn run() -> Result<(), sync::Error> {
             println!("{}", dir.display());
             Ok(())
         }
-        Some(Commands::Clean) => sync::clean_stale_completions(&dirs, flags),
+        Some(Commands::Clean) => sync::clean_stale_completions(&dirs, flags, cli.quiet),
         Some(Commands::Completion { shell }) => {
             let mut cmd = Cli::command();
             let bin_name = cmd.get_name().to_string();
@@ -108,7 +112,7 @@ fn run() -> Result<(), sync::Error> {
             let shells = cli
                 .shell
                 .unwrap_or_else(|| vec!["zsh".to_string(), "bash".to_string(), "fish".to_string()]);
-            sync::sync_completions(&dirs, &shells, &cli.tools, flags, cli.new_only)
+            sync::sync_completions(&dirs, &shells, &cli.tools, flags, cli.new_only, cli.quiet)
         }
     }
 }
@@ -189,5 +193,29 @@ mod tests {
     #[test]
     fn test_new_only_conflicts_with_tools() {
         assert!(parse(&["misecompsync", "--new-only", "kubectl"]).is_err());
+    }
+
+    #[test]
+    fn test_quiet_defaults_to_off() {
+        assert!(!parse(&["misecompsync"]).unwrap().quiet);
+    }
+
+    #[test]
+    fn test_quiet_combines_with_sync_flags() {
+        // Typical hook usage: quiet sync of new tools only.
+        let cli = parse(&["misecompsync", "--quiet", "--new-only"]).unwrap();
+        assert!(cli.quiet);
+        assert!(cli.new_only);
+
+        let cli = parse(&["misecompsync", "-q", "kubectl"]).unwrap();
+        assert!(cli.quiet);
+        assert_eq!(cli.tools, ["kubectl"]);
+    }
+
+    #[test]
+    fn test_quiet_accepted_before_or_after_clean() {
+        // Global flag, so `misecompsync -q clean` and `misecompsync clean -q` both work.
+        assert!(parse(&["misecompsync", "-q", "clean"]).unwrap().quiet);
+        assert!(parse(&["misecompsync", "clean", "--quiet"]).unwrap().quiet);
     }
 }
