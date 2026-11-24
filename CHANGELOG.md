@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.5.21](https://github.com/alltuner/mise-completions-sync/compare/v0.5.20...v0.5.21) (2026-11-24)
+
+
+### Features
+
+* add --quiet flag to hide progress output ([#198](https://github.com/alltuner/mise-completions-sync/issues/198)) ([63c0e00](https://github.com/alltuner/mise-completions-sync/commit/63c0e000c69dfc7212c99158e70e3d8ba46fd918))
+
+
+### Miscellaneous Chores
+
+* **deps:** update rust dependencies ([#197](https://github.com/alltuner/mise-completions-sync/issues/197)) ([67b5086](https://github.com/alltuner/mise-completions-sync/commit/67b508636020e9401c88f03af700d7ab1f173154))
+
+
+### CI/CD Changes
+
+* build the docs with just site and deploy with Wrangler ([#195](https://github.com/alltuner/mise-completions-sync/issues/195)) ([f5d4ee5](https://github.com/alltuner/mise-completions-sync/commit/f5d4ee52212cd58da6667e2f3a112c5b32f5f188))
+
 ## [0.5.20](https://github.com/alltuner/mise-completions-sync/compare/v0.5.19...v0.5.20) (2026-10-26)
 
 
